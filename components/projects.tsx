@@ -7,8 +7,9 @@ type ProjectItem = {
   description: string;
   details: string;
   tech: string[];
-  status: "live" | "development" | "local";
+  status: "current" | "internship" | "personal";
   link: string;
+  images?: string[];
 };
 
 type ProjectsProps = {
@@ -16,25 +17,29 @@ type ProjectsProps = {
 };
 
 const statusConfig = {
-  live: {
-    label: "Live",
+  current: {
+    label: "Current Work",
     className: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
     dot: "bg-emerald-500",
+    hoverClass: "project-hover-live",
   },
-  development: {
-    label: "In Dev",
-    className: "bg-amber-500/10 text-amber-600 border-amber-500/20",
-    dot: "bg-amber-500",
+  internship: {
+    label: "Internship",
+    className: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+    dot: "bg-blue-500",
+    hoverClass: "project-hover-development",
   },
-  local: {
-    label: "Local",
-    className: "bg-slate-500/10 text-slate-500 border-slate-500/20",
-    dot: "bg-slate-400",
+  personal: {
+    label: "Personal",
+    className: "bg-violet-500/10 text-violet-600 border-violet-500/20",
+    dot: "bg-violet-500",
+    hoverClass: "project-hover-local",
   },
 };
 
 export function Projects({ items }: ProjectsProps) {
   const [expanded, setExpanded] = useState<number | null>(null);
+  const [hoveredImg, setHoveredImg] = useState<string | null>(null);
 
   const toggleProject = (i: number) => {
     setExpanded(expanded === i ? null : i);
@@ -43,9 +48,9 @@ export function Projects({ items }: ProjectsProps) {
   return (
     <section
       id="projects"
-      className="rounded-xl bg-card p-4 shadow-[var(--shadow)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)] sm:p-6"
+      className="card-tilt rounded-xl bg-card p-4 shadow-[var(--shadow)] sm:p-6"
     >
-      <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-accent sm:mb-5">
+      <h2 className="section-heading mb-4 text-xs font-semibold uppercase tracking-widest text-accent sm:mb-5">
         Projects
       </h2>
       <div className="space-y-3 sm:space-y-5">
@@ -67,10 +72,10 @@ export function Projects({ items }: ProjectsProps) {
                   toggleProject(i);
                 }
               }}
-              className={`group cursor-pointer rounded-lg border p-3 transition-all sm:p-4 ${
+              className={`group cursor-pointer rounded-lg border p-3 transition-all sm:p-4 ${status.hoverClass} ${
                 isOpen
                   ? "border-accent/40 border-l-2 border-l-accent bg-section-bg/30"
-                  : "border-border hover:border-accent/40 hover:border-l-accent hover:border-l-2 hover:bg-section-bg/50"
+                  : "border-border border-l-2 border-l-transparent hover:border-accent/40 hover:bg-section-bg/50"
               }`}
             >
               <div className="flex items-start justify-between gap-2">
@@ -123,6 +128,27 @@ export function Projects({ items }: ProjectsProps) {
                 }`}
               >
                 <div className="overflow-hidden">
+                  {item.images && item.images.length > 0 && (
+                    <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {item.images.map((img, idx) => (
+                        <div
+                          key={idx}
+                          className="overflow-hidden rounded-md border border-border hover:border-accent/40 transition-colors"
+                          onMouseEnter={(e) => {
+                            e.stopPropagation();
+                            setHoveredImg(img);
+                          }}
+                          onMouseLeave={() => setHoveredImg(null)}
+                        >
+                          <img
+                            src={img}
+                            alt={`${item.name} screenshot ${idx + 1}`}
+                            className="w-full h-24 object-cover sm:h-32 transition-transform duration-300 hover:scale-110"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div className="rounded-md bg-background/50 p-3 text-xs leading-relaxed text-muted sm:text-sm">
                     {item.details}
                   </div>
@@ -143,6 +169,17 @@ export function Projects({ items }: ProjectsProps) {
           );
         })}
       </div>
+      {hoveredImg && (
+        <div
+          className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+        >
+          <img
+            src={hoveredImg}
+            alt="Full size preview"
+            className="max-h-[85vh] max-w-[85vw] rounded-lg object-contain shadow-2xl"
+          />
+        </div>
+      )}
     </section>
   );
 }

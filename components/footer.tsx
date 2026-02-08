@@ -20,13 +20,13 @@ export function Footer({ data }: FooterProps) {
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
           <a
             href={`mailto:${data.email}`}
-            className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1.5 text-xs font-medium text-white shadow-sm transition-opacity hover:opacity-90 sm:px-4 sm:py-2 sm:text-sm"
+            className="shimmer-btn inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1.5 text-xs font-medium text-white shadow-sm transition-opacity hover:opacity-90 sm:px-4 sm:py-2 sm:text-sm"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="relative z-10 h-3.5 w-3.5">
               <path d="M3 4a2 2 0 0 0-2 2v1.161l8.441 4.221a1.25 1.25 0 0 0 1.118 0L19 7.162V6a2 2 0 0 0-2-2H3Z" />
               <path d="m19 8.839-7.77 3.885a2.75 2.75 0 0 1-2.46 0L1 8.839V14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.839Z" />
             </svg>
-            Email
+            <span className="relative z-10">Email</span>
           </a>
 
           {data.github && (
@@ -55,8 +55,11 @@ export function Footer({ data }: FooterProps) {
         </div>
       </div>
 
-      <div className="mt-4 border-t border-border pt-3 text-center text-[11px] text-muted-light sm:text-xs">
-        Built with Next.js, Tailwind CSS & TypeScript
+      <div className="mt-4 border-t border-border pt-3 text-center">
+        <p className="font-cursive text-lg text-muted-light">— Keith</p>
+        <p className="mt-1 text-[11px] text-muted-light sm:text-xs">
+          Built with Next.js, Tailwind CSS & TypeScript
+        </p>
       </div>
     </footer>
   );

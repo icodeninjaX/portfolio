@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Geist_Mono } from "next/font/google";
+import { Poppins, Geist_Mono, Caveat } from "next/font/google";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -13,6 +13,13 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "700"],
 });
 
 const siteUrl = "https://keithvergara.dev";
@@ -104,7 +111,7 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body
-        className={`${poppins.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} ${geistMono.variable} ${caveat.variable} antialiased`}
       >
         {children}
       </body>

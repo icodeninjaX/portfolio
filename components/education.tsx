@@ -12,13 +12,13 @@ type EducationProps = {
 
 export function Education({ items }: EducationProps) {
   return (
-    <section id="education" className="rounded-xl bg-card p-4 shadow-[var(--shadow)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)] sm:p-6">
-      <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-accent sm:mb-5">
+    <section id="education" className="p-4 sm:p-6">
+      <h2 className="section-heading mb-4 text-xs font-semibold uppercase tracking-widest text-accent sm:mb-5">
         Education
       </h2>
       <div className="space-y-4">
         {items.map((item, i) => (
-          <div key={i}>
+          <div key={i} className="border-l-2 border-border pl-4 transition-colors hover:border-accent">
             <h3 className="text-sm font-semibold sm:text-[15px]">{item.degree}</h3>
             <p className="mt-0.5 text-xs text-muted-light sm:text-sm">
               {item.institution} &middot; {item.location}

@@ -49,7 +49,7 @@ export function Experience({ items }: ExperienceProps) {
       id="experience"
       className="rounded-xl bg-card p-4 shadow-[var(--shadow)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)] sm:p-6"
     >
-      <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-accent sm:mb-5">
+      <h2 className="section-heading mb-4 text-xs font-semibold uppercase tracking-widest text-accent sm:mb-5">
         Experience
       </h2>
       <div className="relative space-y-0">

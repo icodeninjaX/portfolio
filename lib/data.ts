@@ -79,7 +79,7 @@ export const resumeData = {
       details:
         "Dashboard-style interface featuring real-time device status monitoring (online/offline), order lifecycle tracking, advertisement management, and interactive GPS mapping for locating devices. Built with MVC architecture for clean separation of concerns.",
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL", "Ajax", "HTMX"],
-      status: "live" as const,
+      status: "current" as const,
       link: "",
     },
     {
@@ -89,7 +89,7 @@ export const resumeData = {
       details:
         "Complete business management solution with customer registration, order processing pipeline, inventory tracking, and multi-branch support. The SMS integration automatically determines the nearest branch using location data and sends order details for fulfillment.",
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
-      status: "live" as const,
+      status: "internship" as const,
       link: "",
     },
     {
@@ -99,8 +99,9 @@ export const resumeData = {
       details:
         "Production-grade architecture with dual AI integration for transaction parsing and receipt OCR. Implements sophisticated duplicate detection algorithms to prevent double-counting. Comprehensive financial tracking with category breakdown, spending trends, and AI-generated insights. Secured with Google OAuth authentication.",
       tech: ["React", "TypeScript", "Supabase"],
-      status: "development" as const,
+      status: "personal" as const,
       link: "https://github.com/icodeninjaX",
+      images: ["/images/Tracky.png"],
     },
     {
       name: "Cooperative Management System",
@@ -109,7 +110,7 @@ export const resumeData = {
       details:
         "Handles member management, loan processing, savings tracking, and financial reporting for cooperatives. Features automated interest calculations, real-time data synchronization across devices, comprehensive validation with Zod schemas, and full test coverage with Jest.",
       tech: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS", "PostgreSQL", "Jest", "Zod"],
-      status: "development" as const,
+      status: "personal" as const,
       link: "https://github.com/icodeninjaX",
     },
     {
@@ -119,7 +120,7 @@ export const resumeData = {
       details:
         "Full CRUD application for managing your plant collection with watering and fertilizer scheduling. Includes an AI-powered plant identification feature — snap a photo and the system identifies the plant species, common name, and scientific name automatically.",
       tech: ["HTML", "CSS", "JavaScript", "HTMX", "MySQL"],
-      status: "local" as const,
+      status: "personal" as const,
       link: "",
     },
   ],
