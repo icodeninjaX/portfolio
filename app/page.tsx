@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { resumeData } from "@/lib/data";
 import { Header } from "@/components/header";
 import { Summary } from "@/components/summary";
@@ -24,6 +25,12 @@ export default function Home() {
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
+      <Link
+        href="/creative"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-medium text-white shadow-lg transition-transform hover:scale-105"
+      >
+        Enter 3D
+      </Link>
       <ScrollProgress />
       <StickyNav />
       <ThemeToggle />

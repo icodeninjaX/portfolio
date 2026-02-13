@@ -73,7 +73,7 @@ export const resumeData = {
 
   projects: [
     {
-      name: "Backend Management System",
+      name: "371admin",
       description:
         "Web-based internal tool for X-META Technologies Inc. Real-time monitoring of online/offline devices, order tracking, and ads monitoring via a dashboard with GPS mapping for live device location.",
       details:
@@ -104,7 +104,7 @@ export const resumeData = {
       images: ["/images/Tracky.png"],
     },
     {
-      name: "Cooperative Management System",
+      name: "Coop-Tracker",
       description:
         "Full-stack financial management platform for cooperative organizations with real-time sync, automated calculations, and mobile-first design.",
       details:
@@ -114,7 +114,7 @@ export const resumeData = {
       link: "https://github.com/icodeninjaX",
     },
     {
-      name: "Garden App",
+      name: "PlantPal",
       description:
         "Gardening hobby tracker for logging watering, fertilizer schedules, and plant details including scientific names. Features plant identification by photo. Currently available locally.",
       details:
