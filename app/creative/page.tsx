@@ -22,7 +22,21 @@ import { WaterCooler } from "@/components/creative/WaterCooler";
 import { PrinterCopier } from "@/components/creative/PrinterCopier";
 import { RubberDuck } from "@/components/creative/RubberDuck";
 import { ParkingLot } from "@/components/creative/ParkingLot";
-import { FPSHands } from "@/components/creative/FPSHands";
+import { CeilingLights } from "@/components/creative/CeilingLights";
+import { LeftWallGallery } from "@/components/creative/LeftWallGallery";
+import { SkyClouds } from "@/components/creative/SkyClouds";
+import { XMetaSign } from "@/components/creative/XMetaSign";
+import { ProductShowcase } from "@/components/creative/ProductShowcase";
+import { XMetaBanner } from "@/components/creative/XMetaBanner";
+import { CompanyValues } from "@/components/creative/CompanyValues";
+import { XMetaAccents } from "@/components/creative/XMetaAccents";
+import { OfficeSofa } from "@/components/creative/OfficeSofa";
+import { OfficeCeiling } from "@/components/creative/OfficeCeiling";
+import { SplitAircon } from "@/components/creative/SplitAircon";
+import { RoomLabels } from "@/components/creative/RoomLabels";
+import { OfficeDoors } from "@/components/creative/OfficeDoors";
+import { FPSHands, WeaponType } from "@/components/creative/FPSHands";
+import { WaterProjectile } from "@/components/creative/WaterProjectile";
 import { ConversationOverlay } from "@/components/creative/ConversationOverlay";
 import { NPC_DIALOGUES } from "@/lib/npcDialogue";
 
@@ -33,6 +47,12 @@ interface Ball {
   targetPos: [number, number, number];
   createdAt: number;
   color: string;
+}
+
+interface WaterShot {
+  id: number;
+  startPos: [number, number, number];
+  direction: [number, number, number];
 }
 
 const CHAR_START: [number, number, number] = [0, 0.3, 12];
@@ -50,6 +70,13 @@ export default function CreativePage() {
   const [dialogueIndex, setDialogueIndex] = useState(0);
   const [talkingToPosition, setTalkingToPosition] = useState<THREE.Vector3 | null>(null);
 
+  // Weapon state
+  const [weapon, setWeapon] = useState<WeaponType>("fists");
+  const [attacking, setAttacking] = useState(false);
+  const [waterShots, setWaterShots] = useState<WaterShot[]>([]);
+  const [hitNPCs, setHitNPCs] = useState<Set<string>>(new Set());
+  const weaponRef = useRef<WeaponType>("fists");
+
   const charPosRef = useRef(new THREE.Vector3(...CHAR_START));
   const yawRef = useRef(0);
   const pitchRef = useRef(0);
@@ -62,6 +89,7 @@ export default function CreativePage() {
   // Keep refs in sync for use in key handlers
   talkingToRef.current = talkingTo;
   nearbyNPCRef.current = nearbyNPC;
+  weaponRef.current = weapon;
 
   useEffect(() => {
     const onChange = () => {
@@ -69,6 +97,107 @@ export default function CreativePage() {
     };
     document.addEventListener("pointerlockchange", onChange);
     return () => document.removeEventListener("pointerlockchange", onChange);
+  }, []);
+
+  // Weapon switching (1/2/3 keys + scroll wheel)
+  useEffect(() => {
+    const WEAPONS: WeaponType[] = ["fists", "knife", "watergun"];
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "1") setWeapon("fists");
+      else if (e.key === "2") setWeapon("knife");
+      else if (e.key === "3") setWeapon("watergun");
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (!document.pointerLockElement) return;
+      e.preventDefault();
+      setWeapon((prev) => {
+        const idx = WEAPONS.indexOf(prev);
+        const next = e.deltaY > 0
+          ? (idx + 1) % WEAPONS.length
+          : (idx - 1 + WEAPONS.length) % WEAPONS.length;
+        return WEAPONS[next];
+      });
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("wheel", onWheel);
+    };
+  }, []);
+
+  // Attack on left click (while pointer locked)
+  useEffect(() => {
+    const onMouseDown = (e: MouseEvent) => {
+      if (e.button !== 0 || !document.pointerLockElement || talkingToRef.current) return;
+
+      setAttacking(true);
+      setTimeout(() => setAttacking(false), 330);
+
+      // Melee hit detection (fists / knife)
+      if (weaponRef.current === "fists" || weaponRef.current === "knife") {
+        const range = weaponRef.current === "knife" ? 3.0 : 2.0;
+        const yaw = yawRef.current;
+        const fwdX = -Math.sin(yaw);
+        const fwdZ = -Math.cos(yaw);
+        npcPositionsRef.current.forEach((npcPos, name) => {
+          const dx = npcPos.x - charPosRef.current.x;
+          const dz = npcPos.z - charPosRef.current.z;
+          const dist = Math.sqrt(dx * dx + dz * dz);
+          if (dist > range) return;
+          // Check if NPC is roughly in front of player (dot product)
+          const dot = (dx * fwdX + dz * fwdZ) / (dist || 1);
+          if (dot > 0.3) {
+            triggerNPCHit(name);
+          }
+        });
+      }
+
+      // Spawn water projectile when using water gun
+      if (weaponRef.current === "watergun") {
+        const yaw = yawRef.current;
+        const pitch = pitchRef.current;
+        const dir: [number, number, number] = [
+          -Math.sin(yaw) * Math.cos(pitch),
+          Math.sin(pitch),
+          -Math.cos(yaw) * Math.cos(pitch),
+        ];
+        const start: [number, number, number] = [
+          charPosRef.current.x + dir[0] * 0.5,
+          charPosRef.current.y + 2.2 + dir[1] * 0.5,
+          charPosRef.current.z + dir[2] * 0.5,
+        ];
+        setWaterShots((prev) => [
+          ...prev,
+          { id: Date.now() + Math.random(), startPos: start, direction: dir },
+        ]);
+      }
+    };
+
+    window.addEventListener("mousedown", onMouseDown);
+    return () => window.removeEventListener("mousedown", onMouseDown);
+  }, []);
+
+  const handleWaterShotDone = useCallback((id: number) => {
+    setWaterShots((prev) => prev.filter((s) => s.id !== id));
+  }, []);
+
+  const triggerNPCHit = useCallback((name: string) => {
+    setHitNPCs((prev) => {
+      const next = new Set(prev);
+      next.add(name);
+      return next;
+    });
+    setTimeout(() => {
+      setHitNPCs((prev) => {
+        const next = new Set(prev);
+        next.delete(name);
+        return next;
+      });
+    }, 800);
   }, []);
 
   // E key and ESC key handlers for conversation
@@ -219,11 +348,25 @@ export default function CreativePage() {
             <PrinterCopier />
             <RubberDuck />
             <ParkingLot />
+            <CeilingLights />
+            <LeftWallGallery />
+            <SkyClouds />
+            <XMetaSign />
+            <ProductShowcase />
+            <XMetaBanner />
+            <CompanyValues />
+            <XMetaAccents />
+            <OfficeSofa />
+            <OfficeCeiling />
+            <SplitAircon />
+            <RoomLabels />
+            <OfficeDoors />
             <OfficePeople
               npcPositionsRef={npcPositionsRef}
               talkingTo={talkingTo}
               charPosRef={charPosRef}
               onNearbyNPCChange={handleNearbyNPCChange}
+              hitNPCs={hitNPCs}
             />
             <Character
               startPosition={CHAR_START}
@@ -244,7 +387,17 @@ export default function CreativePage() {
               />
             ))}
           </Scene>
-          <FPSHands handOffsetRef={handOffsetRef} visible={!talkingTo} />
+          <FPSHands handOffsetRef={handOffsetRef} visible={!talkingTo} weapon={weapon} attacking={attacking} />
+          {waterShots.map((shot) => (
+            <WaterProjectile
+              key={shot.id}
+              startPos={shot.startPos}
+              direction={shot.direction}
+              onDone={() => handleWaterShotDone(shot.id)}
+              npcPositionsRef={npcPositionsRef}
+              onHitNPC={triggerNPCHit}
+            />
+          ))}
           <PostEffects />
         </Suspense>
       </Canvas>
@@ -253,6 +406,8 @@ export default function CreativePage() {
         pointerLocked={pointerLocked}
         nearbyNPC={nearbyNPC}
         talkingTo={talkingTo}
+        weapon={weapon}
+        onWeaponChange={setWeapon}
       />
 
       {/* Conversation overlay */}
@@ -294,7 +449,7 @@ export default function CreativePage() {
           >
             Click to Play
             <div style={{ fontSize: 14, fontWeight: 400, marginTop: 8, color: "#9ca3af" }}>
-              WASD to move &bull; Mouse to look &bull; ESC to unlock
+              WASD to move &bull; Mouse to look &bull; Click to attack &bull; 1/2/3 switch weapons
             </div>
           </div>
         </div>

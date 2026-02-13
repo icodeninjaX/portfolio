@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { SectionOverlay } from "./SectionOverlay";
+import type { WeaponType } from "./FPSHands";
 
 const SECTION_COLORS: Record<string, string> = {
   summary: "#2563eb",
@@ -19,14 +20,22 @@ const SECTION_LABELS: Record<string, string> = {
   education: "Education",
 };
 
+const WEAPONS: { key: WeaponType; label: string; icon: string; hotkey: string }[] = [
+  { key: "fists", label: "Fists", icon: "\u270A", hotkey: "1" },
+  { key: "knife", label: "Knife", icon: "\uD83D\uDD2A", hotkey: "2" },
+  { key: "watergun", label: "Water Gun", icon: "\uD83D\uDD2B", hotkey: "3" },
+];
+
 interface OfficeHUDProps {
   activeSection: string | null;
   pointerLocked: boolean;
   nearbyNPC?: string | null;
   talkingTo?: string | null;
+  weapon?: WeaponType;
+  onWeaponChange?: (weapon: WeaponType) => void;
 }
 
-export function OfficeHUD({ activeSection, pointerLocked, nearbyNPC, talkingTo }: OfficeHUDProps) {
+export function OfficeHUD({ activeSection, pointerLocked, nearbyNPC, talkingTo, weapon = "fists", onWeaponChange }: OfficeHUDProps) {
   const color = activeSection ? SECTION_COLORS[activeSection] || "#2563eb" : null;
 
   return (
@@ -89,15 +98,18 @@ export function OfficeHUD({ activeSection, pointerLocked, nearbyNPC, talkingTo }
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 6,
-            height: 6,
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.8)",
-            boxShadow: "0 0 2px rgba(0, 0, 0, 0.5)",
             pointerEvents: "none",
             zIndex: 20,
           }}
-        />
+        >
+          {/* Crosshair lines */}
+          <div style={{ position: "absolute", top: -8, left: -1, width: 2, height: 6, background: "rgba(255,255,255,0.8)" }} />
+          <div style={{ position: "absolute", bottom: -8, left: -1, width: 2, height: 6, background: "rgba(255,255,255,0.8)" }} />
+          <div style={{ position: "absolute", left: -8, top: -1, width: 6, height: 2, background: "rgba(255,255,255,0.8)" }} />
+          <div style={{ position: "absolute", right: -8, top: -1, width: 6, height: 2, background: "rgba(255,255,255,0.8)" }} />
+          {/* Center dot */}
+          <div style={{ position: "absolute", top: -2, left: -2, width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.9)", boxShadow: "0 0 2px rgba(0,0,0,0.5)" }} />
+        </div>
       )}
 
       {/* Nearby NPC prompt */}
@@ -126,7 +138,7 @@ export function OfficeHUD({ activeSection, pointerLocked, nearbyNPC, talkingTo }
         </div>
       )}
 
-      {/* Instructions - bottom center (hidden during conversation) */}
+      {/* Weapon selector - bottom center */}
       {pointerLocked && !talkingTo && (
         <div
           style={{
@@ -134,19 +146,84 @@ export function OfficeHUD({ activeSection, pointerLocked, nearbyNPC, talkingTo }
             bottom: 24,
             left: "50%",
             transform: "translateX(-50%)",
+            display: "flex",
+            gap: 8,
+            zIndex: 20,
+            pointerEvents: "none",
+          }}
+        >
+          {WEAPONS.map((w) => {
+            const isActive = weapon === w.key;
+            return (
+              <div
+                key={w.key}
+                onClick={() => onWeaponChange?.(w.key)}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "8px 14px",
+                  borderRadius: 10,
+                  background: isActive ? "rgba(255, 107, 0, 0.85)" : "rgba(0, 0, 0, 0.55)",
+                  backdropFilter: "blur(8px)",
+                  border: isActive ? "2px solid #ff8c33" : "1px solid rgba(255, 255, 255, 0.15)",
+                  cursor: "pointer",
+                  pointerEvents: "auto",
+                  minWidth: 64,
+                  transition: "all 0.15s ease",
+                  boxShadow: isActive ? "0 0 12px rgba(255, 107, 0, 0.4)" : "none",
+                }}
+              >
+                <span style={{ fontSize: 22, lineHeight: 1 }}>{w.icon}</span>
+                <span
+                  style={{
+                    color: isActive ? "#ffffff" : "#9ca3af",
+                    fontSize: 10,
+                    fontFamily: "system-ui, -apple-system, sans-serif",
+                    fontWeight: isActive ? 600 : 400,
+                    marginTop: 4,
+                  }}
+                >
+                  {w.label}
+                </span>
+                <span
+                  style={{
+                    color: isActive ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)",
+                    fontSize: 9,
+                    fontFamily: "monospace",
+                    marginTop: 2,
+                  }}
+                >
+                  [{w.hotkey}]
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Instructions - top right (hidden during conversation) */}
+      {pointerLocked && !talkingTo && (
+        <div
+          style={{
+            position: "absolute",
+            top: 24,
+            right: 24,
             color: "#6b7280",
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: "system-ui, -apple-system, sans-serif",
-            textAlign: "center",
+            textAlign: "right",
             pointerEvents: "none",
             zIndex: 20,
             background: "rgba(255,255,255,0.8)",
             backdropFilter: "blur(8px)",
-            padding: "6px 16px",
+            padding: "6px 12px",
             borderRadius: 6,
+            lineHeight: 1.6,
           }}
         >
-          WASD to move &bull; Mouse to look &bull; ESC to unlock
+          WASD move &bull; Mouse look &bull; Click attack<br />
+          1/2/3 or Scroll to switch &bull; ESC unlock
         </div>
       )}
 

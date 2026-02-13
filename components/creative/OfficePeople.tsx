@@ -178,16 +178,20 @@ interface WorkerRuntime {
   roomCenter: THREE.Vector3;
 }
 
+const HIT_REACTIONS = ["Ouch!", "Hey!", "Watch it!", "Stop that!", "Not cool!", "Ow!"];
+
 function OfficeWorker({
   runtime,
   talkingTo,
   charPosRef,
   npcPositionsRef,
+  hitNPCs,
 }: {
   runtime: WorkerRuntime;
   talkingTo: string | null;
   charPosRef: MutableRefObject<THREE.Vector3>;
   npcPositionsRef: MutableRefObject<Map<string, THREE.Vector3>>;
+  hitNPCs: Set<string>;
 }) {
   const { char, seatPos } = runtime;
 
@@ -208,6 +212,11 @@ function OfficeWorker({
   const transitionT = useRef(0);
   const idleDuration = useRef(0); // how long to idle at destination
   const moveStyleRef = useRef<MoveStyle>("walk");
+
+  // Hit reaction
+  const flinchTimeRef = useRef(0);
+  const wasHit = useRef(false);
+  const [hitReaction, setHitReaction] = useState<string | null>(null);
 
   // Chatter
   const chatterTimerRef = useRef(3 + Math.random() * 8);
@@ -250,6 +259,22 @@ function OfficeWorker({
     const isSeatedState = activityRef.current === "working" || activityRef.current === "sitting_down";
     publishPos.y = isSeatedState ? -0.42 : 0;
     npcPositionsRef.current.set(char.name, publishPos);
+
+    // Hit reaction detection
+    const isHit = hitNPCs.has(char.name);
+    if (isHit && !wasHit.current) {
+      flinchTimeRef.current = 0;
+      wasHit.current = true;
+      setHitReaction(HIT_REACTIONS[Math.floor(Math.random() * HIT_REACTIONS.length)]);
+    }
+    if (!isHit && wasHit.current) {
+      wasHit.current = false;
+    }
+    if (flinchTimeRef.current < 1) {
+      flinchTimeRef.current += delta * 2; // ~0.5s flinch
+    } else if (hitReaction) {
+      setHitReaction(null);
+    }
 
     // If this NPC is being talked to, freeze state machine and face player
     if (talkingTo === char.name) {
@@ -387,6 +412,14 @@ function OfficeWorker({
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
       groupRef.current.rotation.y, facingRef.current, 0.08,
     );
+
+    // Flinch — stagger back and tilt
+    if (flinchTimeRef.current < 1) {
+      const flinch = Math.sin(flinchTimeRef.current * Math.PI);
+      groupRef.current.position.y += flinch * 0.08;
+      groupRef.current.rotation.x += flinch * 0.15;
+      groupRef.current.rotation.z += Math.sin(flinchTimeRef.current * Math.PI * 3) * flinch * 0.1;
+    }
 
     /* ── musical notes (singing) ── */
     const isSinging = activity === "singing";
@@ -536,8 +569,25 @@ function OfficeWorker({
           </Text>
         </group>
 
+        {/* Hit reaction bubble */}
+        {hitReaction && (
+          <group position={[0, 2.52, 0]}>
+            <mesh position={[0, 0, -0.005]}>
+              <planeGeometry args={[1.0, 0.28]} />
+              <meshBasicMaterial color="#ff4444" transparent opacity={0.92} side={THREE.DoubleSide} />
+            </mesh>
+            <mesh position={[0, -0.17, -0.004]} rotation={[0, 0, Math.PI]}>
+              <coneGeometry args={[0.05, 0.08, 3]} />
+              <meshBasicMaterial color="#ff4444" transparent opacity={0.92} side={THREE.DoubleSide} />
+            </mesh>
+            <Text fontSize={0.1} color="#ffffff" anchorX="center" anchorY="middle" fontWeight="bold">
+              {hitReaction}
+            </Text>
+          </group>
+        )}
+
         {/* Speech bubble */}
-        {chatterLine && talkingTo !== char.name && (
+        {chatterLine && !hitReaction && talkingTo !== char.name && (
           <group position={[0, 2.52, 0]}>
             <mesh position={[0, 0, -0.005]}>
               <planeGeometry args={[1.4, 0.22]} />
@@ -755,9 +805,10 @@ interface OfficePeopleProps {
   talkingTo: string | null;
   charPosRef: MutableRefObject<THREE.Vector3>;
   onNearbyNPCChange: (name: string | null) => void;
+  hitNPCs?: Set<string>;
 }
 
-export function OfficePeople({ npcPositionsRef, talkingTo, charPosRef, onNearbyNPCChange }: OfficePeopleProps) {
+export function OfficePeople({ npcPositionsRef, talkingTo, charPosRef, onNearbyNPCChange, hitNPCs }: OfficePeopleProps) {
   const workers = useMemo<WorkerRuntime[]>(() => {
     return CHARACTERS.map((char) => {
       const roomCenter = new THREE.Vector3(...char.deskCenter);
@@ -799,6 +850,7 @@ export function OfficePeople({ npcPositionsRef, talkingTo, charPosRef, onNearbyN
           talkingTo={talkingTo}
           charPosRef={charPosRef}
           npcPositionsRef={npcPositionsRef}
+          hitNPCs={hitNPCs ?? new Set()}
         />
       ))}
     </>
