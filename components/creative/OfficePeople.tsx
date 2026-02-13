@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useMemo, MutableRefObject, useCallback } from "react";
+import { useRef, useMemo, useState, MutableRefObject, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
+import { Text, Billboard } from "@react-three/drei";
 import * as THREE from "three";
 
 /* ── Named characters with fixed appearances ── */
@@ -94,6 +94,51 @@ const CHARACTERS: CharacterDef[] = [
   },
 ];
 
+/* ── Ambient chatter lines (short, about Keith) ── */
+const CHATTER_LINES: Record<string, string[]> = {
+  Carl: [
+    "Keith's so impressive...",
+    "Full-stack AND AI...",
+    "Solid Next.js skills.",
+    "Great React developer.",
+    "His portfolio is sharp.",
+  ],
+  Charo: [
+    "TRACKY is amazing!",
+    "371admin? Top notch.",
+    "AI receipt scanning...",
+    "He never stops coding!",
+    "So many cool projects.",
+  ],
+  Chella: [
+    "Killing it at X-META!",
+    "Real-time monitoring!",
+    "That POS was legit.",
+    "Full stack master.",
+    "Built the whole backend.",
+  ],
+  Natalie: [
+    "TS and PHP? Versatile.",
+    "React skills on point!",
+    "APIs and databases too.",
+    "Tailwind CSS expert.",
+    "Such a broad skill set.",
+  ],
+  Keith: [
+    "Always learning...",
+    "Love problem-solving!",
+    "Side project time!",
+    "CS degree paid off.",
+    "Code. Build. Repeat.",
+  ],
+};
+
+function lerpAngle(a: number, b: number, t: number): number {
+  let diff = ((b - a + Math.PI) % (Math.PI * 2)) - Math.PI;
+  if (diff < -Math.PI) diff += Math.PI * 2;
+  return a + diff * t;
+}
+
 /* ── Key locations ── */
 const KITCHEN_CENTER = new THREE.Vector3(13, 0, 0);
 const RESTROOM_CENTER = new THREE.Vector3(-13, 0, 0);
@@ -119,8 +164,13 @@ type Activity =
   | "in_restroom"    // standing in restroom
   | "go_hallway"     // walking to hallway spot
   | "in_hallway"     // standing in hallway (chatting / stretching)
+  | "dancing"        // dancing at location
+  | "singing"        // singing at location
+  | "jumping"        // jumping at location
   | "returning"      // walking back to desk
   | "sitting_down";  // transition
+
+type MoveStyle = "walk" | "run" | "crawl";
 
 interface WorkerRuntime {
   char: CharacterDef;
@@ -146,7 +196,9 @@ function OfficeWorker({
   const rightLegRef = useRef<THREE.Group>(null);
   const leftArmRef = useRef<THREE.Group>(null);
   const rightArmRef = useRef<THREE.Group>(null);
-  const nameRef = useRef<THREE.Group>(null);
+  const note1Ref = useRef<THREE.Group>(null);
+  const note2Ref = useRef<THREE.Group>(null);
+  const note3Ref = useRef<THREE.Group>(null);
 
   const activityRef = useRef<Activity>("working");
   const timerRef = useRef(Math.random() * 6); // desync start
@@ -155,6 +207,14 @@ function OfficeWorker({
   const facingRef = useRef(Math.PI);
   const transitionT = useRef(0);
   const idleDuration = useRef(0); // how long to idle at destination
+  const moveStyleRef = useRef<MoveStyle>("walk");
+
+  // Chatter
+  const chatterTimerRef = useRef(3 + Math.random() * 8);
+  const chatterPhaseRef = useRef<"waiting" | "showing">("waiting");
+  const chatterIndexRef = useRef(Math.floor(Math.random() * (CHATTER_LINES[char.name]?.length || 1)));
+  const [chatterLine, setChatterLine] = useState<string | null>(null);
+  const nameTagWidth = char.name.length * 0.085 + 0.16;
 
   function pickNextActivity(): Activity {
     const roll = Math.random();
@@ -196,15 +256,15 @@ function OfficeWorker({
       const dx = charPosRef.current.x - posRef.current.x;
       const dz = charPosRef.current.z - posRef.current.z;
       const targetFacing = Math.atan2(dx, dz);
-      facingRef.current = THREE.MathUtils.lerp(facingRef.current, targetFacing, 0.1);
+      facingRef.current = lerpAngle(facingRef.current, targetFacing, 0.15);
 
       groupRef.current.position.copy(posRef.current);
       groupRef.current.position.y = activityRef.current === "working" ? -0.42 : 0;
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(
-        groupRef.current.rotation.y, facingRef.current, 0.08,
-      );
-      if (nameRef.current) {
-        nameRef.current.rotation.y = -groupRef.current.rotation.y;
+      groupRef.current.rotation.y = facingRef.current;
+      if (chatterPhaseRef.current === "showing") {
+        setChatterLine(null);
+        chatterPhaseRef.current = "waiting";
+        chatterTimerRef.current = 4 + Math.random() * 6;
       }
       return;
     }
@@ -227,24 +287,38 @@ function OfficeWorker({
         setDestination(next);
         timerRef.current = 0;
         idleDuration.current = 3 + Math.random() * 6;
+        // Pick movement style
+        const styleRoll = Math.random();
+        moveStyleRef.current = styleRoll < 0.15 ? "crawl" : styleRoll < 0.35 ? "run" : "walk";
       }
     } else if (activity === "go_kitchen" || activity === "go_restroom" || activity === "go_hallway") {
-      const arrived = walkToward(targetRef.current, walkSpeed, delta);
+      const speed = moveStyleRef.current === "run" ? walkSpeed * 2
+        : moveStyleRef.current === "crawl" ? walkSpeed * 0.45
+        : walkSpeed;
+      const arrived = walkToward(targetRef.current, speed, delta);
       if (arrived) {
-        if (activity === "go_kitchen") activityRef.current = "in_kitchen";
+        const actionRoll = Math.random();
+        if (actionRoll < 0.15) activityRef.current = "dancing";
+        else if (actionRoll < 0.27) activityRef.current = "singing";
+        else if (actionRoll < 0.38) activityRef.current = "jumping";
+        else if (activity === "go_kitchen") activityRef.current = "in_kitchen";
         else if (activity === "go_restroom") activityRef.current = "in_restroom";
         else activityRef.current = "in_hallway";
         timerRef.current = 0;
       }
-    } else if (activity === "in_kitchen" || activity === "in_restroom" || activity === "in_hallway") {
-      // Idle at location
+    } else if (activity === "in_kitchen" || activity === "in_restroom" || activity === "in_hallway"
+      || activity === "dancing" || activity === "singing" || activity === "jumping") {
       if (timerRef.current > idleDuration.current) {
         activityRef.current = "returning";
         targetRef.current.copy(seatPos);
         timerRef.current = 0;
+        moveStyleRef.current = "walk"; // walk back normally
       }
     } else if (activity === "returning") {
-      const arrived = walkToward(seatPos, walkSpeed, delta);
+      const speed = moveStyleRef.current === "run" ? walkSpeed * 2
+        : moveStyleRef.current === "crawl" ? walkSpeed * 0.45
+        : walkSpeed;
+      const arrived = walkToward(seatPos, speed, delta);
       if (arrived) {
         posRef.current.copy(seatPos);
         facingRef.current = Math.PI;
@@ -264,6 +338,8 @@ function OfficeWorker({
     const isSeated = activity === "working";
     const isWalking = activity === "go_kitchen" || activity === "go_restroom" || activity === "go_hallway" || activity === "returning";
     const isStandingIdle = activity === "in_kitchen" || activity === "in_restroom" || activity === "in_hallway";
+    const isCrawling = isWalking && moveStyleRef.current === "crawl";
+    const isRunning = isWalking && moveStyleRef.current === "run";
 
     let standFactor: number;
     if (isSeated) standFactor = 0;
@@ -276,19 +352,120 @@ function OfficeWorker({
     worldPos.y = seatDropY;
 
     groupRef.current.position.copy(worldPos);
+
+    // Crawling — body drops low and tilts forward
+    if (isCrawling) {
+      groupRef.current.position.y -= 0.55;
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0.9, 0.12);
+    } else {
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0, 0.12);
+    }
+
+    // Running — slight forward lean
+    if (isRunning) {
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0.15, 0.1);
+    }
+
+    // Dance body bob
+    if (activity === "dancing") {
+      const beat = Date.now() * 0.008 + char.name.charCodeAt(0);
+      groupRef.current.position.y += Math.abs(Math.sin(beat)) * 0.12;
+      groupRef.current.rotation.z = Math.sin(beat * 0.5) * 0.06;
+    } else if (activity === "singing") {
+      const sw = Date.now() * 0.003 + char.name.charCodeAt(0);
+      groupRef.current.rotation.z = Math.sin(sw) * 0.04;
+    } else if (activity === "jumping") {
+      // Periodic jump: 0.8s jump, 1.5s pause
+      const jumpT = ((Date.now() * 0.001 + char.name.charCodeAt(0)) % 2.3);
+      if (jumpT < 0.8) {
+        groupRef.current.position.y += Math.sin((jumpT / 0.8) * Math.PI) * 0.6;
+      }
+    } else {
+      groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, 0, 0.1);
+    }
+
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
       groupRef.current.rotation.y, facingRef.current, 0.08,
     );
 
-    // Name tag always faces camera-ish (billboard by counter-rotating)
-    if (nameRef.current) {
-      nameRef.current.rotation.y = -groupRef.current.rotation.y;
+    /* ── musical notes (singing) ── */
+    const isSinging = activity === "singing";
+    const nt = Date.now() * 0.002 + char.name.charCodeAt(0);
+    if (note1Ref.current) {
+      note1Ref.current.visible = isSinging;
+      if (isSinging) {
+        note1Ref.current.position.x = 0.3 + Math.sin(nt * 1.3) * 0.08;
+        note1Ref.current.position.y = 2.3 + Math.sin(nt * 1.8) * 0.12;
+      }
+    }
+    if (note2Ref.current) {
+      note2Ref.current.visible = isSinging;
+      if (isSinging) {
+        note2Ref.current.position.x = -0.25 + Math.sin(nt * 1.1 + 2) * 0.06;
+        note2Ref.current.position.y = 2.5 + Math.sin(nt * 1.5 + 1) * 0.1;
+      }
+    }
+    if (note3Ref.current) {
+      note3Ref.current.visible = isSinging;
+      if (isSinging) {
+        note3Ref.current.position.x = 0.15 + Math.sin(nt * 0.9 + 4) * 0.07;
+        note3Ref.current.position.y = 2.7 + Math.sin(nt * 1.2 + 3) * 0.1;
+      }
     }
 
     /* ── limbs ── */
     const legBend = (1 - standFactor) * -Math.PI / 2;
 
-    if (isWalking) {
+    if (activity === "dancing") {
+      const beat = Date.now() * 0.008 + char.name.charCodeAt(0);
+      const pump = Math.sin(beat);
+      // Alternating arm pumps
+      if (leftArmRef.current) leftArmRef.current.rotation.x = pump * 0.9 - 0.6;
+      if (rightArmRef.current) rightArmRef.current.rotation.x = -pump * 0.9 - 0.6;
+      // Leg bounce
+      if (leftLegRef.current) leftLegRef.current.rotation.x = Math.sin(beat) * 0.25;
+      if (rightLegRef.current) rightLegRef.current.rotation.x = Math.sin(beat + Math.PI) * 0.25;
+    } else if (activity === "singing") {
+      const sw = Date.now() * 0.003 + char.name.charCodeAt(0);
+      if (rightArmRef.current) rightArmRef.current.rotation.x = -1.3 + Math.sin(sw * 2) * 0.12;
+      if (leftArmRef.current) leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, Math.sin(sw) * 0.15, 0.08);
+      if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, Math.sin(sw * 0.5) * 0.05, 0.08);
+      if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, -Math.sin(sw * 0.5) * 0.05, 0.08);
+    } else if (activity === "jumping") {
+      const jumpT = ((Date.now() * 0.001 + char.name.charCodeAt(0)) % 2.3);
+      const inAir = jumpT < 0.8;
+      if (inAir) {
+        // Arms up, legs tuck
+        if (leftArmRef.current) leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, -2.2, 0.15);
+        if (rightArmRef.current) rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, -2.2, 0.15);
+        if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, 0.4, 0.15);
+        if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, 0.4, 0.15);
+      } else {
+        // Landing — arms down, legs straight
+        if (leftArmRef.current) leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, 0, 0.12);
+        if (rightArmRef.current) rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, 0, 0.12);
+        if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, 0, 0.12);
+        if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, 0, 0.12);
+      }
+    } else if (isCrawling) {
+      // Fast alternating crawl cycle
+      const cycle = Date.now() * 0.01 + char.name.charCodeAt(0);
+      const reach = Math.sin(cycle);
+      // Arms reach forward alternately
+      if (leftArmRef.current) leftArmRef.current.rotation.x = reach * 0.7 - 0.9;
+      if (rightArmRef.current) rightArmRef.current.rotation.x = -reach * 0.7 - 0.9;
+      // Legs push alternately
+      if (leftLegRef.current) leftLegRef.current.rotation.x = -reach * 0.5 + 0.3;
+      if (rightLegRef.current) rightLegRef.current.rotation.x = reach * 0.5 + 0.3;
+    } else if (isRunning) {
+      // Exaggerated fast arm/leg swing
+      const cycle = Date.now() * 0.012 + char.name.charCodeAt(0);
+      const swing = Math.sin(cycle) * 0.7;
+      if (leftLegRef.current) leftLegRef.current.rotation.x = swing;
+      if (rightLegRef.current) rightLegRef.current.rotation.x = -swing;
+      if (leftArmRef.current) leftArmRef.current.rotation.x = -swing * 0.85;
+      if (rightArmRef.current) rightArmRef.current.rotation.x = swing * 0.85;
+    } else if (isWalking) {
       const cycle = Date.now() * 0.006 + char.name.charCodeAt(0);
       const swing = Math.sin(cycle) * 0.4;
       if (leftLegRef.current) leftLegRef.current.rotation.x = swing;
@@ -310,6 +487,24 @@ function OfficeWorker({
       if (leftArmRef.current) leftArmRef.current.rotation.x = THREE.MathUtils.lerp(leftArmRef.current.rotation.x, armAngle, 0.1);
       if (rightArmRef.current) rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, armAngle, 0.1);
     }
+
+    /* ── chatter timer ── */
+    chatterTimerRef.current -= delta;
+    if (chatterTimerRef.current <= 0) {
+      if (chatterPhaseRef.current === "waiting") {
+        const lines = CHATTER_LINES[char.name];
+        if (lines && lines.length > 0) {
+          chatterIndexRef.current = (chatterIndexRef.current + 1) % lines.length;
+          setChatterLine(lines[chatterIndexRef.current]);
+          chatterPhaseRef.current = "showing";
+          chatterTimerRef.current = 3 + Math.random() * 2;
+        }
+      } else {
+        setChatterLine(null);
+        chatterPhaseRef.current = "waiting";
+        chatterTimerRef.current = 5 + Math.random() * 8;
+      }
+    }
   });
 
   function walkToward(target: THREE.Vector3, speed: number, delta: number): boolean {
@@ -324,12 +519,50 @@ function OfficeWorker({
 
   return (
     <group ref={groupRef} position={seatPos.toArray()}>
-      {/* Floating name tag */}
-      <group ref={nameRef} position={[0, 2.05, 0]}>
-        <Text fontSize={0.14} color="#374151" anchorX="center" anchorY="middle" outlineWidth={0.01} outlineColor="#ffffff">
-          {char.name}
-        </Text>
-      </group>
+      {/* Floating name tag + chatter (auto-faces camera) */}
+      <Billboard>
+        {/* Name tag */}
+        <group position={[0, 2.12, 0]}>
+          <mesh position={[0, 0, -0.005]}>
+            <planeGeometry args={[nameTagWidth, 0.24]} />
+            <meshBasicMaterial color="#0f172a" transparent opacity={0.88} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position={[0, -0.13, -0.004]}>
+            <planeGeometry args={[nameTagWidth, 0.03]} />
+            <meshBasicMaterial color={char.shirtColor} side={THREE.DoubleSide} />
+          </mesh>
+          <Text fontSize={0.14} color="#ffffff" anchorX="center" anchorY="middle" outlineWidth={0.005} outlineColor="#000000">
+            {char.name}
+          </Text>
+        </group>
+
+        {/* Speech bubble */}
+        {chatterLine && talkingTo !== char.name && (
+          <group position={[0, 2.52, 0]}>
+            <mesh position={[0, 0, -0.005]}>
+              <planeGeometry args={[1.4, 0.22]} />
+              <meshBasicMaterial color="#f8fafc" transparent opacity={0.92} side={THREE.DoubleSide} />
+            </mesh>
+            <mesh position={[0, -0.14, -0.004]} rotation={[0, 0, Math.PI]}>
+              <coneGeometry args={[0.05, 0.08, 3]} />
+              <meshBasicMaterial color="#f8fafc" transparent opacity={0.92} side={THREE.DoubleSide} />
+            </mesh>
+            <Text fontSize={0.08} color="#334155" anchorX="center" anchorY="middle" maxWidth={1.2}>
+              {chatterLine}
+            </Text>
+          </group>
+        )}
+        {/* Musical notes (animated in useFrame, visible only when singing) */}
+        <group ref={note1Ref} visible={false} position={[0.3, 2.3, 0]}>
+          <Text fontSize={0.18} color="#ec4899" anchorX="center" anchorY="middle">{"♪"}</Text>
+        </group>
+        <group ref={note2Ref} visible={false} position={[-0.25, 2.5, 0]}>
+          <Text fontSize={0.14} color="#8b5cf6" anchorX="center" anchorY="middle">{"♫"}</Text>
+        </group>
+        <group ref={note3Ref} visible={false} position={[0.15, 2.7, 0]}>
+          <Text fontSize={0.12} color="#f59e0b" anchorX="center" anchorY="middle">{"♪"}</Text>
+        </group>
+      </Billboard>
 
       {/* Head */}
       <mesh position={[0, 1.65, 0]}>

@@ -91,21 +91,22 @@ export function Scene({
       );
 
       const lookTarget = new THREE.Vector3(npcPos.x, eyeHeight, npcPos.z);
-      const tempObj = new THREE.Object3D();
-      tempObj.position.copy(convTargetPos.current);
-      tempObj.lookAt(lookTarget);
-      convTargetQuat.current.copy(tempObj.quaternion);
+      const tempCam = new THREE.PerspectiveCamera();
+      tempCam.position.copy(convTargetPos.current);
+      tempCam.lookAt(lookTarget);
+      convTargetQuat.current.copy(tempCam.quaternion);
     }
     prevTalkingTo.current = talkingTo;
 
     // Transition progress
     const targetTransition = talkingTo ? 1 : 0;
     const transitionSpeed = talkingTo ? 2.0 : 3.0; // ~0.5s in, ~0.33s out
-    transitionRef.current = THREE.MathUtils.clamp(
-      transitionRef.current + (targetTransition - transitionRef.current > 0 ? 1 : -1) * transitionSpeed * delta,
-      0,
-      1
-    );
+    const step = transitionSpeed * delta;
+    if (transitionRef.current < targetTransition) {
+      transitionRef.current = Math.min(transitionRef.current + step, targetTransition);
+    } else if (transitionRef.current > targetTransition) {
+      transitionRef.current = Math.max(transitionRef.current - step, targetTransition);
+    }
     const t = smoothstep(transitionRef.current);
 
     // FPS camera
@@ -117,14 +118,16 @@ export function Scene({
     const fpsEuler = new THREE.Euler(pitchRef.current, yawRef.current, 0, "YXZ");
     fpsCamQuat.current.setFromEuler(fpsEuler);
 
-    if (t < 0.001) {
+    if (t > 0.999) {
+      // Fully in conversation — lock to target
+      camera.position.copy(convTargetPos.current);
+      camera.quaternion.copy(convTargetQuat.current);
+    } else if (t < 0.001) {
       // Pure FPS mode
       camera.position.copy(fpsPos);
       camera.quaternion.copy(fpsCamQuat.current);
     } else {
       // Lerp between FPS and cached conversation target
-      // (convTargetPos/convTargetQuat persist even after talkingTo becomes null,
-      //  so the exit transition lerps smoothly back to FPS)
       camera.position.lerpVectors(fpsPos, convTargetPos.current, t);
       camera.quaternion.slerpQuaternions(fpsCamQuat.current, convTargetQuat.current, t);
     }
