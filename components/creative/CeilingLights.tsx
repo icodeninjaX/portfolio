@@ -37,6 +37,14 @@ function Fixture({ position }: { position: [number, number, number] }) {
           toneMapped={false}
         />
       </mesh>
+      {/* Actual point light casting downward */}
+      <pointLight
+        position={[0, -0.15, 0]}
+        intensity={0.6}
+        color="#fff5e6"
+        distance={8}
+        decay={2}
+      />
     </group>
   );
 }

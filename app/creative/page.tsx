@@ -38,7 +38,9 @@ import { OfficeDoors } from "@/components/creative/OfficeDoors";
 import { FPSHands, WeaponType } from "@/components/creative/FPSHands";
 import { WaterProjectile } from "@/components/creative/WaterProjectile";
 import { ConversationOverlay } from "@/components/creative/ConversationOverlay";
+import { RemotePlayers } from "@/components/creative/RemotePlayers";
 import { NPC_DIALOGUES } from "@/lib/npcDialogue";
+import { useMultiplayer } from "@/lib/useMultiplayer";
 
 interface Ball {
   id: number;
@@ -85,11 +87,39 @@ export default function CreativePage() {
   const npcPositionsRef = useRef(new Map<string, THREE.Vector3>());
   const talkingToRef = useRef<string | null>(null);
   const nearbyNPCRef = useRef<string | null>(null);
+  const attackingRef = useRef(false);
+  const remotePlayerPositionsRef = useRef(new Map<string, THREE.Vector3>());
 
   // Keep refs in sync for use in key handlers
   talkingToRef.current = talkingTo;
   nearbyNPCRef.current = nearbyNPC;
   weaponRef.current = weapon;
+  attackingRef.current = attacking;
+
+  // Auto-generated player name
+  const [playerName] = useState(() => {
+    const adjectives = ["Swift", "Bold", "Calm", "Keen", "Wild", "Cool", "Brave", "Sharp"];
+    const nouns = ["Fox", "Wolf", "Hawk", "Bear", "Lynx", "Owl", "Deer", "Crow"];
+    return `${adjectives[Math.floor(Math.random() * adjectives.length)]}${nouns[Math.floor(Math.random() * nouns.length)]}`;
+  });
+
+  // Multiplayer
+  const {
+    connected,
+    playerCount,
+    remotePlayersRef,
+    sendShot,
+    sendHit,
+    remoteShots,
+    remoteHits,
+    removeRemoteShot,
+  } = useMultiplayer({
+    charPosRef,
+    yawRef,
+    weaponRef,
+    attackingRef,
+    playerName,
+  });
 
   useEffect(() => {
     const onChange = () => {
@@ -148,10 +178,20 @@ export default function CreativePage() {
           const dz = npcPos.z - charPosRef.current.z;
           const dist = Math.sqrt(dx * dx + dz * dz);
           if (dist > range) return;
-          // Check if NPC is roughly in front of player (dot product)
           const dot = (dx * fwdX + dz * fwdZ) / (dist || 1);
           if (dot > 0.3) {
             triggerNPCHit(name);
+          }
+        });
+        // Melee hit detection against remote players
+        remotePlayerPositionsRef.current.forEach((playerPos, id) => {
+          const dx = playerPos.x - charPosRef.current.x;
+          const dz = playerPos.z - charPosRef.current.z;
+          const dist = Math.sqrt(dx * dx + dz * dz);
+          if (dist > range) return;
+          const dot = (dx * fwdX + dz * fwdZ) / (dist || 1);
+          if (dot > 0.3) {
+            sendHit(id);
           }
         });
       }
@@ -174,6 +214,7 @@ export default function CreativePage() {
           ...prev,
           { id: Date.now() + Math.random(), startPos: start, direction: dir },
         ]);
+        sendShot(start, dir);
       }
     };
 
@@ -184,6 +225,10 @@ export default function CreativePage() {
   const handleWaterShotDone = useCallback((id: number) => {
     setWaterShots((prev) => prev.filter((s) => s.id !== id));
   }, []);
+
+  const handleHitPlayer = useCallback((id: string) => {
+    sendHit(id);
+  }, [sendHit]);
 
   const triggerNPCHit = useCallback((name: string) => {
     setHitNPCs((prev) => {
@@ -368,6 +413,11 @@ export default function CreativePage() {
               onNearbyNPCChange={handleNearbyNPCChange}
               hitNPCs={hitNPCs}
             />
+            <RemotePlayers
+              remotePlayersRef={remotePlayersRef}
+              remoteHits={remoteHits}
+              remotePlayerPositionsRef={remotePlayerPositionsRef}
+            />
             <Character
               startPosition={CHAR_START}
               positionRef={charPosRef}
@@ -396,6 +446,17 @@ export default function CreativePage() {
               onDone={() => handleWaterShotDone(shot.id)}
               npcPositionsRef={npcPositionsRef}
               onHitNPC={triggerNPCHit}
+              remotePlayerPositionsRef={remotePlayerPositionsRef}
+              onHitPlayer={handleHitPlayer}
+            />
+          ))}
+          {/* Remote water projectiles (visual only, no hit detection on receiver) */}
+          {remoteShots.map((shot) => (
+            <WaterProjectile
+              key={shot.id}
+              startPos={shot.startPos}
+              direction={shot.direction}
+              onDone={() => removeRemoteShot(shot.id)}
             />
           ))}
           <PostEffects />
@@ -408,6 +469,9 @@ export default function CreativePage() {
         talkingTo={talkingTo}
         weapon={weapon}
         onWeaponChange={setWeapon}
+        connected={connected}
+        playerCount={playerCount}
+        playerName={playerName}
       />
 
       {/* Conversation overlay */}

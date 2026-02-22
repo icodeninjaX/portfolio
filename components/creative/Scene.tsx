@@ -31,6 +31,11 @@ export function Scene({
   const transitionRef = useRef(0); // 0 = FPS, 1 = conversation
   const fpsCamQuat = useRef(new THREE.Quaternion());
 
+  // Head bob state
+  const prevCharPos = useRef(new THREE.Vector3());
+  const bobTimer = useRef(0);
+  const bobAmount = useRef(0);
+
   // Cached conversation camera target — computed once when conversation starts
   const convTargetPos = useRef(new THREE.Vector3());
   const convTargetQuat = useRef(new THREE.Quaternion());
@@ -109,10 +114,28 @@ export function Scene({
     }
     const t = smoothstep(transitionRef.current);
 
+    // Head bob: detect walking from position delta
+    const dx = charPosRef.current.x - prevCharPos.current.x;
+    const dz = charPosRef.current.z - prevCharPos.current.z;
+    const isWalking = Math.abs(dx) + Math.abs(dz) > 0.001;
+    prevCharPos.current.copy(charPosRef.current);
+
+    const targetBob = isWalking ? 1 : 0;
+    bobAmount.current = THREE.MathUtils.lerp(bobAmount.current, targetBob, delta * 8);
+
+    if (bobAmount.current > 0.01) {
+      bobTimer.current += delta * 9; // 9 Hz brisk walk cadence
+    } else {
+      bobTimer.current = 0;
+    }
+
+    const bobY = Math.sin(bobTimer.current) * 0.04 * bobAmount.current;
+    const bobX = Math.cos(bobTimer.current * 0.5) * 0.02 * bobAmount.current;
+
     // FPS camera
     const fpsPos = new THREE.Vector3(
-      charPosRef.current.x,
-      charPosRef.current.y + 2.2,
+      charPosRef.current.x + bobX,
+      charPosRef.current.y + 2.2 + bobY,
       charPosRef.current.z
     );
     const fpsEuler = new THREE.Euler(pitchRef.current, yawRef.current, 0, "YXZ");
@@ -135,13 +158,13 @@ export function Scene({
 
   return (
     <>
-      {/* Warm ambient fill */}
-      <ambientLight intensity={0.5} color="#fff8f0" />
+      {/* Warm ambient fill (reduced to let ceiling lights shine) */}
+      <ambientLight intensity={0.3} color="#fff8f0" />
 
       {/* Sunlight from above-left (through windows) */}
       <directionalLight
         position={[-10, 12, -5]}
-        intensity={1.2}
+        intensity={1.0}
         color="#fff5e6"
         castShadow
       />
@@ -153,8 +176,8 @@ export function Scene({
         color="#e8f0ff"
       />
 
-      {/* Overhead office light */}
-      <pointLight position={[0, 4.5, 0]} intensity={0.8} color="#ffffff" distance={20} />
+      {/* Overhead office light (reduced — ceiling fixtures now provide distributed light) */}
+      <pointLight position={[0, 4.5, 0]} intensity={0.3} color="#ffffff" distance={20} />
 
       {/* Sky hemisphere light */}
       <hemisphereLight

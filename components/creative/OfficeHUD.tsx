@@ -33,9 +33,12 @@ interface OfficeHUDProps {
   talkingTo?: string | null;
   weapon?: WeaponType;
   onWeaponChange?: (weapon: WeaponType) => void;
+  connected?: boolean;
+  playerCount?: number;
+  playerName?: string;
 }
 
-export function OfficeHUD({ activeSection, pointerLocked, nearbyNPC, talkingTo, weapon = "fists", onWeaponChange }: OfficeHUDProps) {
+export function OfficeHUD({ activeSection, pointerLocked, nearbyNPC, talkingTo, weapon = "fists", onWeaponChange, connected, playerCount, playerName }: OfficeHUDProps) {
   const color = activeSection ? SECTION_COLORS[activeSection] || "#2563eb" : null;
 
   return (
@@ -62,6 +65,44 @@ export function OfficeHUD({ activeSection, pointerLocked, nearbyNPC, talkingTo, 
       >
         &larr; Back to Resume
       </Link>
+
+      {/* Multiplayer status badge - below back button */}
+      {connected !== undefined && (
+        <div
+          style={{
+            position: "absolute",
+            top: 64,
+            left: 24,
+            fontSize: 12,
+            fontFamily: "system-ui, -apple-system, sans-serif",
+            padding: "5px 12px",
+            borderRadius: 6,
+            background: connected ? "rgba(34, 197, 94, 0.9)" : "rgba(239, 68, 68, 0.9)",
+            color: "#ffffff",
+            fontWeight: 500,
+            zIndex: 20,
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
+          <span
+            style={{
+              width: 7,
+              height: 7,
+              borderRadius: "50%",
+              background: connected ? "#bbf7d0" : "#fecaca",
+              display: "inline-block",
+            }}
+          />
+          {connected
+            ? `Online: ${playerCount ?? 1} player${(playerCount ?? 1) !== 1 ? "s" : ""}`
+            : "Connecting..."}
+          {playerName && connected && (
+            <span style={{ opacity: 0.7, marginLeft: 4 }}>({playerName})</span>
+          )}
+        </div>
+      )}
 
       {/* Active section label - top center */}
       {activeSection && color && (

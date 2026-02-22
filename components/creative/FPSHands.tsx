@@ -126,7 +126,7 @@ function Fist({ side }: { side: "left" | "right" }) {
 }
 
 /* ── Knife ── */
-function KnifeModel() {
+export function KnifeModel() {
   return (
     <group rotation={[-0.3, 0, 0]}>
       {/* Pommel (end cap) */}
@@ -193,7 +193,7 @@ function KnifeModel() {
 }
 
 /* ── Water Gun ── */
-function WaterGunModel() {
+export function WaterGunModel() {
   return (
     <group rotation={[-0.15, 0, 0]}>
       {/* Receiver / main body */}

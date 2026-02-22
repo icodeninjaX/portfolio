@@ -10,13 +10,15 @@ interface WaterProjectileProps {
   onDone: () => void;
   npcPositionsRef?: MutableRefObject<Map<string, THREE.Vector3>>;
   onHitNPC?: (name: string) => void;
+  remotePlayerPositionsRef?: MutableRefObject<Map<string, THREE.Vector3>>;
+  onHitPlayer?: (id: string) => void;
 }
 
 const SPEED = 25;
 const MAX_DIST = 30;
 const HIT_RADIUS = 1.2;
 
-export function WaterProjectile({ startPos, direction, onDone, npcPositionsRef, onHitNPC }: WaterProjectileProps) {
+export function WaterProjectile({ startPos, direction, onDone, npcPositionsRef, onHitNPC, remotePlayerPositionsRef, onHitPlayer }: WaterProjectileProps) {
   const groupRef = useRef<THREE.Group>(null);
   const traveled = useRef(0);
   const hasHit = useRef(false);
@@ -43,6 +45,22 @@ export function WaterProjectile({ startPos, direction, onDone, npcPositionsRef, 
         if (dist < HIT_RADIUS) {
           hasHit.current = true;
           onHitNPC(name);
+        }
+      });
+    }
+
+    // Check remote player proximity for hit detection
+    if (!hasHit.current && remotePlayerPositionsRef && onHitPlayer) {
+      const pos = groupRef.current.position;
+      remotePlayerPositionsRef.current.forEach((playerPos, id) => {
+        if (hasHit.current) return;
+        const dx = pos.x - playerPos.x;
+        const dy = pos.y - (playerPos.y + 1.2);
+        const dz = pos.z - playerPos.z;
+        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        if (dist < HIT_RADIUS) {
+          hasHit.current = true;
+          onHitPlayer(id);
         }
       });
     }

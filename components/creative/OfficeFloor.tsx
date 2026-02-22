@@ -7,18 +7,28 @@ const GROUT_WIDTH = 0.04;
 const FLOOR_EXTENT = 15; // -15 to +15
 const TILE_STEP = TILE_SIZE + GROUT_WIDTH;
 
-const TILE_COLORS = ["#e8e0d4", "#e2dace", "#ded5c8", "#e5ddd2"];
+const TILE_VARIANTS = [
+  { color: "#e8e0d4", roughness: 0.45, metalness: 0.05 },
+  { color: "#e2dace", roughness: 0.55, metalness: 0.03 },
+  { color: "#ded5c8", roughness: 0.40, metalness: 0.06 },
+  { color: "#e5ddd2", roughness: 0.50, metalness: 0.04 },
+  { color: "#dfd7cb", roughness: 0.48, metalness: 0.05 },
+  { color: "#e6ded3", roughness: 0.42, metalness: 0.04 },
+];
 
 export function OfficeFloor() {
   const tiles = useMemo(() => {
-    const result: { x: number; z: number; color: string }[] = [];
+    const result: { x: number; z: number; color: string; roughness: number; metalness: number }[] = [];
     let idx = 0;
     for (let x = -FLOOR_EXTENT + TILE_SIZE / 2; x < FLOOR_EXTENT; x += TILE_STEP) {
       for (let z = -FLOOR_EXTENT + TILE_SIZE / 2; z < FLOOR_EXTENT; z += TILE_STEP) {
+        const variant = TILE_VARIANTS[idx % TILE_VARIANTS.length];
         result.push({
           x,
           z,
-          color: TILE_COLORS[idx % TILE_COLORS.length],
+          color: variant.color,
+          roughness: variant.roughness,
+          metalness: variant.metalness,
         });
         idx++;
       }
@@ -45,8 +55,8 @@ export function OfficeFloor() {
           <planeGeometry args={[TILE_SIZE, TILE_SIZE]} />
           <meshStandardMaterial
             color={tile.color}
-            roughness={0.6}
-            metalness={0.05}
+            roughness={tile.roughness}
+            metalness={tile.metalness}
           />
         </mesh>
       ))}

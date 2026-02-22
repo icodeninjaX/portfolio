@@ -11,12 +11,16 @@ function WindowPane({ position }: { position: [number, number, number] }) {
       {/* Glass */}
       <mesh>
         <planeGeometry args={[3.5, 2.5]} />
-        <meshStandardMaterial
-          color="#a8d8ea"
+        <meshPhysicalMaterial
+          color="#c8e8f8"
           transparent
-          opacity={0.35}
-          roughness={0.1}
+          opacity={0.15}
+          roughness={0.05}
           metalness={0.1}
+          transmission={0.85}
+          thickness={0.1}
+          ior={1.5}
+          envMapIntensity={1.0}
         />
       </mesh>
       {/* Frame */}
