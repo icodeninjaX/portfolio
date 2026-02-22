@@ -1,4 +1,5 @@
 {
   "name": "portfolio-multiplayer",
-  "main": "party/game.ts"
+  "main": "party/game.ts",
+  "compatibilityDate": "2026-02-22"
 }
