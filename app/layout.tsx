@@ -1,25 +1,24 @@
 import type { Metadata } from "next";
-import { Poppins, Geist_Mono, Caveat } from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
-  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
-const geistMono = Geist_Mono({
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
-});
-
-const caveat = Caveat({
-  variable: "--font-caveat",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "700"],
 });
 
 const siteUrl = "https://keithvergara.dev";
@@ -75,10 +74,13 @@ function JsonLd() {
     email: "mailto:kdv062997@gmail.com",
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Las Piñas City",
+      addressLocality: "Las Pinas City",
       addressCountry: "PH",
     },
-    sameAs: ["https://github.com/icodeninjaX"],
+    sameAs: [
+      "https://github.com/icodeninjaX",
+      "https://www.linkedin.com/in/keithvergara-dev/",
+    ],
     knowsAbout: [
       "JavaScript",
       "TypeScript",
@@ -111,7 +113,7 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body
-        className={`${poppins.variable} ${geistMono.variable} ${caveat.variable} antialiased`}
+        className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
       >
         {children}
       </body>

@@ -30,7 +30,7 @@ export function ThemeToggle() {
       onClick={toggle}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
       title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-      className="print-hidden fixed right-4 top-4 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-card border border-border shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-lg)] sm:right-6 sm:top-6 sm:h-10 sm:w-10"
+      className="print-hidden fixed right-4 top-4 z-50 flex h-8 w-8 items-center justify-center border border-border bg-card text-muted transition-colors hover:text-foreground sm:right-6 sm:top-6"
     >
       {theme === "dark" ? (
         <svg
@@ -38,7 +38,7 @@ export function ThemeToggle() {
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
-          className="h-4 w-4 text-amber-400 sm:h-5 sm:w-5"
+          className="h-3.5 w-3.5"
         >
           <path d="M10 2a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 2zM10 15a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 15zM10 7a3 3 0 100 6 3 3 0 000-6zM15.657 5.404a.75.75 0 10-1.06-1.06l-1.061 1.06a.75.75 0 001.06 1.06l1.06-1.06zM6.464 14.596a.75.75 0 10-1.06-1.06l-1.06 1.06a.75.75 0 001.06 1.06l1.06-1.06zM18 10a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0118 10zM5 10a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 015 10zM14.596 15.657a.75.75 0 001.06-1.06l-1.06-1.061a.75.75 0 10-1.06 1.06l1.06 1.06zM5.404 6.464a.75.75 0 001.06-1.06l-1.06-1.06a.75.75 0 10-1.06 1.06l1.06 1.06z" />
         </svg>
@@ -48,7 +48,7 @@ export function ThemeToggle() {
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
-          className="h-4 w-4 text-slate-700 sm:h-5 sm:w-5"
+          className="h-3.5 w-3.5"
         >
           <path
             fillRule="evenodd"

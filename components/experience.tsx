@@ -5,19 +5,13 @@ type ExperienceItem = {
   location: string;
   startDate: string;
   endDate: string;
-  highlights: string[];
+  description: string;
+  tech: string[];
 };
 
 type ExperienceProps = {
   items: ExperienceItem[];
 };
-
-const colors = [
-  "bg-blue-500/15 text-blue-600",
-  "bg-violet-500/15 text-violet-600",
-  "bg-rose-500/15 text-rose-600",
-  "bg-emerald-500/15 text-emerald-600",
-];
 
 function getDuration(start: string, end: string): string {
   const parseDate = (s: string) => {
@@ -45,66 +39,45 @@ function getDuration(start: string, end: string): string {
 
 export function Experience({ items }: ExperienceProps) {
   return (
-    <section
-      id="experience"
-      className="rounded-xl bg-card p-4 shadow-[var(--shadow)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)] sm:p-6"
-    >
-      <h2 className="section-heading mb-4 text-xs font-semibold uppercase tracking-widest text-accent sm:mb-5">
+    <section id="experience" className="section-box">
+      <h2 className="section-heading mb-5 text-xl text-accent sm:mb-6 sm:text-2xl">
         Experience
       </h2>
-      <div className="relative space-y-0">
+      <div className="space-y-4">
         {items.map((item, i) => {
           const duration = getDuration(item.startDate, item.endDate);
 
           return (
-            <div key={i} className="relative pb-5 pl-5 last:pb-0 sm:pb-6 sm:pl-6">
-              {/* Timeline line */}
-              {i < items.length - 1 && (
-                <div className="absolute left-[5px] top-[10px] h-full w-px bg-border" />
-              )}
-              {/* Timeline dot — pulses if current role */}
-              <div className="absolute left-0 top-[6px] h-[11px] w-[11px] rounded-full border-2 border-accent bg-card" />
-              {item.endDate === "Present" && (
-                <div className="animate-pulse-dot absolute left-0 top-[6px] h-[11px] w-[11px] rounded-full bg-accent/30" />
-              )}
-
-              <div className="flex items-start gap-3">
-                {/* Growth stage avatar */}
-                <div
-                  className={`hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg sm:flex ${colors[i % colors.length]}`}
-                  aria-hidden="true"
-                  title={i === 0 ? "Current role" : "Starting out"}
-                >
-                  {/* Newest role = most "grown", last role = baby */}
-                  {i === items.length - 1 ? "👶" : i === 0 ? "🧑‍💻" : "🧑"}
+            <div
+              key={i}
+              className="rounded-lg border border-border-hover p-4 sm:p-5"
+            >
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                <div>
+                  <h3 className="font-display text-sm font-semibold text-foreground sm:text-base">
+                    {item.role}
+                  </h3>
+                  <p className="font-display text-xs text-muted sm:text-sm">
+                    {item.company} &middot; {item.location}
+                  </p>
                 </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                    <h3 className="text-sm font-semibold sm:text-[15px]">{item.role}</h3>
-                    <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent sm:text-[11px]">
-                      {duration}
-                    </span>
-                  </div>
-                  <div className="mt-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                    <p className="text-xs text-muted-light sm:text-sm">
-                      {item.company} &middot; {item.location}
-                    </p>
-                    <span className="text-[11px] font-medium text-muted-light sm:text-xs">
-                      {item.startDate} &ndash; {item.endDate}
-                    </span>
-                  </div>
-                  <ul className="mt-2 space-y-1 sm:mt-2.5 sm:space-y-1.5">
-                    {item.highlights.map((h, j) => (
-                      <li
-                        key={j}
-                        className="relative pl-3 text-xs leading-relaxed text-muted before:absolute before:left-0 before:top-[7px] before:h-1 before:w-1 before:rounded-full before:bg-muted-light sm:pl-4 sm:text-sm sm:before:top-[9px]"
-                      >
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
+                <div className="flex items-center gap-2 font-display text-xs text-muted-light sm:text-sm">
+                  <span>{item.startDate} &ndash; {item.endDate}</span>
+                  <span className="font-mono text-[11px] text-foreground/50">{duration}</span>
                 </div>
+              </div>
+              <p className="mt-3 font-display text-[11px] leading-relaxed text-foreground/70 text-justify sm:text-xs">
+                {item.description}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {item.tech.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full border border-tag-border bg-tag-bg px-2 py-px font-display text-[9px] font-medium text-tag-text sm:text-[10px]"
+                  >
+                    {t}
+                  </span>
+                ))}
               </div>
             </div>
           );

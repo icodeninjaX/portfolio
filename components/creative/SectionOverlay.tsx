@@ -69,13 +69,9 @@ function ExperienceContent() {
           <p style={{ fontSize: 12, color: "#6b7280", marginBottom: 6 }}>
             {exp.company} &bull; {exp.startDate} – {exp.endDate}
           </p>
-          <ul style={{ margin: 0, paddingLeft: 16, listStyleType: "disc" }}>
-            {exp.highlights.map((h, i) => (
-              <li key={i} style={{ fontSize: 12, lineHeight: 1.6, color: "#4b5563", marginBottom: 4 }}>
-                {h}
-              </li>
-            ))}
-          </ul>
+          <p style={{ fontSize: 12, lineHeight: 1.6, color: "#4b5563" }}>
+            {exp.description}
+          </p>
         </div>
       ))}
     </div>

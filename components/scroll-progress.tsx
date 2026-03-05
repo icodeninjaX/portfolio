@@ -23,10 +23,10 @@ export function ScrollProgress() {
       aria-valuenow={Math.round(progress)}
       aria-valuemin={0}
       aria-valuemax={100}
-      className="print-hidden fixed left-0 top-0 z-50 h-0.5 w-full bg-border/50"
+      className="print-hidden fixed left-0 top-0 z-50 h-px w-full"
     >
       <div
-        className="h-full bg-gradient-to-r from-accent to-accent-secondary"
+        className="h-full bg-accent"
         style={{ width: `${progress}%` }}
       />
     </div>

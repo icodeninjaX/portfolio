@@ -1,73 +1,99 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { resumeData } from "@/lib/data";
+import { LuGraduationCap, LuMapPin, LuMail, LuLayers } from "react-icons/lu";
 
 type HeaderProps = {
   data: typeof resumeData;
 };
 
+const titles = [
+  "Full-Stack Web Developer",
+  "Information Systems",
+  "Problem Solver",
+];
+
 export function Header({ data }: HeaderProps) {
+  const [titleIndex, setTitleIndex] = useState(0);
+  const [animState, setAnimState] = useState<"enter" | "exit">("enter");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimState("exit");
+      setTimeout(() => {
+        setTitleIndex((prev) => (prev + 1) % titles.length);
+        setAnimState("enter");
+      }, 300);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <header className="header-aurora rounded-xl bg-card p-4 shadow-[var(--shadow-md)] sm:p-8">
-      <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex gap-3 items-center sm:gap-4 sm:items-start">
-          <div className="profile-ring animate-scale-in shrink-0">
-            <Image
-              src="/profile.jpg"
-              alt={data.name}
-              width={80}
-              height={80}
-              className="h-14 w-14 rounded-full object-cover sm:h-20 sm:w-20"
-              priority
-            />
-          </div>
+    <header className="section-box">
+      <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex gap-4 items-center sm:items-start">
+          <Image
+            src="/profile.jpg"
+            alt={data.name}
+            width={80}
+            height={80}
+            className="h-16 w-16 rounded-full object-cover transition-all duration-500 sm:h-20 sm:w-20"
+            priority
+          />
           <div>
-            <h1 className="animate-gradient-shift bg-gradient-to-r from-accent via-accent-secondary to-accent bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-4xl">
-              <span className="font-mono text-lg font-light text-muted-light sm:text-2xl">&lt;</span>
-              {" "}{data.name}{" "}
-              <span className="font-mono text-lg font-light text-muted-light sm:text-2xl">/&gt;</span>
+            <h1
+              className="glitch-name text-2xl text-foreground sm:text-3xl"
+              data-text={data.name}
+            >
+              {data.name}
             </h1>
-            <div className="mt-0.5 flex flex-wrap items-center gap-2 sm:mt-1">
-              <p className="text-base font-medium text-foreground/80 sm:text-lg">
-                {data.title}
-              </p>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-medium text-emerald-600 sm:text-xs">
-                <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                Available
-              </span>
+            <div className="mt-1.5">
+              <div className="h-4 overflow-hidden">
+                <p
+                  key={titleIndex}
+                  className={`font-display text-[11px] font-medium tracking-tight text-accent sm:text-xs ${
+                    animState === "enter" ? "title-enter" : "title-exit"
+                  }`}
+                >
+                  {titles[titleIndex]}
+                </p>
+              </div>
             </div>
-            <p className="mt-0.5 text-xs text-muted-light sm:text-sm">
-              {data.location}
-            </p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs sm:flex-col sm:gap-1.5 sm:text-sm sm:items-end">
-          <a
-            href={`mailto:${data.email}`}
-            className="text-muted transition-colors hover:text-accent"
-          >
-            {data.email}
-          </a>
-          <span className="text-muted">{data.phone}</span>
-          {data.github && (
-            <a
-              href={`https://${data.github}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted transition-colors hover:text-accent"
-            >
-              GitHub
-            </a>
-          )}
-          {data.linkedin && (
-            <a
-              href={`https://${data.linkedin}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted transition-colors hover:text-accent"
-            >
-              LinkedIn
-            </a>
-          )}
+
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
+          <span className="inline-flex w-fit items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-display text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            Open to Work
+          </span>
+
+          <div className="grid w-full grid-cols-2 gap-x-6 gap-y-2.5 font-display sm:w-auto">
+            <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
+              <LuGraduationCap className="h-3.5 w-3.5 shrink-0 text-muted-light" />
+              <span className="text-[11px] text-muted sm:text-xs">Information Systems</span>
+            </div>
+            <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
+              <LuMapPin className="h-3.5 w-3.5 shrink-0 text-muted-light" />
+              <span className="text-[11px] text-muted sm:text-xs">Based on Philippines</span>
+            </div>
+            <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
+              <LuMail className="h-3.5 w-3.5 shrink-0 text-muted-light" />
+              <a
+                href={`mailto:${data.email}`}
+                className="text-[11px] text-muted transition-colors hover:text-accent sm:text-xs"
+              >
+                {data.email}
+              </a>
+            </div>
+            <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
+              <LuLayers className="h-3.5 w-3.5 shrink-0 text-muted-light" />
+              <span className="text-[11px] text-muted sm:text-xs">5 working projects</span>
+            </div>
+          </div>
         </div>
       </div>
     </header>
