@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { resumeData } from "@/lib/data";
 import { LuGraduationCap, LuMapPin, LuMail, LuLayers } from "react-icons/lu";
@@ -62,13 +63,21 @@ export function Header({ data }: HeaderProps) {
         </div>
 
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
-          <span className="open-work-badge inline-flex w-fit items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-display text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
-            <span className="relative flex h-2 w-2 items-center justify-center">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/70" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
+            <span className="open-work-badge inline-flex w-fit items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-display text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+              <span className="relative flex h-2 w-2 items-center justify-center">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/70" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              </span>
+              Open to Work
             </span>
-            Open to Work
-          </span>
+            <Link
+              href="/creative"
+              className="print-hidden inline-flex items-center justify-center rounded-full border border-border-hover px-2.5 py-1 font-display text-[10px] text-foreground transition-colors hover:bg-section-bg sm:text-[11px]"
+            >
+              Enter our office (desktop only)
+            </Link>
+          </div>
 
           <div className="grid w-full grid-cols-2 gap-x-6 gap-y-2.5 font-display sm:w-auto">
             <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">

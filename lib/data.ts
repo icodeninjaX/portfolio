@@ -11,6 +11,11 @@ export const resumeData = {
   summary:
     "Im a full-stack web developer with hands-on experience building internal tools, POS systems, and real-time monitoring platforms. Proficient in PHP, JavaScript, TypeScript, and modern frameworks like React and Next.js. Passionate about building practical, production-grade applications — from AI-powered financial tools to cooperative management systems.",
 
+  quote: {
+    text: "The biggest risk is not taking any risk.",
+    author: "Mark Zuckerberg",
+  },
+
   experience: [
     {
       company: "X-META Technologies Inc.",
@@ -20,7 +25,7 @@ export const resumeData = {
       startDate: "Dec 2024",
       endDate: "Present",
       description: "Building a real-time device monitoring platform with dashboard interfaces for order tracking, ads management, and GPS-based device location mapping.",
-      tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL", "Ajax", "HTMX"],
+      tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
     },
     {
       company: "Internship",
@@ -76,7 +81,7 @@ export const resumeData = {
         "Web-based internal tool for X-META Technologies Inc. Real-time monitoring of online/offline devices, order tracking, and ads monitoring via a dashboard with GPS mapping for live device location.",
       details:
         "Dashboard-style interface featuring real-time device status monitoring (online/offline), order lifecycle tracking, advertisement management, and interactive GPS mapping for locating devices. Built with MVC architecture for clean separation of concerns.",
-      tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL", "Ajax", "HTMX"],
+      tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
       status: "current" as const,
       link: "",
     },
@@ -96,7 +101,7 @@ export const resumeData = {
         "AI-powered budget tracker for personal financial management. Features AI transaction parsing, receipt OCR, intelligent financial insights, dual AI integration, duplicate detection algorithms, and Google Auth.",
       details:
         "Production-grade architecture with dual AI integration for transaction parsing and receipt OCR. Implements sophisticated duplicate detection algorithms to prevent double-counting. Comprehensive financial tracking with category breakdown, spending trends, and AI-generated insights. Secured with Google OAuth authentication.",
-      tech: ["React", "TypeScript", "Supabase"],
+      tech: ["React", "TypeScript", "Tailwind CSS", "Supabase"],
       status: "personal" as const,
       link: "https://github.com/icodeninjaX",
       images: ["/images/Tracky.png"],
@@ -107,7 +112,7 @@ export const resumeData = {
         "Full-stack financial management platform for cooperative organizations with real-time sync, automated calculations, and mobile-first design.",
       details:
         "Handles member management, loan processing, savings tracking, and financial reporting for cooperatives. Features automated interest calculations, real-time data synchronization across devices, comprehensive validation with Zod schemas, and full test coverage with Jest.",
-      tech: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS", "PostgreSQL", "Jest", "Zod"],
+      tech: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS"],
       status: "personal" as const,
       link: "https://github.com/icodeninjaX",
     },

@@ -103,7 +103,7 @@ export function Skills({ skills }: SkillsProps) {
   return (
     <section id="skills" className="section-box overflow-hidden">
       <h2 className="section-heading mb-4 text-xl text-accent sm:mb-5 sm:text-2xl">
-        Skills
+        Tech-Stack
       </h2>
       <div className="flex flex-col gap-2">
         <MarqueeRow skills={row1} />

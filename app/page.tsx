@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { resumeData } from "@/lib/data";
 import { Header } from "@/components/header";
 import { Summary } from "@/components/summary";
@@ -16,12 +15,6 @@ export default function Home() {
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
-      <Link
-        href="/creative"
-        className="print-hidden fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-sm bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-80"
-      >
-        Enter 3D
-      </Link>
       <ScrollProgress />
       <StickyNav />
       <main id="main-content" role="main" className="mx-auto max-w-2xl px-5 pb-16 pt-20 sm:px-8 sm:pt-24">
