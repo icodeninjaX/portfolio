@@ -11,22 +11,20 @@ type HeaderProps = {
 
 const titles = [
   "Full-Stack Web Developer",
-  "Information Systems",
-  "Problem Solver",
+  "Let's build your website",
+  "Building Solutions",
+  "Making your Life Easier",
+  "Let's automate your business",
+  "Let's track your sales",
 ];
 
 export function Header({ data }: HeaderProps) {
   const [titleIndex, setTitleIndex] = useState(0);
-  const [animState, setAnimState] = useState<"enter" | "exit">("enter");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setAnimState("exit");
-      setTimeout(() => {
-        setTitleIndex((prev) => (prev + 1) % titles.length);
-        setAnimState("enter");
-      }, 300);
-    }, 4000);
+      setTitleIndex((prev) => (prev + 1) % titles.length);
+    }, 2200);
 
     return () => clearInterval(interval);
   }, []);
@@ -54,9 +52,7 @@ export function Header({ data }: HeaderProps) {
               <div className="h-4 overflow-hidden">
                 <p
                   key={titleIndex}
-                  className={`font-display text-[11px] font-medium tracking-tight text-accent sm:text-xs ${
-                    animState === "enter" ? "title-enter" : "title-exit"
-                  }`}
+                  className="title-enter whitespace-nowrap font-display text-[11px] font-medium tracking-tight text-accent sm:text-xs"
                 >
                   {titles[titleIndex]}
                 </p>
@@ -66,8 +62,11 @@ export function Header({ data }: HeaderProps) {
         </div>
 
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
-          <span className="inline-flex w-fit items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-display text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          <span className="open-work-badge inline-flex w-fit items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-display text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+            <span className="relative flex h-2 w-2 items-center justify-center">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/70" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            </span>
             Open to Work
           </span>
 

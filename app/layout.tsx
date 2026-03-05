@@ -113,6 +113,7 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body
+        suppressHydrationWarning
         className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
       >
         {children}
