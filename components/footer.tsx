@@ -69,7 +69,6 @@ export function Footer({ data }: FooterProps) {
                 <span>LinkedIn</span>
               </span>
             )}
-
           </div>
         </div>
       </footer>

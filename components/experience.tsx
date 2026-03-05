@@ -58,7 +58,8 @@ export function Experience({ items }: ExperienceProps) {
                     {item.role}
                   </h3>
                   <p className="font-display text-xs text-muted sm:text-sm">
-                    {item.company} &middot; {item.location}
+                    {item.company}
+                    {item.location ? <> &middot; {item.location}</> : null}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 font-display text-xs text-muted-light sm:text-sm">
