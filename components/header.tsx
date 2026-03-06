@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { resumeData } from "@/lib/data";
 import { LuGraduationCap, LuMapPin, LuMail, LuLayers } from "react-icons/lu";
@@ -71,12 +70,6 @@ export function Header({ data }: HeaderProps) {
               </span>
               Open to Work
             </span>
-            <Link
-              href="/creative"
-              className="print-hidden inline-flex items-center justify-center rounded-full border border-border-hover px-2.5 py-1 font-display text-[10px] text-foreground transition-colors hover:bg-section-bg sm:text-[11px]"
-            >
-              Enter our office (desktop only)
-            </Link>
           </div>
 
           <div className="grid w-full grid-cols-2 gap-x-6 gap-y-2.5 font-display sm:w-auto">

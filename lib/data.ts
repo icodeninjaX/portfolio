@@ -76,6 +76,7 @@ export const resumeData = {
 
   projects: [
     {
+      slug: "371admin",
       name: "371admin",
       description:
         "Web-based internal tool for X-META Technologies Inc. Real-time monitoring of online/offline devices, order tracking, and ads monitoring via a dashboard with GPS mapping for live device location.",
@@ -84,8 +85,23 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
       status: "current" as const,
       link: "",
+      images: [
+        "/images/371admin-maindashboard.png",
+        "/images/371admin-maindashboard-1.png",
+        "/images/371admin-odermonitoring-mainui.png",
+        "/images/371admin-backend-alldevicemonitoring.png",
+        "/images/371admin-backend-offlinedevices.png",
+        "/images/371admin-backend-notinstalled.png",
+        "/images/371admin-backend-simdata-monitoring.png",
+        "/images/371admin-ads-listbooking.png",
+        "/images/371admin-ads-bookingform.png",
+        "/images/371admin-ads-dailymonitoringreport.png",
+        "/images/371admin-ads-weeklymonitoring.png",
+        "/images/371admin-ads-playplancalculator.png",
+      ],
     },
     {
+      slug: "new-z1on-lpg",
       name: "New Z1on LPG POS + CMS",
       description:
         "Point-of-sale and content management system for an LPG company. Handles customers, orders, and branch operations. Integrated with Semaphore SMS API to auto-route orders to the nearest branch.",
@@ -94,8 +110,10 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
       status: "internship" as const,
       link: "",
+      images: [],
     },
     {
+      slug: "tracky",
       name: "TRACKY",
       description:
         "AI-powered budget tracker for personal financial management. Features AI transaction parsing, receipt OCR, intelligent financial insights, dual AI integration, duplicate detection algorithms, and Google Auth.",
@@ -103,10 +121,18 @@ export const resumeData = {
         "Production-grade architecture with dual AI integration for transaction parsing and receipt OCR. Implements sophisticated duplicate detection algorithms to prevent double-counting. Comprehensive financial tracking with category breakdown, spending trends, and AI-generated insights. Secured with Google OAuth authentication.",
       tech: ["React", "TypeScript", "Tailwind CSS", "Supabase"],
       status: "personal" as const,
-      link: "https://github.com/icodeninjaX",
-      images: ["/images/Tracky.png"],
+      link: "https://budget-tracker-two-inky.vercel.app/",
+      images: [
+        "/images/tracky-maindashboard.png",
+        "/images/tracky-transactions.png",
+        "/images/tracky-recurring.png",
+        "/images/tracky-budgets.png",
+        "/images/tracky-savings.png",
+        "/images/tracky-calendarview.png",
+      ],
     },
     {
+      slug: "coop-tracker",
       name: "Coop-Tracker",
       description:
         "Full-stack financial management platform for cooperative organizations with real-time sync, automated calculations, and mobile-first design.",
@@ -114,9 +140,18 @@ export const resumeData = {
         "Handles member management, loan processing, savings tracking, and financial reporting for cooperatives. Features automated interest calculations, real-time data synchronization across devices, comprehensive validation with Zod schemas, and full test coverage with Jest.",
       tech: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS"],
       status: "personal" as const,
-      link: "https://github.com/icodeninjaX",
+      link: "https://coop-tracker.vercel.app/",
+      images: [
+        "/images/coop-tracker-maindashboard.png",
+        "/images/coop-tracker-members.png",
+        "/images/coop-tracker-loans.png",
+        "/images/coop-tracker-ledger.png",
+        "/images/coop-tracker-shares.png",
+        "/images/coop-tracker-archives.png",
+      ],
     },
     {
+      slug: "plantpal",
       name: "PlantPal",
       description:
         "Gardening hobby tracker for logging watering, fertilizer schedules, and plant details including scientific names. Features plant identification by photo. Currently available locally.",
@@ -125,6 +160,7 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "HTMX", "MySQL"],
       status: "personal" as const,
       link: "",
+      images: [],
     },
   ],
 };

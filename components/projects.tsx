@@ -1,6 +1,8 @@
-import { LuExternalLink } from "react-icons/lu";
+import Link from "next/link";
+import { LuExternalLink, LuArrowRight } from "react-icons/lu";
 
 type ProjectItem = {
+  slug: string;
   name: string;
   description: string;
   details: string;
@@ -30,17 +32,26 @@ export function Projects({ items }: ProjectsProps) {
               <h3 className="font-display text-sm font-semibold text-foreground sm:text-base">
                 {item.name}
               </h3>
-              {item.link && (
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/projects/${item.slug}`}
                   className="inline-flex items-center gap-1.5 rounded-full border border-border-hover px-3 py-1 font-display text-[10px] font-medium text-foreground transition-colors hover:bg-section-bg sm:text-[11px]"
                 >
-                  Live
-                  <LuExternalLink className="h-3 w-3" />
-                </a>
-              )}
+                  View
+                  <LuArrowRight className="h-3 w-3" />
+                </Link>
+                {item.link && (
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border-hover px-3 py-1 font-display text-[10px] font-medium text-foreground transition-colors hover:bg-section-bg sm:text-[11px]"
+                  >
+                    Live
+                    <LuExternalLink className="h-3 w-3" />
+                  </a>
+                )}
+              </div>
             </div>
 
             <p className="mt-2 font-display text-[10px] leading-relaxed text-foreground/70 text-justify sm:text-[11px]">
