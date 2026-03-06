@@ -58,10 +58,6 @@ export const metadata: Metadata = {
     description:
       "Full-stack web developer specializing in PHP, JavaScript, TypeScript, React, and Next.js.",
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
   robots: {
     index: true,
     follow: true,
