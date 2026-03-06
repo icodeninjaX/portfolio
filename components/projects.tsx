@@ -9,7 +9,7 @@ type ProjectItem = {
   tech: string[];
   status: "current" | "internship" | "personal";
   link: string;
-  images?: string[];
+  images?: (string | { src: string; label: string })[];
 };
 
 type ProjectsProps = {
