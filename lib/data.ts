@@ -47,6 +47,39 @@ export const resumeData = {
     },
   ],
 
+  journey: [
+    {
+      year: "College",
+      title: "First Steps into Programming",
+      description: "Started learning the fundamentals of programming during my BS in Information Systems. Got introduced to HTML, CSS, and basic JavaScript — and immediately got hooked on building things for the web.",
+    },
+    {
+      year: "2023",
+      title: "Internship — Real-World Experience",
+      description: "Landed an internship where I built a full POS and CMS system for an LPG company from scratch. This was my first taste of working with real business requirements — handling customer data, order processing, and integrating SMS APIs for branch routing.",
+    },
+    {
+      year: "2023–2024",
+      title: "Self-Learning & Personal Projects",
+      description: "After my internship, I doubled down on learning modern tools — React, Next.js, TypeScript, Tailwind CSS, and Supabase. Built personal projects like TRACKY (AI-powered budget tracker) and Coop-Tracker (cooperative management platform) to sharpen my skills and explore new technologies.",
+    },
+    {
+      year: "2024",
+      title: "Exploring AI & Modern Dev Tools",
+      description: "Started integrating AI into my workflow and projects — using Claude Code, Gemini, and OpenAI Codex for development. Built features like AI transaction parsing, receipt OCR, and intelligent financial insights into TRACKY.",
+    },
+    {
+      year: "Dec 2024",
+      title: "Joined X-META Technologies Inc.",
+      description: "Started my role as a Full-Stack Web Developer, building a real-time device monitoring platform with dashboard interfaces, order tracking, ads management, and GPS-based device location mapping.",
+    },
+    {
+      year: "Present",
+      title: "Continuing to Grow",
+      description: "Actively building, learning, and shipping. Focused on deepening my expertise in full-stack development, exploring new frameworks, and contributing to production-grade applications that solve real problems.",
+    },
+  ],
+
   education: [
     {
       institution: "Dr. Filemon C. Aguilar Memorial College of Las Piñas - IT Campus",

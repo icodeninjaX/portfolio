@@ -34,7 +34,7 @@ export function Header({ data }: HeaderProps) {
       <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex gap-4 items-center sm:items-start">
           <Image
-            src="/profile.jpg"
+            src="/profile.webp"
             alt={data.name}
             width={80}
             height={80}

@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { LuArrowRight } from "react-icons/lu";
+
 type ExperienceItem = {
   company: string;
   shortName: string;
@@ -40,9 +43,18 @@ function getDuration(start: string, end: string): string {
 export function Experience({ items }: ExperienceProps) {
   return (
     <section id="experience" className="section-box">
-      <h2 className="section-heading mb-5 text-xl text-accent sm:mb-6 sm:text-2xl">
-        Experience
-      </h2>
+      <div className="mb-5 flex items-center justify-between sm:mb-6">
+        <h2 className="section-heading text-xl text-accent sm:text-2xl">
+          Experience
+        </h2>
+        <Link
+          href="/experience"
+          className="inline-flex items-center gap-1.5 rounded-full border border-border-hover px-3 py-1 font-display text-[10px] font-medium text-foreground transition-colors hover:bg-section-bg sm:text-[11px]"
+        >
+          My journey
+          <LuArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
       <div className="space-y-4">
         {items.map((item, i) => {
           const duration = getDuration(item.startDate, item.endDate);
