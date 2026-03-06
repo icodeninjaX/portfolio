@@ -105,7 +105,7 @@ export function StickyNav() {
               alt="KV"
               width={28}
               height={28}
-              className="h-7 w-7 rounded-full object-cover"
+              className="h-7 w-7 rounded-full object-cover ring-1 ring-border-hover"
             />
           </button>
 
@@ -133,7 +133,6 @@ export function StickyNav() {
               }`}
             >
               <div className="relative h-4 w-4">
-                {/* Top line */}
                 <span
                   className={`absolute left-0 block h-[1.5px] rounded-full bg-foreground transition-all ease-[cubic-bezier(0.77,0,0.18,1)] ${
                     menuOpen
@@ -141,7 +140,6 @@ export function StickyNav() {
                       : "top-0.5 w-4 duration-500 delay-0 group-hover:w-3"
                   }`}
                 />
-                {/* Middle line */}
                 <span
                   className={`absolute left-0 top-1/2 block h-[1.5px] -translate-y-1/2 rounded-full bg-foreground transition-all ease-[cubic-bezier(0.77,0,0.18,1)] ${
                     menuOpen
@@ -149,7 +147,6 @@ export function StickyNav() {
                       : "w-2.5 opacity-100 duration-300 delay-150 group-hover:w-4"
                   }`}
                 />
-                {/* Bottom line */}
                 <span
                   className={`absolute left-0 block h-[1.5px] rounded-full bg-foreground transition-all ease-[cubic-bezier(0.77,0,0.18,1)] ${
                     menuOpen
