@@ -22,6 +22,15 @@
   --skills-bg: #111111;
   --skills-text: #f0f0f0;
   --skills-muted: #888888;
+  --desktop-grid-line: rgba(17, 17, 17, 0.06);
+  --desktop-glow-primary: rgba(247, 160, 75, 0.22);
+  --desktop-glow-secondary: rgba(35, 214, 255, 0.16);
+  --desktop-panel-top: rgba(255, 255, 255, 0.9);
+  --desktop-panel-bottom: rgba(255, 255, 255, 0.78);
+  --desktop-panel-border: rgba(255, 255, 255, 0.96);
+  --desktop-panel-edge: rgba(17, 17, 17, 0.12);
+  --desktop-shadow: 0 22px 60px rgba(15, 23, 42, 0.08);
+  --desktop-shadow-hover: 0 28px 80px rgba(15, 23, 42, 0.14);
 }
 
 /* ---- Dark theme ---- */
@@ -46,6 +55,15 @@
   --skills-bg: #0a0a0a;
   --skills-text: #f0f0f0;
   --skills-muted: #777777;
+  --desktop-grid-line: rgba(255, 255, 255, 0.06);
+  --desktop-glow-primary: rgba(255, 124, 69, 0.18);
+  --desktop-glow-secondary: rgba(76, 163, 255, 0.14);
+  --desktop-panel-top: rgba(22, 22, 22, 0.92);
+  --desktop-panel-bottom: rgba(10, 10, 10, 0.88);
+  --desktop-panel-border: rgba(255, 255, 255, 0.14);
+  --desktop-panel-edge: rgba(255, 255, 255, 0.18);
+  --desktop-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+  --desktop-shadow-hover: 0 28px 80px rgba(0, 0, 0, 0.42);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -70,6 +88,15 @@
     --skills-bg: #0a0a0a;
     --skills-text: #f0f0f0;
     --skills-muted: #777777;
+    --desktop-grid-line: rgba(255, 255, 255, 0.06);
+    --desktop-glow-primary: rgba(255, 124, 69, 0.18);
+    --desktop-glow-secondary: rgba(76, 163, 255, 0.14);
+    --desktop-panel-top: rgba(22, 22, 22, 0.92);
+    --desktop-panel-bottom: rgba(10, 10, 10, 0.88);
+    --desktop-panel-border: rgba(255, 255, 255, 0.14);
+    --desktop-panel-edge: rgba(255, 255, 255, 0.18);
+    --desktop-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+    --desktop-shadow-hover: 0 28px 80px rgba(0, 0, 0, 0.42);
   }
 }
 
@@ -437,6 +464,52 @@ body {
 @media (min-width: 640px) {
   .section-box {
     padding: 1.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-desktop-backdrop {
+    background:
+      radial-gradient(circle at top left, var(--desktop-glow-primary), transparent 28rem),
+      radial-gradient(circle at top right, var(--desktop-glow-secondary), transparent 26rem),
+      linear-gradient(180deg, transparent, var(--accent-subtle));
+  }
+
+  .home-desktop-grid {
+    background-image:
+      linear-gradient(var(--desktop-grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--desktop-grid-line) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: linear-gradient(to bottom, black, transparent 78%);
+  }
+
+  .home-shell .section-box {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background:
+      linear-gradient(180deg, var(--desktop-panel-top), var(--desktop-panel-bottom)) padding-box,
+      linear-gradient(135deg, var(--desktop-panel-border), var(--desktop-panel-edge)) border-box;
+    box-shadow: var(--desktop-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .home-shell .section-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), transparent 42%);
+    pointer-events: none;
+  }
+
+  .home-shell .section-box > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .home-shell .section-box:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--desktop-shadow-hover);
   }
 }
 

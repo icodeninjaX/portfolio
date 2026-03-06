@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { LuSun, LuMoon } from "react-icons/lu";
+import { resumeData } from "@/lib/data";
 
 const sections = [
   { id: "about", label: "About" },
@@ -94,27 +95,108 @@ export function StickyNav() {
           visible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         }`}
       >
-        <div className="mx-auto flex max-w-2xl items-center justify-between px-5 py-3 sm:px-8">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-2"
-            aria-label="Scroll to top"
-          >
-            <Image
-              src="/logo.webp"
-              alt="KV"
-              width={28}
-              height={28}
-              className="h-7 w-7 rounded-full object-cover ring-1 ring-border-hover"
-            />
-          </button>
+        <div className="mx-auto max-w-2xl px-5 py-3 sm:px-8 lg:max-w-7xl lg:px-8 lg:py-5 xl:px-12">
+          <div className="flex items-center justify-between lg:hidden">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="flex items-center gap-2"
+              aria-label="Scroll to top"
+            >
+              <Image
+                src="/logo.webp"
+                alt="KV"
+                width={28}
+                height={28}
+                className="h-7 w-7 rounded-full object-cover ring-1 ring-border-hover"
+              />
+            </button>
 
-          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
+              {theme && (
+                <button
+                  onClick={toggleTheme}
+                  aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-border-hover bg-card/80 text-muted backdrop-blur-xl transition-colors hover:text-foreground"
+                >
+                  {theme === "dark" ? (
+                    <LuSun className="h-3.5 w-3.5" />
+                  ) : (
+                    <LuMoon className="h-3.5 w-3.5" />
+                  )}
+                </button>
+              )}
+
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuOpen}
+                className={`group relative flex h-8 w-8 items-center justify-center rounded-full border border-border-hover bg-card/80 backdrop-blur-xl transition-transform duration-700 ease-[cubic-bezier(0.77,0,0.18,1)] ${
+                  menuOpen ? "rotate-180" : "rotate-0"
+                }`}
+              >
+                <div className="relative h-4 w-4">
+                  <span
+                    className={`absolute left-0 block h-[1.5px] rounded-full bg-foreground transition-all ease-[cubic-bezier(0.77,0,0.18,1)] ${
+                      menuOpen
+                        ? "top-1/2 w-4 -translate-y-1/2 rotate-45 duration-500 delay-100"
+                        : "top-0.5 w-4 duration-500 delay-0 group-hover:w-3"
+                    }`}
+                  />
+                  <span
+                    className={`absolute left-0 top-1/2 block h-[1.5px] -translate-y-1/2 rounded-full bg-foreground transition-all ease-[cubic-bezier(0.77,0,0.18,1)] ${
+                      menuOpen
+                        ? "w-0 translate-x-2 opacity-0 duration-300 delay-0"
+                        : "w-2.5 opacity-100 duration-300 delay-150 group-hover:w-4"
+                    }`}
+                  />
+                  <span
+                    className={`absolute left-0 block h-[1.5px] rounded-full bg-foreground transition-all ease-[cubic-bezier(0.77,0,0.18,1)] ${
+                      menuOpen
+                        ? "top-1/2 w-4 -translate-y-1/2 -rotate-45 duration-500 delay-100"
+                        : "bottom-0.5 w-3 duration-500 delay-0 group-hover:w-2.5"
+                    }`}
+                  />
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-3">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-border-hover bg-card/80 backdrop-blur-xl"
+              aria-label="Scroll to top"
+            >
+              <Image
+                src="/logo.webp"
+                alt="KV"
+                width={28}
+                height={28}
+                className="h-8 w-8 rounded-full object-cover ring-1 ring-border-hover"
+              />
+            </button>
+
+            <div className="flex items-center gap-1 rounded-full border border-border-hover bg-card/80 p-1.5 shadow-md backdrop-blur-xl">
+              {sections.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => scrollTo(section.id)}
+                  className={`rounded-full px-4 py-2 font-display text-xs font-medium transition-all ${
+                    active === section.id
+                      ? "bg-foreground text-background shadow-sm"
+                      : "text-muted hover:bg-foreground/5 hover:text-foreground"
+                  }`}
+                >
+                  {section.label}
+                </button>
+              ))}
+            </div>
+
             {theme && (
               <button
                 onClick={toggleTheme}
                 aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-border-hover bg-card/80 text-muted backdrop-blur-xl transition-colors hover:text-foreground"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border-hover bg-card/80 text-muted backdrop-blur-xl transition-colors hover:text-foreground"
               >
                 {theme === "dark" ? (
                   <LuSun className="h-3.5 w-3.5" />
@@ -124,45 +206,19 @@ export function StickyNav() {
               </button>
             )}
 
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
-              className={`group relative flex h-8 w-8 items-center justify-center rounded-full border border-border-hover bg-card/80 backdrop-blur-xl transition-transform duration-700 ease-[cubic-bezier(0.77,0,0.18,1)] ${
-                menuOpen ? "rotate-180" : "rotate-0"
-              }`}
+            <a
+              href={`mailto:${resumeData.email}`}
+              className="inline-flex h-10 items-center rounded-full border border-border-hover bg-card/80 px-4 font-display text-xs font-medium text-foreground backdrop-blur-xl transition-colors hover:bg-foreground hover:text-background"
             >
-              <div className="relative h-4 w-4">
-                <span
-                  className={`absolute left-0 block h-[1.5px] rounded-full bg-foreground transition-all ease-[cubic-bezier(0.77,0,0.18,1)] ${
-                    menuOpen
-                      ? "top-1/2 w-4 -translate-y-1/2 rotate-45 duration-500 delay-100"
-                      : "top-0.5 w-4 duration-500 delay-0 group-hover:w-3"
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 top-1/2 block h-[1.5px] -translate-y-1/2 rounded-full bg-foreground transition-all ease-[cubic-bezier(0.77,0,0.18,1)] ${
-                    menuOpen
-                      ? "w-0 translate-x-2 opacity-0 duration-300 delay-0"
-                      : "w-2.5 opacity-100 duration-300 delay-150 group-hover:w-4"
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 block h-[1.5px] rounded-full bg-foreground transition-all ease-[cubic-bezier(0.77,0,0.18,1)] ${
-                    menuOpen
-                      ? "top-1/2 w-4 -translate-y-1/2 -rotate-45 duration-500 delay-100"
-                      : "bottom-0.5 w-3 duration-500 delay-0 group-hover:w-2.5"
-                  }`}
-                />
-              </div>
-            </button>
+              Let&apos;s work
+            </a>
           </div>
         </div>
       </nav>
 
       {/* Overlay */}
       <div
-        className={`print-hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-500 ${
+        className={`print-hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-500 lg:hidden ${
           menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         onClick={() => setMenuOpen(false)}
@@ -170,7 +226,7 @@ export function StickyNav() {
 
       {/* Menu panel */}
       <div
-        className={`print-hidden fixed right-0 top-0 z-40 h-full w-72 border-l border-border-hover bg-card/95 backdrop-blur-2xl transition-all duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] ${
+        className={`print-hidden fixed right-0 top-0 z-40 h-full w-72 border-l border-border-hover bg-card/95 backdrop-blur-2xl transition-all duration-500 ease-[cubic-bezier(0.77,0,0.18,1)] lg:hidden ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

@@ -20,6 +20,48 @@ function formatLinkLabel(url: string) {
 export function Footer({ data }: FooterProps) {
   const githubUrl = normalizeExternalUrl(data.github);
   const linkedinUrl = normalizeExternalUrl(data.linkedin);
+  const contactLinks = (
+    <>
+      <a
+        href={`mailto:${data.email}`}
+        className="inline-flex items-center gap-2 font-display text-[11px] text-muted transition-colors hover:text-foreground sm:text-xs"
+      >
+        <LuMail className="h-3.5 w-3.5 shrink-0" />
+        <span>{data.email}</span>
+      </a>
+
+      {githubUrl && (
+        <a
+          href={githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 font-display text-[11px] text-muted transition-colors hover:text-foreground sm:text-xs"
+        >
+          <LuGithub className="h-3.5 w-3.5 shrink-0" />
+          <span>{formatLinkLabel(data.github)}</span>
+        </a>
+      )}
+
+      {linkedinUrl && (
+        <a
+          href={linkedinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 font-display text-[11px] text-muted transition-colors hover:text-foreground sm:text-xs"
+        >
+          <LuLinkedin className="h-3.5 w-3.5 shrink-0" />
+          <span>{data.name}</span>
+        </a>
+      )}
+
+      {!linkedinUrl && (
+        <span className="inline-flex items-center gap-2 font-display text-[11px] text-muted-light sm:text-xs">
+          <LuLinkedin className="h-3.5 w-3.5 shrink-0" />
+          <span>LinkedIn</span>
+        </span>
+      )}
+    </>
+  );
 
   return (
     <>
@@ -30,45 +72,12 @@ export function Footer({ data }: FooterProps) {
             <p className="mt-1 font-display text-[10px] text-muted sm:text-[11px]">Open to collaborations.</p>
           </div>
 
-          <div className="flex flex-col items-start gap-2 sm:items-end">
-            <a
-              href={`mailto:${data.email}`}
-              className="inline-flex items-center gap-2 font-display text-[11px] text-muted transition-colors hover:text-foreground sm:text-xs"
-            >
-              <LuMail className="h-3.5 w-3.5 shrink-0" />
-              <span>{data.email}</span>
-            </a>
+          <div className="flex flex-col items-start gap-2 sm:items-end lg:hidden">
+            {contactLinks}
+          </div>
 
-            {githubUrl && (
-              <a
-                href={githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-display text-[11px] text-muted transition-colors hover:text-foreground sm:text-xs"
-              >
-                <LuGithub className="h-3.5 w-3.5 shrink-0" />
-                <span>{formatLinkLabel(data.github)}</span>
-              </a>
-            )}
-
-            {linkedinUrl && (
-              <a
-                href={linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-display text-[11px] text-muted transition-colors hover:text-foreground sm:text-xs"
-              >
-                <LuLinkedin className="h-3.5 w-3.5 shrink-0" />
-                <span>{data.name}</span>
-              </a>
-            )}
-
-            {!linkedinUrl && (
-              <span className="inline-flex items-center gap-2 font-display text-[11px] text-muted-light sm:text-xs">
-                <LuLinkedin className="h-3.5 w-3.5 shrink-0" />
-                <span>LinkedIn</span>
-              </span>
-            )}
+          <div className="hidden lg:ml-auto lg:flex lg:flex-col lg:items-start lg:gap-2">
+            {contactLinks}
           </div>
         </div>
       </footer>
