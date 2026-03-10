@@ -51,7 +51,6 @@ export function Header({ data }: HeaderProps) {
               className="h-16 w-16 rounded-full object-cover ring-1 ring-border-hover transition-all duration-500 sm:h-20 sm:w-20 lg:h-24 lg:w-24"
               priority
             />
-            <div className="hidden lg:flex">{openToWorkBadge}</div>
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 lg:gap-3">
@@ -61,6 +60,7 @@ export function Header({ data }: HeaderProps) {
               >
                 {data.name}
               </h1>
+              <div className="hidden lg:flex">{openToWorkBadge}</div>
             </div>
             <div className="mt-1.5 lg:mt-2">
               <div className="h-4 overflow-hidden lg:h-5">
