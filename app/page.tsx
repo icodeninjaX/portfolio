@@ -51,7 +51,7 @@ export default function Home() {
             <Education items={resumeData.education} />
           </div>
 
-          <div className="mt-10 animate-fade-in-up delay-5 lg:mt-0 lg:col-start-1 lg:row-start-3 lg:self-start">
+          <div className="mt-10 animate-fade-in-up delay-5 lg:mt-6 lg:col-start-2 lg:row-start-5">
             <Footer data={resumeData} />
           </div>
         </div>
