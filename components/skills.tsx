@@ -1,6 +1,7 @@
 "use client";
 
 import { type IconType } from "react-icons";
+import { PiOpenAiLogo } from "react-icons/pi";
 import {
   SiJavascript,
   SiPhp,
@@ -21,7 +22,6 @@ import {
   SiBun,
   SiClaude,
   SiGooglegemini,
-  SiOpenai,
   SiSupabase,
   SiPostgresql,
 } from "react-icons/si";
@@ -55,7 +55,7 @@ const iconMap: Record<string, { icon: IconType; color: string }> = {
   Bun: { icon: SiBun, color: "#FBF0DF" },
   "Claude Code": { icon: SiClaude, color: "#D97706" },
   Gemini: { icon: SiGooglegemini, color: "#8E75B2" },
-  Codex: { icon: SiOpenai, color: "#10A37F" },
+  Codex: { icon: PiOpenAiLogo, color: "#10A37F" },
   Supabase: { icon: SiSupabase, color: "#3FCF8E" },
   PostgreSQL: { icon: SiPostgresql, color: "#4169E1" },
 };
