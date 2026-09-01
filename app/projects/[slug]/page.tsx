@@ -9,7 +9,7 @@ import {
   SiJavascript,
   SiPhp,
   SiHtml5,
-  SiCss,
+  SiCss3,
   SiTypescript,
   SiMysql,
   SiReact,
@@ -21,7 +21,7 @@ import {
 
 const techIcons: Record<string, { icon: IconType; color: string }> = {
   HTML: { icon: SiHtml5, color: "#E34F26" },
-  CSS: { icon: SiCss, color: "#1572B6" },
+  CSS: { icon: SiCss3, color: "#1572B6" },
   JavaScript: { icon: SiJavascript, color: "#F7DF1E" },
   PHP: { icon: SiPhp, color: "#777BB4" },
   MySQL: { icon: SiMysql, color: "#4479A1" },
