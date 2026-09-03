@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { LuGithub, LuLinkedin, LuMail, LuArrowRight, LuSparkles } from "react-icons/lu";
+import { LuGithub, LuLinkedin, LuMail, LuArrowRight } from "react-icons/lu";
 import { resumeData } from "@/lib/data";
 
 type FooterProps = {
@@ -90,18 +89,6 @@ export function Footer({ data }: FooterProps) {
           </div>
         </div>
       </footer>
-
-      {/* 3D Office Interactive Callout */}
-      <div className="mt-6 flex justify-center">
-        <Link
-          href="/creative"
-          className="group inline-flex items-center gap-2 rounded-full border border-border-hover bg-card/80 px-4 py-1.5 font-display text-xs font-medium text-foreground shadow-xs transition-all hover:border-foreground/30 hover:bg-section-bg active:scale-95"
-        >
-          <LuSparkles className="h-3.5 w-3.5 text-amber-500 transition-transform group-hover:rotate-12" />
-          <span>Walk through my 3D Virtual Office</span>
-          <LuArrowRight className="h-3 w-3 text-muted-light transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      </div>
 
       <blockquote className="mt-5 text-center font-display text-[11px] italic leading-relaxed text-foreground/75 sm:text-xs">
         &ldquo;{data.quote.text}&rdquo;

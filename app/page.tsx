@@ -4,7 +4,6 @@ import { Summary } from "@/components/summary";
 import { Experience } from "@/components/experience";
 import { Education } from "@/components/education";
 import { Skills } from "@/components/skills";
-import { CreativeBanner } from "@/components/creative-banner";
 import { Projects } from "@/components/projects";
 import { Footer } from "@/components/footer";
 import { ScrollProgress } from "@/components/scroll-progress";
@@ -40,10 +39,6 @@ export default function Home() {
 
           <div className="mt-6 animate-fade-in-up delay-3">
             <Skills skills={resumeData.skills} />
-          </div>
-
-          <div className="mt-6 animate-fade-in-up delay-4">
-            <CreativeBanner />
           </div>
 
           <div className="mt-6 animate-fade-in-up delay-4">

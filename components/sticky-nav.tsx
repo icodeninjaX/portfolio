@@ -126,7 +126,7 @@ export function StickyNav() {
               <Link
                 href="/creative"
                 aria-label="3D Office mode"
-                className="flex h-8 items-center gap-1 rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 font-display text-[10px] font-medium text-purple-400 backdrop-blur-xl transition-colors hover:bg-purple-500/20 active:scale-95"
+                className="flex h-8 items-center gap-1 rounded-full border border-border-hover bg-card/80 px-2.5 font-display text-[10px] font-medium text-foreground backdrop-blur-xl transition-colors hover:bg-section-bg active:scale-95"
               >
                 <span>🎮 3D Office</span>
               </Link>
@@ -213,7 +213,7 @@ export function StickyNav() {
 
             <Link
               href="/creative"
-              className="inline-flex h-10 items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 px-3.5 font-display text-xs font-medium text-purple-400 backdrop-blur-xl transition-all hover:bg-purple-500/20 active:scale-95"
+              className="inline-flex h-10 items-center gap-1.5 rounded-full border border-border-hover bg-card/80 px-3.5 font-display text-xs font-medium text-foreground backdrop-blur-xl transition-all hover:bg-foreground hover:text-background active:scale-95"
               title="Step inside interactive 3D virtual office"
             >
               <span>🎮 3D Office</span>
