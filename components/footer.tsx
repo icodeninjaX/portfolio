@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LuGithub, LuLinkedin, LuMail } from "react-icons/lu";
+import { LuGithub, LuLinkedin, LuMail, LuArrowRight, LuSparkles } from "react-icons/lu";
 import { resumeData } from "@/lib/data";
 
 type FooterProps = {
@@ -21,80 +21,89 @@ function formatLinkLabel(url: string) {
 export function Footer({ data }: FooterProps) {
   const githubUrl = normalizeExternalUrl(data.github);
   const linkedinUrl = normalizeExternalUrl(data.linkedin);
-  const contactLinks = (
-    <>
-      <a
-        href={`mailto:${data.email}`}
-        className="inline-flex items-center gap-2 font-display text-[11px] text-muted transition-colors hover:text-foreground sm:text-xs"
-      >
-        <LuMail className="h-3.5 w-3.5 shrink-0" />
-        <span>{data.email}</span>
-      </a>
-
-      {githubUrl && (
-        <a
-          href={githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 font-display text-[11px] text-muted transition-colors hover:text-foreground sm:text-xs"
-        >
-          <LuGithub className="h-3.5 w-3.5 shrink-0" />
-          <span>{formatLinkLabel(data.github)}</span>
-        </a>
-      )}
-
-      {linkedinUrl && (
-        <a
-          href={linkedinUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 font-display text-[11px] text-muted transition-colors hover:text-foreground sm:text-xs"
-        >
-          <LuLinkedin className="h-3.5 w-3.5 shrink-0" />
-          <span>{data.name}</span>
-        </a>
-      )}
-
-      {!linkedinUrl && (
-        <span className="inline-flex items-center gap-2 font-display text-[11px] text-muted-light sm:text-xs">
-          <LuLinkedin className="h-3.5 w-3.5 shrink-0" />
-          <span>LinkedIn</span>
-        </span>
-      )}
-    </>
-  );
 
   return (
     <>
-      <footer className="section-box">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+      <footer className="section-box relative overflow-hidden">
+        <div className="flex flex-col gap-6 sm:gap-8">
           <div>
-            <h2 className="section-heading text-lg text-accent sm:text-xl">Get in touch</h2>
-            <p className="mt-1 font-display text-[10px] text-muted sm:text-[11px]">
-              Available for full-time roles, contract work, and impactful projects.
+            <div className="flex items-center gap-2 font-display text-[11px] font-medium text-emerald-500">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              <span>Available for Hire & Contract</span>
+            </div>
+
+            <h2 className="section-heading mt-2 text-2xl text-accent sm:text-3xl">
+              Let&apos;s Build Together.
+            </h2>
+            <p className="mt-2 text-justify font-display text-xs leading-relaxed text-foreground/80 sm:text-sm">
+              Need a full-stack engineer who takes ownership of internal tools, telemetry dashboards, or automation workflows? I&apos;m ready to contribute to your team or turn your next product idea into production software.
             </p>
           </div>
 
-          <div className="flex flex-col items-start gap-2 sm:items-end lg:hidden">
-            {contactLinks}
-          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-t border-border-hover/60 pt-5">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <a
+                href={`mailto:${data.email}`}
+                className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 font-display text-xs font-semibold text-background transition-transform duration-200 hover:scale-[1.02] active:scale-95 sm:text-sm"
+              >
+                <LuMail className="h-4 w-4" />
+                <span>Email Keith</span>
+                <LuArrowRight className="h-3.5 w-3.5" />
+              </a>
 
-          <div className="hidden lg:ml-auto lg:flex lg:flex-col lg:items-start lg:gap-2">
-            {contactLinks}
+              {linkedinUrl && (
+                <a
+                  href={linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border-hover bg-card px-3.5 py-2 font-display text-xs font-medium text-foreground transition-colors hover:bg-section-bg active:scale-95 sm:text-sm"
+                >
+                  <LuLinkedin className="h-4 w-4" />
+                  <span>LinkedIn</span>
+                </a>
+              )}
+
+              {githubUrl && (
+                <a
+                  href={githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border-hover bg-card px-3.5 py-2 font-display text-xs font-medium text-foreground transition-colors hover:bg-section-bg active:scale-95 sm:text-sm"
+                >
+                  <LuGithub className="h-4 w-4" />
+                  <span>GitHub</span>
+                </a>
+              )}
+            </div>
+
+            <div className="text-left sm:text-right">
+              <span className="font-display text-[11px] text-muted-light block">
+                Philippines (UTC+8)
+              </span>
+              <span className="font-display text-[11px] text-muted block">
+                Typical reply: within 24 hrs
+              </span>
+            </div>
           </div>
         </div>
       </footer>
 
-      <div className="mt-4 flex justify-center">
+      {/* 3D Office Interactive Callout */}
+      <div className="mt-6 flex justify-center">
         <Link
           href="/creative"
-          className="inline-flex items-center gap-1.5 rounded-full border border-border-hover bg-card/80 px-3 py-1 font-display text-[11px] text-muted transition-colors hover:border-foreground/30 hover:text-foreground active:scale-95"
+          className="group inline-flex items-center gap-2 rounded-full border border-border-hover bg-card/80 px-4 py-1.5 font-display text-xs font-medium text-foreground shadow-xs transition-all hover:border-foreground/30 hover:bg-section-bg active:scale-95"
         >
-          <span>🎮 Step into my 3D Office Mode</span>
+          <LuSparkles className="h-3.5 w-3.5 text-amber-500 transition-transform group-hover:rotate-12" />
+          <span>Walk through my 3D Virtual Office</span>
+          <LuArrowRight className="h-3 w-3 text-muted-light transition-transform group-hover:translate-x-0.5" />
         </Link>
       </div>
 
-      <blockquote className="mt-4 text-center font-display text-[11px] italic leading-relaxed text-foreground/75 sm:text-xs">
+      <blockquote className="mt-5 text-center font-display text-[11px] italic leading-relaxed text-foreground/75 sm:text-xs">
         &ldquo;{data.quote.text}&rdquo;
       </blockquote>
       <p className="mt-1 text-center font-display text-[10px] text-muted sm:text-[11px]">
