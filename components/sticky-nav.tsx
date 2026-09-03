@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { LuSun, LuMoon } from "react-icons/lu";
 import { resumeData } from "@/lib/data";
 
@@ -69,6 +70,16 @@ export function StickyNav() {
       document.body.style.overflow = "";
     }
     return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && menuOpen) {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [menuOpen]);
 
   const scrollTo = useCallback((id: string) => {
@@ -270,6 +281,15 @@ export function StickyNav() {
                 {section.label}
               </button>
             ))}
+
+            <Link
+              href="/creative"
+              onClick={() => setMenuOpen(false)}
+              className="mt-3 flex items-center justify-between rounded-lg border border-border-hover bg-section-bg/60 px-3 py-2.5 font-display text-xs font-medium text-foreground transition-colors hover:bg-section-bg"
+            >
+              <span>🎮 3D Office Mode</span>
+              <span className="text-[10px] text-muted-light">Explore &rarr;</span>
+            </Link>
           </div>
         </div>
       </div>

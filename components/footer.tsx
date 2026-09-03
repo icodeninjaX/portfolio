@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { LuGithub, LuLinkedin, LuMail } from "react-icons/lu";
 import { resumeData } from "@/lib/data";
 
@@ -69,7 +70,9 @@ export function Footer({ data }: FooterProps) {
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="section-heading text-lg text-accent sm:text-xl">Get in touch</h2>
-            <p className="mt-1 font-display text-[10px] text-muted sm:text-[11px]">Open to collaborations.</p>
+            <p className="mt-1 font-display text-[10px] text-muted sm:text-[11px]">
+              Available for full-time roles, contract work, and impactful projects.
+            </p>
           </div>
 
           <div className="flex flex-col items-start gap-2 sm:items-end lg:hidden">
@@ -82,7 +85,16 @@ export function Footer({ data }: FooterProps) {
         </div>
       </footer>
 
-      <blockquote className="mt-3 text-center font-display text-[11px] italic leading-relaxed text-foreground/75 sm:text-xs">
+      <div className="mt-4 flex justify-center">
+        <Link
+          href="/creative"
+          className="inline-flex items-center gap-1.5 rounded-full border border-border-hover bg-card/80 px-3 py-1 font-display text-[11px] text-muted transition-colors hover:border-foreground/30 hover:text-foreground active:scale-95"
+        >
+          <span>🎮 Step into my 3D Office Mode</span>
+        </Link>
+      </div>
+
+      <blockquote className="mt-4 text-center font-display text-[11px] italic leading-relaxed text-foreground/75 sm:text-xs">
         &ldquo;{data.quote.text}&rdquo;
       </blockquote>
       <p className="mt-1 text-center font-display text-[10px] text-muted sm:text-[11px]">
@@ -90,7 +102,7 @@ export function Footer({ data }: FooterProps) {
       </p>
 
       <p className="mt-3 text-center font-display text-[10px] text-muted sm:text-[11px]">
-        All rights reserved Keith Vergara 2026
+        &copy; 2026 Keith Vergara. All rights reserved.
       </p>
     </>
   );

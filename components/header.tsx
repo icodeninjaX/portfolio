@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { resumeData } from "@/lib/data";
-import { LuGraduationCap, LuMapPin, LuMail, LuLayers } from "react-icons/lu";
+import { LuGraduationCap, LuMapPin, LuMail, LuLayers, LuArrowDown } from "react-icons/lu";
 
 type HeaderProps = {
   data: typeof resumeData;
@@ -45,7 +45,7 @@ export function Header({ data }: HeaderProps) {
           <div className="flex flex-col items-start lg:gap-3">
             <Image
               src="/profile.webp"
-              alt={data.name}
+              alt={`Portrait of ${data.name}, Full-Stack Web Developer`}
               width={80}
               height={80}
               className="h-16 w-16 rounded-full object-cover ring-1 ring-border-hover transition-all duration-500 sm:h-20 sm:w-20 lg:h-24 lg:w-24"
@@ -72,6 +72,22 @@ export function Header({ data }: HeaderProps) {
                 </p>
               </div>
             </div>
+            <div className="mt-3 flex items-center gap-2">
+              <a
+                href="#projects"
+                className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3 py-1 font-display text-[11px] font-medium text-background transition-opacity hover:opacity-90 active:scale-95 sm:text-xs"
+              >
+                <span>View Work</span>
+                <LuArrowDown className="h-3 w-3" />
+              </a>
+              <a
+                href={`mailto:${data.email}`}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border-hover bg-card px-3 py-1 font-display text-[11px] font-medium text-foreground transition-colors hover:bg-section-bg active:scale-95 sm:text-xs"
+              >
+                <span>Contact Me</span>
+                <LuMail className="h-3 w-3" />
+              </a>
+            </div>
           </div>
         </div>
 
@@ -87,7 +103,7 @@ export function Header({ data }: HeaderProps) {
             </div>
             <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
               <LuMapPin className="h-3.5 w-3.5 shrink-0 text-muted-light" />
-              <span className="text-[11px] text-muted sm:text-xs lg:text-[13px]">Based on Philippines</span>
+              <span className="text-[11px] text-muted sm:text-xs lg:text-[13px]">Based in the Philippines</span>
             </div>
             <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
               <LuMail className="h-3.5 w-3.5 shrink-0 text-muted-light" />
@@ -100,7 +116,7 @@ export function Header({ data }: HeaderProps) {
             </div>
             <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
               <LuLayers className="h-3.5 w-3.5 shrink-0 text-muted-light" />
-              <span className="text-[11px] text-muted sm:text-xs lg:text-[13px]">5 working projects</span>
+              <span className="text-[11px] text-muted sm:text-xs lg:text-[13px]">5 shipped projects</span>
             </div>
           </div>
 
@@ -111,7 +127,7 @@ export function Header({ data }: HeaderProps) {
             </div>
             <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
               <LuMapPin className="h-3.5 w-3.5 shrink-0 text-muted-light" />
-              <span className="text-[13px] text-muted">Based on Philippines</span>
+              <span className="text-[13px] text-muted">Based in the Philippines</span>
             </div>
             <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
               <LuMail className="h-3.5 w-3.5 shrink-0 text-muted-light" />
@@ -124,7 +140,7 @@ export function Header({ data }: HeaderProps) {
             </div>
             <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
               <LuLayers className="h-3.5 w-3.5 shrink-0 text-muted-light" />
-              <span className="text-[13px] text-muted">5 working projects</span>
+              <span className="text-[13px] text-muted">5 shipped projects</span>
             </div>
           </div>
         </div>

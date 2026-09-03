@@ -9,7 +9,7 @@ export const resumeData = {
   linkedin: "https://www.linkedin.com/in/keithvergara-dev/",
 
   summary:
-    "Im a full-stack web developer with hands-on experience building internal tools, POS systems, and real-time monitoring platforms. Proficient in PHP, JavaScript, TypeScript, and modern frameworks like React and Next.js. Passionate about building practical, production-grade applications — from AI-powered financial tools to cooperative management systems.",
+    "I'm a full-stack web developer with hands-on experience building internal tools, POS systems, and real-time monitoring platforms. Proficient in PHP, JavaScript, TypeScript, and modern frameworks like React and Next.js. Passionate about building practical, production-grade applications — from AI-powered financial tools to cooperative management systems.",
 
   about: {
     bio: "I'm Keith Vergara, a full-stack web developer based in Las Piñas City, Philippines. I got into programming during college while pursuing my BS in Information Systems, and quickly realized that building things for the web was what I wanted to do. Since then, I've been constantly learning and shipping — from internal business tools to personal projects that solve real problems.",
@@ -36,9 +36,9 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
     },
     {
-      company: "Internship",
-      shortName: "IN",
-      role: "Junior Web Developer",
+      company: "New Z1on LPG",
+      shortName: "NZ",
+      role: "Web Developer Intern",
       location: "",
       startDate: "Apr 2023",
       endDate: "Jul 2023",
