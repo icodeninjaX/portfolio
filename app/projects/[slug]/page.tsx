@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { resumeData } from "@/lib/data";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { PageBackground } from "@/components/page-background";
 import {
   LuArrowLeft,
   LuExternalLink,
@@ -75,9 +76,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   }[project.status];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen overflow-x-clip bg-background">
+      <PageBackground />
       <ThemeToggle />
-      <main className="mx-auto max-w-3xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16">
+      <main className="relative mx-auto max-w-3xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16">
         {/* Navigation back */}
         <Link
           href="/#projects"
@@ -88,7 +90,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </Link>
 
         {/* Header section */}
-        <header className="mt-8 border-b border-border-hover pb-8">
+        <header className="section-box mt-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -118,19 +120,19 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
           {/* Quick facts pill grid */}
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 font-display text-xs">
-            <div className="rounded-lg border border-border-hover bg-card/50 p-2.5">
+            <div className="rounded-lg border border-border-hover bg-card p-2.5 shadow-xs">
               <span className="block text-[10px] text-muted">Category</span>
               <span className="mt-0.5 font-medium text-foreground">{statusLabel}</span>
             </div>
-            <div className="rounded-lg border border-border-hover bg-card/50 p-2.5">
+            <div className="rounded-lg border border-border-hover bg-card p-2.5 shadow-xs">
               <span className="block text-[10px] text-muted">Primary Stack</span>
               <span className="mt-0.5 font-medium text-foreground">{project.tech[0]} + {project.tech[1] ?? ""}</span>
             </div>
-            <div className="rounded-lg border border-border-hover bg-card/50 p-2.5">
+            <div className="rounded-lg border border-border-hover bg-card p-2.5 shadow-xs">
               <span className="block text-[10px] text-muted">Role</span>
               <span className="mt-0.5 font-medium text-foreground">Full-Stack</span>
             </div>
-            <div className="rounded-lg border border-border-hover bg-card/50 p-2.5">
+            <div className="rounded-lg border border-border-hover bg-card p-2.5 shadow-xs">
               <span className="block text-[10px] text-muted">Deployment</span>
               <span className="mt-0.5 font-medium text-foreground">{project.link ? "Production" : "Internal"}</span>
             </div>
@@ -138,12 +140,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </header>
 
         {/* Case Study Body: Problem -> Role -> Decision -> Result */}
-        <div className="mt-10 space-y-10">
+        <div className="mt-6 space-y-6">
           {/* 1. Problem & Challenge */}
-          <section className="rounded-xl border border-border-hover bg-card/40 p-5 sm:p-6">
+          <section className="section-box">
             <div className="flex items-center gap-2 font-display text-sm font-semibold text-accent sm:text-base">
               <LuLightbulb className="h-4 w-4 text-amber-500" />
-              <h2>The Challenge & Problem</h2>
+              <h2 className="section-heading text-lg sm:text-xl">The Challenge & Problem</h2>
             </div>
             <p className="mt-3 text-justify font-display text-xs leading-relaxed text-foreground/85 sm:text-sm">
               {project.problem ?? project.details}
@@ -151,10 +153,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           </section>
 
           {/* 2. My Role & Architecture */}
-          <section className="rounded-xl border border-border-hover bg-card/40 p-5 sm:p-6">
+          <section className="section-box">
             <div className="flex items-center gap-2 font-display text-sm font-semibold text-accent sm:text-base">
               <LuUserCheck className="h-4 w-4 text-blue-500" />
-              <h2>Role & System Architecture</h2>
+              <h2 className="section-heading text-lg sm:text-xl">Role & System Architecture</h2>
             </div>
             <p className="mt-3 text-justify font-display text-xs leading-relaxed text-foreground/85 sm:text-sm">
               {project.role ?? project.details}
@@ -163,10 +165,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
           {/* 3. Key Technical Decisions */}
           {project.decision && (
-            <section className="rounded-xl border border-border-hover bg-card/40 p-5 sm:p-6">
+            <section className="section-box">
               <div className="flex items-center gap-2 font-display text-sm font-semibold text-accent sm:text-base">
                 <LuLayers className="h-4 w-4 text-purple-500" />
-                <h2>Key Technical Decision</h2>
+                <h2 className="section-heading text-lg sm:text-xl">Key Technical Decision</h2>
               </div>
               <p className="mt-3 text-justify font-display text-xs leading-relaxed text-foreground/85 sm:text-sm">
                 {project.decision}
@@ -176,10 +178,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
           {/* 4. Measurable Outcomes */}
           {project.result && (
-            <section className="rounded-xl border border-border-hover bg-card/40 p-5 sm:p-6">
+            <section className="section-box">
               <div className="flex items-center gap-2 font-display text-sm font-semibold text-accent sm:text-base">
                 <LuTrendingUp className="h-4 w-4 text-emerald-500" />
-                <h2>Results & Impact</h2>
+                <h2 className="section-heading text-lg sm:text-xl">Results & Impact</h2>
               </div>
               <p className="mt-3 text-justify font-display text-xs leading-relaxed text-foreground/85 sm:text-sm">
                 {project.result}
@@ -188,17 +190,17 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           )}
 
           {/* Tech Stack Chips */}
-          <section>
-            <h2 className="font-display text-sm font-semibold text-foreground sm:text-base">
+          <section className="section-box">
+            <h2 className="section-heading mb-4 text-xl text-accent sm:mb-5 sm:text-2xl">
               Technologies Utilized
             </h2>
-            <div className="mt-3 flex flex-wrap gap-2.5">
+            <div className="flex flex-wrap gap-2.5">
               {project.tech.map((t) => {
                 const entry = techIcons[t];
                 return (
                   <div
                     key={t}
-                    className="flex items-center gap-2 rounded-full border border-border-hover bg-card px-3 py-1 font-display text-xs text-foreground"
+                    className="flex items-center gap-2 rounded-full border border-border-hover bg-card px-3 py-1 font-display text-xs text-foreground shadow-xs"
                   >
                     {entry && <entry.icon className="h-3.5 w-3.5" style={{ color: entry.color }} />}
                     <span>{t}</span>
@@ -210,10 +212,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
           {/* Interface Screenshots Showcase */}
           {project.images && project.images.length > 0 && (
-            <section className="pt-2">
+            <section className="section-box">
               <div className="mb-6 flex items-center justify-between">
                 <div>
-                  <h2 className="font-display text-base font-semibold text-foreground sm:text-lg">
+                  <h2 className="section-heading text-xl text-accent sm:text-2xl">
                     Interface Showcase
                   </h2>
                   <p className="mt-0.5 font-display text-xs text-muted">
@@ -225,7 +227,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 </span>
               </div>
 
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {project.images.map((img, i) => {
                   const src = typeof img === "string" ? img : img.src;
                   const label = typeof img === "string" ? `Screenshot ${i + 1}` : img.label;
@@ -234,9 +236,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   return (
                     <div
                       key={i}
-                      className="group overflow-hidden rounded-xl border border-border-hover bg-card transition-all hover:border-foreground/20"
+                      className="group overflow-hidden rounded-xl border border-border-hover bg-card shadow-xs transition-all hover:border-foreground/20"
                     >
-                      <div className="border-b border-border-hover/60 bg-section-bg/50 px-4 py-2.5">
+                      <div className="border-b border-border-hover bg-section-bg px-4 py-2.5">
                         <h3 className="font-display text-xs font-semibold text-foreground sm:text-sm">
                           {label}
                         </h3>
@@ -246,7 +248,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                           </p>
                         )}
                       </div>
-                      <div className="overflow-hidden bg-black/40">
+                      <div className="overflow-hidden bg-muted/10">
                         <Image
                           src={src}
                           alt={`${project.name} - ${label}`}
@@ -266,7 +268,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         {/* Previous / Next Project Navigation Footer */}
         <nav
           aria-label="Other case studies"
-          className="mt-16 flex items-center justify-between border-t border-border-hover pt-8"
+          className="section-box mt-6 flex items-center justify-between"
         >
           {prevProject ? (
             <Link

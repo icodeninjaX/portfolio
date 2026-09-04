@@ -40,7 +40,7 @@ export const NPC_DIALOGUES: Record<string, { name: string; lines: string[] }> = 
     lines: [
       "Hey! I'm Keith — yes, the actual Keith this portfolio is about.",
       "I studied BS in Information Systems at Dr. Filemon C. Aguilar Memorial College in Las Piñas City.",
-      "That's where I got my foundations — databases, systems analysis, web development. It all started there.",
+      "I started out in vocational hardware and coding, then took it further in college with systems analysis, databases, and enterprise architecture.",
       "Anyway, feel free to explore the office! Each desk has info about different parts of my background.",
     ],
   },

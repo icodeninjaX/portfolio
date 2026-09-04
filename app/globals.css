@@ -514,14 +514,16 @@ body {
 }
 
 @media (min-width: 1024px) {
-  .home-desktop-backdrop {
+  .home-desktop-backdrop,
+  .page-desktop-backdrop {
     background:
       radial-gradient(circle at top left, var(--desktop-glow-primary), transparent 28rem),
       radial-gradient(circle at top right, var(--desktop-glow-secondary), transparent 26rem),
       linear-gradient(180deg, transparent, var(--accent-subtle));
   }
 
-  .home-desktop-grid {
+  .home-desktop-grid,
+  .page-desktop-grid {
     background-image:
       linear-gradient(var(--desktop-grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--desktop-grid-line) 1px, transparent 1px);
@@ -529,7 +531,8 @@ body {
     mask-image: linear-gradient(to bottom, black, transparent 78%);
   }
 
-  .home-shell .section-box {
+  .home-shell .section-box,
+  .section-box {
     position: relative;
     overflow: hidden;
     border-radius: 1.5rem;
@@ -540,7 +543,8 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .home-shell .section-box::before {
+  .home-shell .section-box::before,
+  .section-box::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -548,12 +552,14 @@ body {
     pointer-events: none;
   }
 
-  .home-shell .section-box > * {
+  .home-shell .section-box > *,
+  .section-box > * {
     position: relative;
     z-index: 1;
   }
 
-  .home-shell .section-box:hover {
+  .home-shell .section-box:hover,
+  .section-box:hover {
     transform: translateY(-4px);
     box-shadow: var(--desktop-shadow-hover);
   }

@@ -22,7 +22,7 @@ export function Education({ items }: EducationProps) {
         {items.map((item, i) => (
           <div
             key={i}
-            className="flex gap-4 rounded-lg border border-border-hover p-4 sm:p-5"
+            className="flex gap-4 rounded-lg border border-border-hover bg-card p-4 shadow-xs sm:p-5"
           >
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-section-bg ring-1 ring-border-hover sm:h-10 sm:w-10">
               <LuGraduationCap className="h-4 w-4 text-muted-light sm:h-5 sm:w-5" />

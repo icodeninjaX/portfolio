@@ -62,7 +62,7 @@ export function Experience({ items }: ExperienceProps) {
           return (
             <div
               key={i}
-              className="rounded-lg border border-border-hover p-4 sm:p-5"
+              className="rounded-lg border border-border-hover bg-card p-4 shadow-xs sm:p-5"
             >
               <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
                 <div>

@@ -36,7 +36,7 @@ export function Projects({ items }: ProjectsProps) {
         {items.map((item, i) => (
           <div
             key={i}
-            className="group rounded-lg border border-border-hover p-4 transition-all duration-200 hover:border-foreground/20 hover:bg-card/40 sm:p-5"
+            className="group rounded-lg border border-border-hover bg-card p-4 shadow-xs transition-all duration-200 hover:border-foreground/20 hover:bg-section-bg sm:p-5"
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-wrap items-center gap-2">

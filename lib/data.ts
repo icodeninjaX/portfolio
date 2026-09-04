@@ -12,8 +12,8 @@ export const resumeData = {
     "I'm a full-stack web developer with hands-on experience building internal tools, POS systems, and real-time monitoring platforms. Proficient in PHP, JavaScript, TypeScript, and modern frameworks like React and Next.js. Passionate about building practical, production-grade applications — from AI-powered financial tools to cooperative management systems.",
 
   about: {
-    bio: "I'm Keith Vergara, a full-stack web developer based in Las Piñas City, Philippines. I got into programming during college while pursuing my BS in Information Systems, and quickly realized that building things for the web was what I wanted to do. Since then, I've been constantly learning and shipping — from internal business tools to personal projects that solve real problems.",
-    background: "My journey started with the basics — HTML, CSS, JavaScript, and PHP. During my internship, I built a complete POS and CMS system for an LPG company, which gave me hands-on experience with real business requirements. Now I'm working at X-META Technologies Inc., where I build and maintain a real-time device monitoring platform. Outside of work, I build personal projects like TRACKY (an AI-powered budget tracker) and Coop-Tracker (a cooperative management system).",
+    bio: "I'm Keith Vergara, a full-stack web developer based in Las Piñas City, Philippines. My background in tech started from the ground up during a 2-year vocational program in hardware servicing and computer programming (earning NC II & NC IV qualifications), before pursuing my BS in Information Systems in college. Since then, I've been constantly learning and shipping — from internal business tools to personal projects that solve real problems.",
+    background: "My journey started way before web development. I spent two years in a vocational program learning how computers actually work — the hardware side, the networking side, and eventually the programming side with languages like Java, Turbo C, and VB6. That hands-on foundation carried me into college where I earned my BS in Information Systems — expanding into database design, systems analysis, IT security, and enterprise architectures while honing my focus on modern web applications. During my internship, I built a complete POS and CMS system for an LPG company, which gave me real-world experience. Now I'm at X-META Technologies Inc., building a real-time device monitoring platform, while shipping personal projects like TRACKY (AI-powered budget tracker) and Coop-Tracker on the side.",
     interests: "When I'm not coding, I enjoy exploring new technologies, tinkering with AI tools, and finding ways to automate everyday tasks. I'm also into gaming and enjoy a good cup of coffee while debugging.",
     motivation: "What drives me as a developer is the ability to turn ideas into working software that people actually use. I love the problem-solving aspect of development — breaking down complex requirements into clean, maintainable code. There's something deeply satisfying about shipping a feature and seeing it work in production.",
     goals: "My career goal is to continue growing as a full-stack developer and eventually take on more senior and leadership roles. I want to work on products that make a real impact, whether that's in fintech, developer tools, or enterprise software. I'm also passionate about staying on the cutting edge — exploring AI integration, modern frameworks, and best practices in software engineering.",
@@ -49,9 +49,14 @@ export const resumeData = {
 
   journey: [
     {
+      year: "2014–2016",
+      title: "Vocational Foundation — Hardware to Code (NC II & NC IV)",
+      description: "Where my path in tech truly began. Completed a 2-year vocational program that taught me computers from the ground up — starting with how the hardware works, how to fix it, and how networks connect everything together (NC II). From there, I moved into actual programming with languages like Java, Turbo C, and Visual Basic 6.0, learning how to think in logic before writing a single line of code (NC IV). It gave me the kind of foundation most developers skip — understanding the full picture from the physical machine all the way up to the software running on it.",
+    },
+    {
       year: "College",
-      title: "First Steps into Programming",
-      description: "Started learning the fundamentals of programming during my BS in Information Systems. Got introduced to HTML, CSS, and basic JavaScript — and immediately got hooked on building things for the web.",
+      title: "BS in Information Systems — Bridging Code & Business Systems",
+      description: "Pursued my degree to connect technical software engineering with real-world business needs. On the software side, I deepened my knowledge in data structures, algorithms, database management, web design, and human-computer interaction. On the systems side, I explored systems analysis, enterprise architecture, IT security, and project management. Rather than just writing code in isolation, it taught me how software integrates into end-to-end business workflows — capped off with a two-part capstone project and a 500-hour industry practicum.",
     },
     {
       year: "2023",

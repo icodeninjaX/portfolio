@@ -8,12 +8,12 @@ import { Projects } from "@/components/projects";
 import { Footer } from "@/components/footer";
 import { ScrollProgress } from "@/components/scroll-progress";
 import { StickyNav } from "@/components/sticky-nav";
+import { PageBackground } from "@/components/page-background";
 
 export default function Home() {
   return (
     <div className="home-shell relative min-h-screen overflow-x-clip bg-background">
-      <div className="home-desktop-backdrop pointer-events-none absolute inset-0 hidden lg:block" />
-      <div className="home-desktop-grid pointer-events-none absolute inset-0 hidden lg:block" />
+      <PageBackground />
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
