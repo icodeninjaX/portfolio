@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useEffect, ReactNode, MutableRefObject } from "react";
+import { useState, useRef, useEffect, ReactNode, MutableRefObject } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import type { MovementState } from "./Character";
 
 interface SceneProps {
   children: ReactNode;
@@ -12,6 +13,9 @@ interface SceneProps {
   handOffsetRef: MutableRefObject<{ x: number; y: number }>;
   talkingTo: string | null;
   talkingToPosition: THREE.Vector3 | null;
+  movementStateRef?: MutableRefObject<MovementState>;
+  cameraMode?: "fps" | "tps";
+  onCameraModeChange?: (mode: "fps" | "tps") => void;
 }
 
 function smoothstep(t: number): number {
@@ -26,10 +30,20 @@ export function Scene({
   handOffsetRef,
   talkingTo,
   talkingToPosition,
+  movementStateRef,
+  cameraMode,
+  onCameraModeChange,
 }: SceneProps) {
   const { gl } = useThree();
-  const transitionRef = useRef(0); // 0 = FPS, 1 = conversation
+  const [internalCameraMode, setInternalCameraMode] = useState<"fps" | "tps">("fps");
+  const activeCameraMode = cameraMode ?? internalCameraMode;
+
+  const transitionRef = useRef(0); // 0 = FPS/TPS, 1 = conversation
   const fpsCamQuat = useRef(new THREE.Quaternion());
+
+  // Camera head-bob and roll
+  const headBobTimer = useRef(0);
+  const rollRef = useRef(0);
 
   // Cached conversation camera target — computed once when conversation starts
   const convTargetPos = useRef(new THREE.Vector3());
@@ -57,20 +71,68 @@ export function Scene({
         1
       );
     };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === "v") {
+        const nextMode = activeCameraMode === "fps" ? "tps" : "fps";
+        if (onCameraModeChange) {
+          onCameraModeChange(nextMode);
+        } else {
+          setInternalCameraMode(nextMode);
+        }
+      }
+    };
+
     document.addEventListener("mousemove", onMouseMove);
-    return () => document.removeEventListener("mousemove", onMouseMove);
-  }, [gl.domElement, yawRef, pitchRef, handOffsetRef]);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [gl.domElement, yawRef, pitchRef, handOffsetRef, activeCameraMode, onCameraModeChange]);
 
   useFrame(({ camera }, delta) => {
     // Decay hand offset
     handOffsetRef.current.x *= 0.95;
     handOffsetRef.current.y *= 0.95;
 
+    // Movement state values
+    const moveState = movementStateRef?.current;
+    const speed = moveState?.speed ?? 0;
+    const isSprinting = moveState?.isSprinting ?? false;
+    const isSliding = moveState?.isSliding ?? false;
+    const isAirborne = moveState?.isAirborne ?? false;
+    const eyeHeight = moveState?.eyeHeight ?? 2.2;
+
+    // Head bob calculation
+    const bobRate = isSprinting ? 14 : speed > 0.5 ? 9 : 2.5;
+    headBobTimer.current += delta * bobRate;
+
+    let bobY = 0;
+    let bobX = 0;
+    if (!isAirborne && !talkingTo) {
+      const ampY = isSprinting ? 0.055 : isSliding ? 0.02 : speed > 0.5 ? 0.035 : 0.008;
+      const ampX = isSprinting ? 0.03 : isSliding ? 0.015 : speed > 0.5 ? 0.018 : 0.004;
+      bobY = Math.sin(headBobTimer.current) * ampY;
+      bobX = Math.cos(headBobTimer.current * 0.5) * ampX;
+    }
+
+    // Camera banking / roll on strafe
+    const targetRoll = -handOffsetRef.current.x * 0.08;
+    rollRef.current = THREE.MathUtils.lerp(rollRef.current, targetRoll, 8.0 * delta);
+
+    // Dynamic FOV expansion when sprinting or sliding
+    if (camera instanceof THREE.PerspectiveCamera) {
+      const targetFov = isSliding ? 57 : isSprinting ? 55 : 50;
+      camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 5.0 * delta);
+      camera.updateProjectionMatrix();
+    }
+
     // Compute conversation camera target ONCE when conversation starts
     if (talkingTo && !prevTalkingTo.current && talkingToPosition) {
       const npcPos = talkingToPosition;
       // Eye height: npcPos.y includes seated offset (-0.42) or 0 for standing
-      const eyeHeight = npcPos.y + 1.65;
+      const convEyeHeight = npcPos.y + 1.65;
 
       const dir = new THREE.Vector3(
         charPosRef.current.x - npcPos.x,
@@ -86,11 +148,11 @@ export function Scene({
 
       convTargetPos.current.set(
         npcPos.x + dir.x * 1.2,
-        eyeHeight,
+        convEyeHeight,
         npcPos.z + dir.z * 1.2
       );
 
-      const lookTarget = new THREE.Vector3(npcPos.x, eyeHeight, npcPos.z);
+      const lookTarget = new THREE.Vector3(npcPos.x, convEyeHeight, npcPos.z);
       const tempCam = new THREE.PerspectiveCamera();
       tempCam.position.copy(convTargetPos.current);
       tempCam.lookAt(lookTarget);
@@ -109,27 +171,63 @@ export function Scene({
     }
     const t = smoothstep(transitionRef.current);
 
-    // FPS camera
+    // FPS camera position & rotation with head bob and roll
+    const yaw = yawRef.current;
+    const rightDirX = Math.cos(yaw);
+    const rightDirZ = -Math.sin(yaw);
+
     const fpsPos = new THREE.Vector3(
+      charPosRef.current.x + rightDirX * bobX,
+      charPosRef.current.y + eyeHeight + bobY,
+      charPosRef.current.z + rightDirZ * bobX
+    );
+    const fpsEuler = new THREE.Euler(pitchRef.current, yawRef.current, rollRef.current, "YXZ");
+    fpsCamQuat.current.setFromEuler(fpsEuler);
+
+    // TPS (Third-Person GTA camera)
+    const isVehicle = moveState?.inVehicle ?? false;
+    const isCrouching = moveState?.isCrouching ?? false;
+    const isSlidingMove = moveState?.isSliding ?? false;
+
+    const camDist = isVehicle ? 4.2 : isSlidingMove ? 3.4 : isSprinting ? 3.2 : 2.8;
+    const camHeight = isVehicle ? 2.0 : isCrouching ? 1.3 : 1.75;
+
+    const tpsPos = new THREE.Vector3(
+      charPosRef.current.x + Math.sin(yaw) * camDist + rightDirX * bobX,
+      charPosRef.current.y + camHeight + Math.sin(-pitchRef.current) * camDist * 0.75 + bobY,
+      charPosRef.current.z + Math.cos(yaw) * camDist + rightDirZ * bobX
+    );
+
+    const lookTarget = new THREE.Vector3(
       charPosRef.current.x,
-      charPosRef.current.y + 2.2,
+      charPosRef.current.y + (isVehicle ? 1.1 : isCrouching ? 0.9 : 1.35),
       charPosRef.current.z
     );
-    const fpsEuler = new THREE.Euler(pitchRef.current, yawRef.current, 0, "YXZ");
-    fpsCamQuat.current.setFromEuler(fpsEuler);
+
+    const tempCamMat = new THREE.Matrix4();
+    tempCamMat.lookAt(tpsPos, lookTarget, new THREE.Vector3(0, 1, 0));
+    const tpsCamQuat = new THREE.Quaternion().setFromRotationMatrix(tempCamMat);
+
+    const activePos = activeCameraMode === "tps" ? tpsPos : fpsPos;
+    const activeQuat = activeCameraMode === "tps" ? tpsCamQuat : fpsCamQuat.current;
 
     if (t > 0.999) {
       // Fully in conversation — lock to target
       camera.position.copy(convTargetPos.current);
       camera.quaternion.copy(convTargetQuat.current);
     } else if (t < 0.001) {
-      // Pure FPS mode
-      camera.position.copy(fpsPos);
-      camera.quaternion.copy(fpsCamQuat.current);
+      // Normal gameplay mode (smooth camera tracking)
+      if (activeCameraMode === "tps") {
+        camera.position.lerp(activePos, 14.0 * delta);
+        camera.quaternion.slerp(activeQuat, 14.0 * delta);
+      } else {
+        camera.position.copy(fpsPos);
+        camera.quaternion.copy(fpsCamQuat.current);
+      }
     } else {
-      // Lerp between FPS and cached conversation target
-      camera.position.lerpVectors(fpsPos, convTargetPos.current, t);
-      camera.quaternion.slerpQuaternions(fpsCamQuat.current, convTargetQuat.current, t);
+      // Lerp between gameplay camera and cached conversation target
+      camera.position.lerpVectors(activePos, convTargetPos.current, t);
+      camera.quaternion.slerpQuaternions(activeQuat, convTargetQuat.current, t);
     }
   });
 

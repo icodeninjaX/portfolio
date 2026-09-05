@@ -11,7 +11,7 @@ import { OutdoorTrees } from "@/components/creative/OutdoorTrees";
 import { SectionStations, STATIONS } from "@/components/creative/SectionStations";
 import { PostEffects } from "@/components/creative/PostEffects";
 import { OfficeHUD } from "@/components/creative/OfficeHUD";
-import { Character } from "@/components/creative/Character";
+import { Character, MovementState, VirtualControls, STATION_COORDS } from "@/components/creative/Character";
 import { ThrownBall } from "@/components/creative/ThrownBall";
 import { OfficePeople } from "@/components/creative/OfficePeople";
 import { OfficeKitchen } from "@/components/creative/OfficeKitchen";
@@ -58,6 +58,16 @@ interface WaterShot {
 const CHAR_START: [number, number, number] = [0, 0.3, 12];
 const BALL_COLORS = ["#2563eb", "#d946ef", "#16a34a", "#ea580c", "#7c3aed"];
 
+const INITIAL_MOVEMENT_STATE: MovementState = {
+  speed: 0,
+  isSprinting: false,
+  isCrouching: false,
+  isSliding: false,
+  isAirborne: false,
+  speedRatio: 0,
+  eyeHeight: 2.2,
+};
+
 export default function CreativePage() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [balls, setBalls] = useState<Ball[]>([]);
@@ -76,6 +86,13 @@ export default function CreativePage() {
   const [waterShots, setWaterShots] = useState<WaterShot[]>([]);
   const [hitNPCs, setHitNPCs] = useState<Set<string>>(new Set());
   const weaponRef = useRef<WeaponType>("fists");
+
+  // Movement & physics telemetry
+  const movementStateRef = useRef<MovementState>({ ...INITIAL_MOVEMENT_STATE });
+  const [hudMovementState, setHudMovementState] = useState<MovementState>({ ...INITIAL_MOVEMENT_STATE });
+  const [virtualControls, setVirtualControls] = useState<VirtualControls>({ forward: 0, strafe: 0 });
+  const [teleportPos, setTeleportPos] = useState<THREE.Vector3 | null>(null);
+  const [cameraMode, setCameraMode] = useState<"fps" | "tps">("fps");
 
   const charPosRef = useRef(new THREE.Vector3(...CHAR_START));
   const yawRef = useRef(0);
@@ -97,6 +114,14 @@ export default function CreativePage() {
     };
     document.addEventListener("pointerlockchange", onChange);
     return () => document.removeEventListener("pointerlockchange", onChange);
+  }, []);
+
+  // Throttled sync of movement state to React HUD state for 60fps smoothness
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHudMovementState({ ...movementStateRef.current });
+    }, 70);
+    return () => clearInterval(interval);
   }, []);
 
   // Weapon switching (1/2/3 keys + scroll wheel)
@@ -198,6 +223,14 @@ export default function CreativePage() {
         return next;
       });
     }, 800);
+  }, []);
+
+  // Fast Travel handler
+  const handleTeleportStation = useCallback((key: string) => {
+    const coords = STATION_COORDS[key];
+    if (coords) {
+      setTeleportPos(new THREE.Vector3(...coords));
+    }
   }, []);
 
   // E key and ESC key handlers for conversation
@@ -330,6 +363,9 @@ export default function CreativePage() {
             handOffsetRef={handOffsetRef}
             talkingTo={talkingTo}
             talkingToPosition={talkingToPosition}
+            movementStateRef={movementStateRef}
+            cameraMode={cameraMode}
+            onCameraModeChange={setCameraMode}
           >
             <OfficeFloor />
             <OfficeWalls />
@@ -374,6 +410,10 @@ export default function CreativePage() {
               onThrow={handleThrow}
               yawRef={yawRef}
               movementDisabled={!!talkingTo}
+              movementStateRef={movementStateRef}
+              virtualControls={virtualControls}
+              teleportPos={teleportPos}
+              onClearTeleport={() => setTeleportPos(null)}
             />
             {balls.map((ball) => (
               <ThrownBall
@@ -387,7 +427,12 @@ export default function CreativePage() {
               />
             ))}
           </Scene>
-          <FPSHands handOffsetRef={handOffsetRef} visible={!talkingTo} weapon={weapon} attacking={attacking} />
+          <FPSHands
+            handOffsetRef={handOffsetRef}
+            visible={!talkingTo && cameraMode === "fps"}
+            weapon={weapon}
+            attacking={attacking}
+          />
           {waterShots.map((shot) => (
             <WaterProjectile
               key={shot.id}
@@ -408,6 +453,11 @@ export default function CreativePage() {
         talkingTo={talkingTo}
         weapon={weapon}
         onWeaponChange={setWeapon}
+        movementState={hudMovementState}
+        onTeleportStation={handleTeleportStation}
+        onVirtualControlChange={setVirtualControls}
+        cameraMode={cameraMode}
+        onToggleCameraMode={() => setCameraMode((prev) => (prev === "fps" ? "tps" : "fps"))}
       />
 
       {/* Conversation overlay */}
@@ -428,7 +478,7 @@ export default function CreativePage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "rgba(0, 0, 0, 0.5)",
+            background: "rgba(0, 0, 0, 0.55)",
             zIndex: 50,
             cursor: "pointer",
           }}
@@ -440,16 +490,25 @@ export default function CreativePage() {
               fontFamily: "system-ui, -apple-system, sans-serif",
               fontWeight: 600,
               textAlign: "center",
-              padding: "32px 48px",
-              borderRadius: 16,
-              background: "rgba(0, 0, 0, 0.6)",
-              backdropFilter: "blur(8px)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
+              padding: "36px 52px",
+              borderRadius: 20,
+              background: "rgba(10, 15, 30, 0.75)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid rgba(255, 255, 255, 0.18)",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
             }}
           >
-            Click to Play
-            <div style={{ fontSize: 14, fontWeight: 400, marginTop: 8, color: "#9ca3af" }}>
-              WASD to move &bull; Mouse to look &bull; Click to attack &bull; 1/2/3 switch weapons
+            <div>Click to Play</div>
+            <div style={{ fontSize: 13, fontWeight: 400, marginTop: 14, color: "#9ca3af", maxWidth: 520, lineHeight: 1.7 }}>
+              <div style={{ color: "#e5e7eb", marginBottom: 6 }}>
+                <strong>WASD / Arrows</strong> to move &bull; <strong>SHIFT</strong> to Turbo Boost &bull; <strong>SPACE</strong> to Jump
+              </div>
+              <div style={{ color: "#e5e7eb", marginBottom: 6 }}>
+                <strong>C / Ctrl</strong> to Crouch &amp; Drift Slide &bull; <strong>H</strong> for Horn &bull; <strong>4-0</strong> Fast Travel Stations
+              </div>
+              <div style={{ color: "#9ca3af" }}>
+                <strong>Mouse</strong> to Look &bull; <strong>Click</strong> to Attack &bull; <strong>1/2/3</strong> Switch Weapons &bull; <strong>ESC</strong> Menu
+              </div>
             </div>
           </div>
         </div>
