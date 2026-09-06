@@ -6,7 +6,7 @@ import { LuArrowLeft } from "react-icons/lu";
 
 export const metadata = {
   title: "About Me | Keith Vergara",
-  description: "Learn more about Keith Vergara — background, interests, and career goals.",
+  description: "Learn more about Keith Vergara: background, interests, and career goals.",
 };
 
 export default function AboutPage() {

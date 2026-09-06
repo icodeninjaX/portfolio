@@ -238,12 +238,12 @@ export default function CreativePage() {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key.toLowerCase() === "e") {
         if (talkingToRef.current) {
-          // Already in conversation — advance or exit
+          // Already in conversation, advance or exit
           const dialogue = NPC_DIALOGUES[talkingToRef.current];
           if (!dialogue) return;
           setDialogueIndex((prev) => {
             if (prev >= dialogue.lines.length - 1) {
-              // Last line — exit conversation
+              // Last line, exit conversation
               exitConversation();
               return 0;
             }

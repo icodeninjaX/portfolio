@@ -57,7 +57,6 @@ export function Projects({ items }: ProjectsProps) {
                   className="inline-flex items-center gap-1.5 rounded-full border border-border-hover px-3 py-1 font-display text-[10px] font-medium text-foreground transition-colors hover:bg-section-bg active:scale-95 sm:text-[11px]"
                 >
                   <span>Case Study</span>
-                  <LuArrowRight className="h-3 w-3" />
                 </Link>
 
                 {item.link && (

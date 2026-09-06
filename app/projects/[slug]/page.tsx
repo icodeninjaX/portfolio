@@ -8,10 +8,6 @@ import {
   LuArrowLeft,
   LuExternalLink,
   LuArrowRight,
-  LuLayers,
-  LuLightbulb,
-  LuUserCheck,
-  LuTrendingUp,
 } from "react-icons/lu";
 import { type IconType } from "react-icons";
 import {
@@ -114,23 +110,15 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             )}
           </div>
 
-          <p className="mt-4 font-display text-base leading-relaxed text-foreground/80 sm:text-lg">
+          <p className="mt-4 text-justify font-display text-base leading-relaxed text-foreground/80 sm:text-lg">
             {project.description}
           </p>
 
           {/* Quick facts pill grid */}
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 font-display text-xs">
+          <div className="mt-6 grid grid-cols-2 gap-3 font-display text-xs">
             <div className="rounded-lg border border-border-hover bg-card p-2.5 shadow-xs">
               <span className="block text-[10px] text-muted">Category</span>
               <span className="mt-0.5 font-medium text-foreground">{statusLabel}</span>
-            </div>
-            <div className="rounded-lg border border-border-hover bg-card p-2.5 shadow-xs">
-              <span className="block text-[10px] text-muted">Primary Stack</span>
-              <span className="mt-0.5 font-medium text-foreground">{project.tech[0]} + {project.tech[1] ?? ""}</span>
-            </div>
-            <div className="rounded-lg border border-border-hover bg-card p-2.5 shadow-xs">
-              <span className="block text-[10px] text-muted">Role</span>
-              <span className="mt-0.5 font-medium text-foreground">Full-Stack</span>
             </div>
             <div className="rounded-lg border border-border-hover bg-card p-2.5 shadow-xs">
               <span className="block text-[10px] text-muted">Deployment</span>
@@ -144,7 +132,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {/* 1. Problem & Challenge */}
           <section className="section-box">
             <div className="flex items-center gap-2 font-display text-sm font-semibold text-accent sm:text-base">
-              <LuLightbulb className="h-4 w-4 text-amber-500" />
               <h2 className="section-heading text-lg sm:text-xl">The Challenge & Problem</h2>
             </div>
             <p className="mt-3 text-justify font-display text-xs leading-relaxed text-foreground/85 sm:text-sm">
@@ -155,7 +142,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {/* 2. My Role & Architecture */}
           <section className="section-box">
             <div className="flex items-center gap-2 font-display text-sm font-semibold text-accent sm:text-base">
-              <LuUserCheck className="h-4 w-4 text-blue-500" />
               <h2 className="section-heading text-lg sm:text-xl">Role & System Architecture</h2>
             </div>
             <p className="mt-3 text-justify font-display text-xs leading-relaxed text-foreground/85 sm:text-sm">
@@ -167,7 +153,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {project.decision && (
             <section className="section-box">
               <div className="flex items-center gap-2 font-display text-sm font-semibold text-accent sm:text-base">
-                <LuLayers className="h-4 w-4 text-purple-500" />
                 <h2 className="section-heading text-lg sm:text-xl">Key Technical Decision</h2>
               </div>
               <p className="mt-3 text-justify font-display text-xs leading-relaxed text-foreground/85 sm:text-sm">
@@ -180,7 +165,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {project.result && (
             <section className="section-box">
               <div className="flex items-center gap-2 font-display text-sm font-semibold text-accent sm:text-base">
-                <LuTrendingUp className="h-4 w-4 text-emerald-500" />
                 <h2 className="section-heading text-lg sm:text-xl">Results & Impact</h2>
               </div>
               <p className="mt-3 text-justify font-display text-xs leading-relaxed text-foreground/85 sm:text-sm">

@@ -31,7 +31,7 @@ export default function ExperiencePage() {
               My Journey
             </h1>
             <p className="mt-3 text-justify font-display text-sm leading-relaxed text-foreground/80 sm:text-base">
-              From writing my first lines of code to building production applications — here&apos;s how my developer journey unfolded.
+              From writing my first lines of code to building production applications. Here&apos;s how my developer journey unfolded.
             </p>
 
             <div className="relative mt-8">
