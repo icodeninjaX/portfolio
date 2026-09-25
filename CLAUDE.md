@@ -7,7 +7,7 @@
 - **3D Engine:** React Three Fiber + Drei + Three.js (for creative mode)
 - **Post-processing:** @react-three/postprocessing
 - **Icons:** react-icons
-- **Fonts:** Geist Sans, Geist Mono (via next/font), Caveat (cursive)
+- **Fonts:** Inter, Space Grotesk, JetBrains Mono, Instrument Serif — self-hosted in `app/fonts/` via `next/font/local` (next/font/google made Vercel builds flaky)
 - **Package Manager:** Bun
 
 ## Project Structure

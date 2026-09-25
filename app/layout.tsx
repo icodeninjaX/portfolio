@@ -1,31 +1,37 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono, Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const inter = Inter({
+// Self-hosted (latin subset, from Google Fonts). next/font/google fetches at
+// build time and Turbopack fails when Google answers with `/l/font?kit=` URLs,
+// which made Vercel builds flaky.
+const inter = localFont({
+  src: "./fonts/inter-var.woff2",
   variable: "--font-body",
-  subsets: ["latin"],
+  weight: "100 900",
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const spaceGrotesk = localFont({
+  src: "./fonts/space-grotesk-var.woff2",
   variable: "--font-display",
-  subsets: ["latin"],
+  weight: "300 700",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
 });
 
-const instrumentSerif = Instrument_Serif({
+const instrumentSerif = localFont({
+  src: [
+    { path: "./fonts/instrument-serif.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/instrument-serif-italic.woff2", weight: "400", style: "italic" },
+  ],
   variable: "--font-serif",
-  subsets: ["latin"],
   display: "swap",
-  weight: "400",
-  style: ["normal", "italic"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const jetbrainsMono = localFont({
+  src: "./fonts/jetbrains-mono-var.woff2",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: "100 800",
   display: "swap",
 });
 
