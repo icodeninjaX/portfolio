@@ -1,59 +1,44 @@
 import { resumeData } from "@/lib/data";
-import { Header } from "@/components/header";
-import { Summary } from "@/components/summary";
-import { Experience } from "@/components/experience";
-import { Education } from "@/components/education";
-import { Skills } from "@/components/skills";
-import { Projects } from "@/components/projects";
-import { Footer } from "@/components/footer";
-import { ScrollProgress } from "@/components/scroll-progress";
-import { StickyNav } from "@/components/sticky-nav";
-import { PageBackground } from "@/components/page-background";
+import { StackExperience } from "@/components/stack/StackExperience";
+import {
+  ContactSection,
+  DataSection,
+  HeroSection,
+  NowSection,
+  ProjectSection,
+  SignalSection,
+  SiliconSection,
+} from "@/components/stack/Sections";
+
+// Projects without product screenshots get a generated editorial cover.
+const COVERS: Record<string, string> = {
+  "new-z1on-lpg": "/stack/cover-lpg.webp",
+  plantpal: "/stack/cover-plantpal.webp",
+};
 
 export default function Home() {
+  const { projects } = resumeData;
+  const panels = projects.map((p) => ({
+    slug: p.slug,
+    images: p.images.length ? p.images.map((i) => i.src) : [COVERS[p.slug]].filter(Boolean),
+  }));
+
   return (
-    <div className="home-shell relative min-h-screen overflow-x-clip bg-background">
-      <PageBackground />
-      <a href="#main-content" className="skip-link">
-        Skip to main content
+    <StackExperience projects={panels}>
+      <a href="#work" className="skip-link">
+        Skip to work
       </a>
-      <ScrollProgress />
-      <StickyNav />
-      <main
-        id="main-content"
-        role="main"
-        className="relative mx-auto max-w-2xl px-5 pb-16 pt-20 sm:px-8 sm:pt-24 lg:max-w-7xl lg:px-8 lg:pb-24 lg:pt-28 xl:px-12"
-      >
-        <div className="lg:mx-auto lg:max-w-[44rem]">
-          <div className="animate-fade-in-up delay-0">
-            <Header data={resumeData} />
-          </div>
-
-          <div className="mt-6 animate-fade-in-up delay-1">
-            <Summary text={resumeData.summary} />
-          </div>
-
-          <div className="mt-6 animate-fade-in-up delay-2">
-            <Experience items={resumeData.experience} />
-          </div>
-
-          <div className="mt-6 animate-fade-in-up delay-3">
-            <Skills skills={resumeData.skills} />
-          </div>
-
-          <div className="mt-6 animate-fade-in-up delay-4">
-            <Projects items={resumeData.projects} />
-          </div>
-
-          <div className="mt-6 animate-fade-in-up delay-5">
-            <Education items={resumeData.education} />
-          </div>
-
-          <div className="mt-10 animate-fade-in-up delay-5">
-            <Footer data={resumeData} />
-          </div>
-        </div>
+      <main id="main-content">
+        <HeroSection data={resumeData} />
+        <SiliconSection data={resumeData} />
+        <SignalSection data={resumeData} />
+        <DataSection data={resumeData} />
+        {projects.map((p, i) => (
+          <ProjectSection key={p.slug} project={p} index={i} total={projects.length} />
+        ))}
+        <NowSection data={resumeData} />
+        <ContactSection data={resumeData} />
       </main>
-    </div>
+    </StackExperience>
   );
 }

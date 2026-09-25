@@ -78,7 +78,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       <main className="relative mx-auto max-w-3xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16">
         {/* Navigation back */}
         <Link
-          href="/#projects"
+          href="/#work"
           className="inline-flex items-center gap-1.5 font-display text-xs text-muted transition-colors hover:text-foreground"
         >
           <LuArrowLeft className="h-3.5 w-3.5" />

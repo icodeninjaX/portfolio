@@ -18,7 +18,7 @@ export default function AboutPage() {
       <ThemeToggle />
       <main className="relative mx-auto max-w-2xl px-5 pb-16 pt-12 sm:px-8 sm:pt-16">
         <Link
-          href="/#about"
+          href="/#top"
           className="inline-flex items-center gap-1.5 font-display text-xs text-muted transition-colors hover:text-foreground"
         >
           <LuArrowLeft className="h-3 w-3" />
