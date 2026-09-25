@@ -3,7 +3,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
-import { AMBER, layerActivity, mulberry32, PLATE_SIZE } from "./activity";
+import { AMBER, layerActivity, mulberry32, PLATE_SIZE, sceneTime } from "./activity";
 import { Plate } from "./Plate";
 import { LAYER_Y } from "./stages";
 import { stackScroll } from "./scrollStore";
@@ -82,7 +82,7 @@ export function NetworkLayer() {
   useFrame((state, delta) => {
     activity.current = THREE.MathUtils.damp(activity.current, layerActivity("network"), 3, delta);
     const act = activity.current;
-    const t = state.clock.elapsedTime;
+    const t = sceneTime(state.clock.elapsedTime);
     const dt = stackScroll.reducedMotion ? 0 : Math.min(delta, 0.05);
 
     if (lineMat.current) lineMat.current.opacity = 0.12 + act * 0.35;

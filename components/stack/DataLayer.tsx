@@ -3,7 +3,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { AMBER, layerActivity } from "./activity";
+import { AMBER, layerActivity, sceneTime } from "./activity";
 import { Plate } from "./Plate";
 import { LAYER_Y } from "./stages";
 
@@ -106,7 +106,7 @@ export function DataLayer() {
 
   useFrame((state, delta) => {
     activity.current = THREE.MathUtils.damp(activity.current, layerActivity("data"), 3, delta);
-    material.uniforms.uTime.value = state.clock.elapsedTime;
+    material.uniforms.uTime.value = sceneTime(state.clock.elapsedTime);
     material.uniforms.uActive.value = activity.current;
     if (edgeRef.current) edgeRef.current.opacity = 0.18 + activity.current * 0.6;
   });

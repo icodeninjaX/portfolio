@@ -14,6 +14,11 @@ export function layerActivity(layer: keyof typeof LAYER_Y) {
   return best;
 }
 
+/** Scene clock; frozen when the visitor prefers reduced motion. */
+export function sceneTime(elapsed: number) {
+  return stackScroll.reducedMotion ? 0 : elapsed;
+}
+
 /** Deterministic PRNG so generated geometry is identical on every load. */
 export function mulberry32(seed: number) {
   let a = seed;

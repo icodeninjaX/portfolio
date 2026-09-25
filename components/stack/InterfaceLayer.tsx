@@ -4,7 +4,7 @@ import { RoundedBox, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
-import { AMBER, layerActivity } from "./activity";
+import { AMBER, layerActivity, sceneTime } from "./activity";
 import { LAYER_Y, PANEL_RING, PROJECT_COUNT, PROJECT_STAGE_OFFSET, panelAngleDeg } from "./stages";
 import { stackScroll } from "./scrollStore";
 
@@ -117,7 +117,7 @@ function Panel({ index, textures }: PanelProps) {
     s.active = THREE.MathUtils.damp(s.active, focus, 4, delta);
     const u = material.uniforms;
     u.uActive.value = s.active;
-    u.uTime.value = frame.clock.elapsedTime;
+    u.uTime.value = sceneTime(frame.clock.elapsedTime);
 
     if (textures.length > 1 && s.active > 0.6 && !stackScroll.reducedMotion) {
       s.timer += delta;
@@ -136,7 +136,7 @@ function Panel({ index, textures }: PanelProps) {
     u.uMix.value = s.mix;
 
     if (group.current) {
-      const t = frame.clock.elapsedTime;
+      const t = sceneTime(frame.clock.elapsedTime);
       group.current.position.set(base.x, base.y + Math.sin(t * 0.8 + index) * 0.06 + s.active * 0.15, base.z);
     }
     if (bar.current) bar.current.scale.x = 0.001 + s.active;

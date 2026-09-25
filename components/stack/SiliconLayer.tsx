@@ -4,7 +4,7 @@ import { RoundedBox, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
-import { AMBER, layerActivity, PLATE_SIZE } from "./activity";
+import { AMBER, layerActivity, PLATE_SIZE, sceneTime } from "./activity";
 import { Plate } from "./Plate";
 import { LAYER_Y } from "./stages";
 
@@ -83,7 +83,7 @@ export function SiliconLayer() {
 
   useFrame((state, delta) => {
     activity.current = THREE.MathUtils.damp(activity.current, layerActivity("silicon"), 3, delta);
-    const t = state.clock.elapsedTime;
+    const t = sceneTime(state.clock.elapsedTime);
     material.uniforms.uTime.value = t;
     material.uniforms.uActive.value = activity.current;
     if (dieRef.current) dieRef.current.emissiveIntensity = 0.6 + activity.current * 2.2 + Math.sin(t * 2.4) * 0.25;

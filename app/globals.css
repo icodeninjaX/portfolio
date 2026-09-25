@@ -1758,9 +1758,26 @@ html.lenis body {
     display: none !important;
   }
 
+  /* Invert the palette tokens so every descendant colour flips with them. */
   .stack-home {
-    background: #fff;
-    color: #111;
+    --s-ink: #fff;
+    --s-bone: #111;
+    --s-bone-2: #333;
+    --s-ash: #666;
+    --s-warm: #8a4410;
+    --s-line: rgba(0, 0, 0, 0.18);
+  }
+
+  .stack-copy::before,
+  .stack-contact::before,
+  .stack-sticky::before {
+    display: none !important;
+  }
+
+  .stack-reveal,
+  .stack-line .stack-reveal {
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   .stack-section {
