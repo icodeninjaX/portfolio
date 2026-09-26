@@ -3,7 +3,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
-import { CAMERA_KEYS, type CameraKey } from "./stages";
+import { CAMERA_KEYS, type CameraShot } from "./stages";
 import { stackScroll } from "./scrollStore";
 
 const DEG = Math.PI / 180;
@@ -14,13 +14,13 @@ function dwell(f: number) {
   return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
-function sample(stage: number) {
+function sample(keys: CameraShot[], stage: number) {
   const t = Math.max(0, stage - 0.5);
-  const i = Math.min(Math.floor(t), CAMERA_KEYS.length - 1);
-  const a = CAMERA_KEYS[i];
-  const b = CAMERA_KEYS[Math.min(i + 1, CAMERA_KEYS.length - 1)];
+  const i = Math.min(Math.floor(t), keys.length - 1);
+  const a = keys[i];
+  const b = keys[Math.min(i + 1, keys.length - 1)];
   const f = dwell(t - i);
-  const mix = (k: keyof Omit<CameraKey, "layer" | "label">) => a[k] + (b[k] - a[k]) * f;
+  const mix = (k: keyof CameraShot) => a[k] + (b[k] - a[k]) * f;
   return {
     r: mix("r"),
     a: mix("a"),
@@ -32,7 +32,8 @@ function sample(stage: number) {
   };
 }
 
-export function CameraRig() {
+/** Scroll-driven camera. Pages pass their own keyframes; the homepage tower is the default. */
+export function CameraRig({ keys = CAMERA_KEYS }: { keys?: CameraShot[] }) {
   const { camera, size } = useThree();
   const pos = useRef(new THREE.Vector3(8, 2, 8));
   const target = useRef(new THREE.Vector3());
@@ -42,7 +43,7 @@ export function CameraRig() {
   const first = useRef(true);
 
   useFrame((state, delta) => {
-    const k = sample(stackScroll.stage);
+    const k = sample(keys, stackScroll.stage);
     const mobile = stackScroll.isMobile;
     // Narrow screens need more distance for close-ups; the wide shot already fits.
     const r = k.r * (mobile ? 1 + 0.3 * THREE.MathUtils.clamp((30 - k.r) / 15, 0, 1) : 1);

@@ -23,7 +23,7 @@ export function panelAngleDeg(index: number) {
  * Cylindrical camera keyframe. Angles are in degrees and intentionally keep
  * growing past 360 so interpolation always orbits forward around the tower.
  */
-export type CameraKey = {
+export type CameraShot = {
   r: number;
   a: number;
   y: number;
@@ -33,6 +33,9 @@ export type CameraKey = {
   ty: number;
   /** Horizontal framing shift (fraction of viewport) to make room for copy. */
   shift: number;
+};
+
+export type CameraKey = CameraShot & {
   /** Which layer glows while this stage is in view ("all" lights the whole tower). */
   layer: keyof typeof LAYER_Y | "all";
   /** Short label for the HUD altimeter. */

@@ -30,7 +30,7 @@ const busFragment = /* glsl */ `
   }
 `;
 
-function busMaterial(speed: number, density: number, base: number, intensity: number) {
+export function busMaterial(speed: number, density: number, base: number, intensity: number) {
   return new THREE.ShaderMaterial({
     vertexShader: busVertex,
     fragmentShader: busFragment,
@@ -110,22 +110,31 @@ export function Crown() {
   );
 }
 
-export function Dust({ count = 900 }: { count?: number }) {
+export function Dust({
+  count = 900,
+  radius = [2, 18],
+  height = [-3, 31],
+}: {
+  count?: number;
+  radius?: [number, number];
+  height?: [number, number];
+}) {
   const points = useRef<THREE.Points>(null);
   const geometry = useMemo(() => {
     const rand = mulberry32(1997);
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const r = 2 + rand() * 16;
+      const r = radius[0] + rand() * (radius[1] - radius[0]);
       const a = rand() * Math.PI * 2;
       arr[i * 3] = Math.sin(a) * r;
-      arr[i * 3 + 1] = -3 + rand() * 34;
+      arr[i * 3 + 1] = height[0] + rand() * (height[1] - height[0]);
       arr[i * 3 + 2] = Math.cos(a) * r;
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(arr, 3));
     return g;
-  }, [count]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count, radius[0], radius[1], height[0], height[1]]);
 
   useFrame((_, delta) => {
     if (points.current && !stackScroll.reducedMotion) points.current.rotation.y += delta * 0.015;
