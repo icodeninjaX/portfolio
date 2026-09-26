@@ -135,9 +135,20 @@ export function StackShell({
     const sections = () => Array.from(document.querySelectorAll<HTMLElement>("[data-stage]"));
     let els = sections();
 
+    // A chapter taller than the viewport would be clipped by a plain
+    // `top: 0` sticky. Pin it by its bottom edge instead, so the reader
+    // scrolls through all of it before it holds.
+    const fitSticky = () => {
+      document.querySelectorAll<HTMLElement>(".stack-sticky").forEach((el) => {
+        const overflow = el.offsetHeight - window.innerHeight;
+        el.style.top = overflow > 0 ? `${-overflow}px` : "";
+      });
+    };
+
     const onResize = () => {
       stackScroll.isMobile = window.innerWidth < 768;
       els = sections();
+      fitSticky();
       measureSections();
       updateStage(window.scrollY);
     };

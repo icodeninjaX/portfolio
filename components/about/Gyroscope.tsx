@@ -204,8 +204,10 @@ const coreFragment = /* glsl */ `
     float n = fbm(p + vec3(0.0, uTime * 0.22, uTime * 0.1));
     float cells = fbm(p * 1.6 - vec3(uTime * 0.16, 0.0, uTime * 0.08));
     float veins = 1.0 - smoothstep(0.0, 0.06, abs(cells - 0.5));
-    float facing = max(dot(vNormal2, vView), 0.0);
-    float fres = pow(1.0 - facing, 2.5);
+    // Clamp both ends: float error can push the dot past 1, and pow() of a
+    // negative base is NaN on real GPUs, which bloom smears into a black frame.
+    float facing = clamp(dot(normalize(vNormal2), normalize(vView)), 0.0, 1.0);
+    float fres = pow(max(1.0 - facing, 0.0), 2.5);
     // Values stay near 1 on purpose: AgX pushes anything hotter toward white.
     // Dark crust, hot cracks: the cracks bloom, the crust keeps the colour rich.
     vec3 crust = vec3(0.16, 0.012, 0.0);
