@@ -847,7 +847,7 @@ html.lenis body {
 }
 
 @media (max-width: 640px) {
-  .stack-nav a:not(.stack-nav__cta):not([href="#work"]) {
+  .stack-nav a:not(.stack-nav__cta):not(.stack-nav__keep) {
     display: none;
   }
 }
@@ -1617,6 +1617,217 @@ html.lenis body {
   color: var(--s-ash);
 }
 
+/* =====================================================================
+   About — "The human in the loop." (components/about/*)
+   Same shell and tokens as the homepage; these are the About-only pieces.
+   ===================================================================== */
+.stack-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 34px;
+  border-top: 1px solid var(--s-line);
+}
+
+.stack-stats > div {
+  padding: 16px 0 4px;
+}
+
+.stack-stats > div + div {
+  padding-left: 18px;
+  border-left: 1px solid var(--s-line);
+}
+
+.stack-stats dt {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--s-ash);
+}
+
+.stack-stats dd {
+  margin-top: 10px;
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.4rem, 3.6vw, 3.4rem);
+  line-height: 0.9;
+  color: var(--s-bone);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Journey list: items light up in step with the beads on the Orbit ring. */
+.stack-orbit {
+  position: relative;
+  margin-top: 30px;
+  padding-left: 22px;
+}
+
+.stack-orbit::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 3px;
+  width: 1px;
+  background: var(--s-line);
+}
+
+.stack-orbit li {
+  --on: clamp(0, calc((var(--p, 0) * var(--n) * 1.05 - var(--i) - 0.15) * 3), 1);
+  position: relative;
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 14px;
+  padding: 7px 0;
+  opacity: calc(0.34 + var(--on) * 0.66);
+  transition: opacity 0.3s;
+}
+
+.stack-orbit li::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -22px;
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  border: 1px solid var(--s-ash);
+  background: var(--s-ink);
+  translate: 0 -50%;
+}
+
+.stack-orbit li::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -22px;
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  background: var(--s-amber);
+  box-shadow: 0 0 10px var(--s-amber);
+  opacity: var(--on);
+  translate: 0 -50%;
+}
+
+.stack-orbit__when {
+  padding-top: 2px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--s-amber);
+}
+
+.stack-orbit__what {
+  font-family: var(--font-display), sans-serif;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: var(--s-bone);
+}
+
+.stack-textlink {
+  display: inline-flex;
+  gap: 10px;
+  margin-top: 24px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--s-bone-2);
+  transition: color 0.3s;
+}
+
+.stack-textlink span {
+  transition: transform 0.45s var(--s-ease);
+}
+
+.stack-textlink:hover {
+  color: var(--s-amber);
+}
+
+.stack-textlink:hover span {
+  transform: translateX(4px);
+}
+
+.stack-moons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 30px;
+  border-top: 1px solid var(--s-line);
+}
+
+.stack-moons li {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--s-line);
+  font-family: var(--font-display), sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.stack-moons li:nth-child(odd) {
+  padding-right: 16px;
+}
+
+.stack-moons li span {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--s-amber);
+}
+
+.stack-quote {
+  margin-top: 30px;
+  padding: 18px 0 0 20px;
+  border-left: 1px solid var(--s-amber);
+}
+
+.stack-quote blockquote {
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  line-height: 1.15;
+  color: var(--s-warm);
+}
+
+.stack-quote figcaption {
+  margin-top: 12px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--s-ash);
+}
+
+.stack-quote figcaption::before {
+  content: "— ";
+}
+
+.stack-contact__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: clamp(28px, 5vh, 44px);
+}
+
+.stack-about .stack-contact__mail {
+  margin-top: clamp(24px, 4vh, 36px);
+  font-size: clamp(1.25rem, 2.6vw, 2.2rem);
+}
+
+.stack-nav a[aria-current="page"] {
+  color: var(--s-bone);
+}
+
+.stack-nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
 /* ---- small screens: copy docks to the bottom over a scrim ---- */
 @media (max-width: 767px) {
   .stack-sticky {
@@ -1692,6 +1903,35 @@ html.lenis body {
   .stack-timeline li {
     grid-template-columns: 1fr;
     gap: 4px;
+  }
+
+  .stack-stats,
+  .stack-orbit,
+  .stack-moons,
+  .stack-quote {
+    margin-top: 20px;
+  }
+
+  .stack-stats dd {
+    font-size: 2.2rem;
+  }
+
+  .stack-orbit li {
+    grid-template-columns: 76px 1fr;
+    padding: 4px 0;
+  }
+
+  .stack-orbit__what {
+    font-size: 13.5px;
+  }
+
+  .stack-moons li {
+    padding: 10px 0;
+    font-size: 16px;
+  }
+
+  .stack-quote blockquote {
+    font-size: 1.25rem;
   }
 
   .stack-body {
@@ -1795,5 +2035,13 @@ html.lenis body {
   .stack-contact {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .stack-orbit li {
+    opacity: 1 !important;
+  }
+
+  .stack-contact__ctas {
+    display: none;
   }
 }

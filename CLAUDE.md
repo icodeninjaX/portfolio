@@ -12,11 +12,15 @@
 
 ## Project Structure
 - `app/` - Next.js App Router pages and layouts
+  - `app/about/page.tsx` - About: scroll-driven 3D gyroscope (see `components/about/`)
   - `app/page.tsx` - Homepage: "Full stack, literally." scroll-driven 3D tower (see `components/stack/`)
   - `app/creative/page.tsx` - 3D interactive office mode (FPS-style walkable office)
   - `app/globals.css` - Global styles, CSS variables, animations, print styles
 - `components/` - Resume page components (header, summary, experience, education, skills, projects, footer, scroll-progress, sticky-nav, theme-toggle)
 - `components/stack/` - Homepage 3D experience. `stages.ts` is the single source of truth: each DOM section with `data-stage` maps in order to one camera keyframe in `CAMERA_KEYS`. `scrollStore.ts` shares scroll state with the canvas without React re-renders. Layers: `SiliconLayer`, `NetworkLayer`, `DataLayer`, `InterfaceLayer` (project screenshots on panels), `Spine` (signal bus, crown, dust). `Sections.tsx` holds the copy.
+- `components/stack/StackShell.tsx` - Shared immersive-page chrome (preloader, Lenis smooth scroll, top bar, altimeter, readout, hero video, grain). The homepage (`StackExperience`) and About (`AboutExperience`) both wrap it with their own canvas, labels and nav. `CameraRig` takes a `keys` prop so each page brings its own keyframes.
+- `components/about/` - About page 3D experience, "The human in the loop": a gyroscope of nested engraved rings around a molten core that you dive into ring by ring. `stages.ts` is the source of truth (`ABOUT_KEYS` camera keyframes, one per `data-stage` section, and `RINGS`, outer to inner). Rings settle into one plane at Trajectory and a beam fires up; `activity.ts` holds the scroll-driven focus/alignment helpers. `Sections.tsx` holds the copy.
+- `public/about/` - About media (Higgsfield-generated hero loop `hero-core.mp4` + `hero-poster.webp`)
 - `public/stack/` - Homepage media (generated PCB texture, project covers for projects without screenshots, hero video loop + poster)
 - `components/creative/` - 3D office scene components (Scene, Character, OfficeWalls, OfficeFloor, SectionStations, OfficePeople, NeonSign, FPSHands, ConversationOverlay, etc.)
 - `lib/data.ts` - All resume/portfolio data (edit this to customize content)
@@ -36,8 +40,8 @@
 - Use Tailwind utility classes for styling; custom CSS variables defined in `globals.css`
 - Dark mode uses a `data-theme` attribute toggle with `prefers-color-scheme` fallback
 - Print styles are supported for PDF export
-- Resume components live as flat files in `components/` (still used by `/about`, `/experience`, `/projects/[slug]`)
-- Homepage is dark-only; its styles live under the `stack-` prefix at the end of `globals.css`
+- Resume components live as flat files in `components/` (still used by `/experience`, `/projects/[slug]`)
+- Homepage and About are dark-only; their styles live under the `stack-` prefix at the end of `globals.css` (About-only pieces in the "About" block)
 - Adding a project to `lib/data.ts` automatically adds a panel + camera stop; give it `images` or add a cover in `COVERS` in `app/page.tsx`
 - 3D/creative components live in `components/creative/`
 
