@@ -9,7 +9,7 @@ import { stackScroll } from "./scrollStore";
 const DEG = Math.PI / 180;
 
 // Hold still while the reader is mid-section, travel between sections.
-function dwell(f: number) {
+export function dwell(f: number) {
   const t = THREE.MathUtils.clamp((f - 0.18) / 0.64, 0, 1);
   return t * t * t * (t * (t * 6 - 15) + 10);
 }
