@@ -1015,13 +1015,15 @@ html.lenis body {
   height: 170vh;
 }
 
+/* Grows past the viewport when a chapter's copy is taller than the screen;
+   StackShell then pins it by its bottom edge (negative top). */
 .stack-sticky {
   position: sticky;
   top: 0;
   display: flex;
   align-items: center;
-  height: 100vh;
-  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
   padding: 96px var(--s-gutter) 72px;
 }
 
@@ -2026,7 +2028,7 @@ html.lenis body {
 
   .stack-sticky {
     position: static;
-    height: auto;
+    min-height: 0;
     padding: 24px 0;
   }
 

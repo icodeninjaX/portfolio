@@ -29,13 +29,15 @@ const fragment = /* glsl */ `
   varying float vDepth;
 
   float line(float v, float width) {
-    float d = abs(fract(v - 0.5) - 0.5) / fwidth(v);
+    // Guard the derivative so a flat spot can't divide 0 by 0 (NaN).
+    float d = abs(fract(v - 0.5) - 0.5) / max(fwidth(v), 1e-5);
     return 1.0 - min(d / width, 1.0);
   }
 
   void main() {
     float r = length(vXZ);
-    float a = atan(vXZ.y, vXZ.x) / 6.2831853 + 0.5;
+    // atan(0, 0) is undefined; nudge off the exact centre.
+    float a = atan(vXZ.y, vXZ.x + 1e-6) / 6.2831853 + 0.5;
     float rings = line(r, 1.0) * 0.55 + line(r * 4.0, 0.8) * 0.12;
     float spokes = line(a * 24.0, 1.0) * smoothstep(1.0, 3.0, r) * 0.35;
     // Radar sweep: a soft leading line with a short afterglow, no hard seam.
