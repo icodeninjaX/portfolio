@@ -37,10 +37,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Inside the Build homepage
 
-The homepage uses one scroll-driven 3D studio; `/resume` is the simple, printable view and `/creative` remains the separate office experience. Content lives in `lib/data.ts`, scene code in `components/cinematic/`, and locally stored media in `public/studio/`.
+The homepage uses the scroll-driven 3D tower in `components/stack/`. Its navigation includes a Simple mode button to `/resume`, the simple, printable view; `/creative` remains the separate office experience. Content lives in `lib/data.ts`. The earlier studio implementation and its media remain in `components/cinematic/` and `public/studio/`.
 
-The scroll journey stays continuously in 3D. Each project is presented as a scroll-controlled interface walkthrough inside one 3D browser. The cursor clicks navigation, the view changes, a record detail opens in depth, and the next view appears. Scrolling pauses and reverses every action. These are local animated demonstrations based on the real interfaces, not live sessions connected to the project backends. Static fallbacks use the corresponding project view.
+The earlier studio implementation presents scroll-controlled interface walkthroughs inside a 3D browser. These are local animated demonstrations based on the real interfaces, not live sessions connected to the project backends.
 
 The implementation, verification evidence, unresolved source claims and performance limits are documented in [.claude/plans/next-level-portfolio.md](.claude/plans/next-level-portfolio.md). Exact generated asset prompts, models, job IDs and the unresolved estimate-versus-balance discrepancy are recorded in [docs/studio-assets.json](docs/studio-assets.json).
 
-Browser checks use an existing Playwright installation (no added project dependency): set `PLAYWRIGHT_MODULE`, start `bun run dev`, then run `node scripts/verify-studio.mjs` and `node scripts/verify-studio-extended.mjs`. For transfer and frame measurements, serve a production build on port 3001 and run `node scripts/measure-studio.mjs`. Results are saved to ignored `.artifacts/`.
+The scripts in `scripts/verify-studio*.mjs` and `scripts/measure-studio.mjs` target the earlier studio homepage, not the current tower homepage. Their results are saved to ignored `.artifacts/`.
