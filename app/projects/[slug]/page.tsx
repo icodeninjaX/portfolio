@@ -232,15 +232,16 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                           </p>
                         )}
                       </div>
-                      <div className="overflow-hidden bg-muted/10">
+                      <a href={src} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.name} ${label} at full size`} className="block overflow-hidden bg-muted/10">
                         <Image
                           src={src}
                           alt={`${project.name} - ${label}`}
-                          width={1200}
-                          height={800}
+                          width={typeof img === "object" ? img.width : 1200}
+                          height={typeof img === "object" ? img.height : 800}
+                          sizes="(max-width: 768px) 90vw, 700px"
                           className="h-auto w-full transition-transform duration-500 group-hover:scale-[1.01]"
                         />
-                      </div>
+                      </a>
                     </div>
                   );
                 })}

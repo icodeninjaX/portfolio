@@ -1,0 +1,315 @@
+{
+  "approvedCreditCap": 39,
+  "modelsSubstituted": false,
+  "reviewDate": "2026-09-25",
+  "assets": [
+    {
+      "model": "gpt_image_2",
+      "jobId": "ff924450-c132-4bcf-890b-6f426e5642de",
+      "request": {
+        "model": "gpt_image_2",
+        "prompt": "Art-directed cinematic developer studio for Keith Vergara, a full-stack web developer. Use the supplied actual 3D blockout as the composition and geometry reference. Preserve the precise sculptural workstation: rectangular graphite architectural frame, satin-metal supports on a low plinth, exactly three blank dark glass display planes and modular application layers. Refine material realism, beveled edges, contact shadows and elegant reflections. Restrained muted blue and purple accents. Sophisticated editorial technology product photography, coherent perspective, readable depth. A seamless pale neutral-gray studio background. No people, no text, no watermarks, no invented brand marks, no fake project interfaces, no glowing orb, no random technology-logo cloud. Blank screens only. Keep the entire object inside the frame. Landscape 4:3 composition, object centered slightly below middle, generous negative space above and around the structure.",
+        "aspect_ratio": "4:3",
+        "resolution": "1k",
+        "quality": "medium",
+        "count": 1,
+        "medias": [
+          {
+            "role": "image",
+            "value": "36a8141a-8413-4078-b6c0-4683fc918bbe"
+          }
+        ]
+      },
+      "outputDimensions": [
+        1168,
+        880
+      ],
+      "destination": "/studio/poster-desktop.webp",
+      "deliveryDimensions": [
+        1168,
+        880
+      ],
+      "review": "Accepted: preserves blockout silhouette, blank screens, coherent lighting; loading/static fallback.",
+      "estimatedCredits": 1
+    },
+    {
+      "model": "gpt_image_2",
+      "jobId": "a6b365c0-8704-4ccc-8196-a39da2d3add8",
+      "request": {
+        "model": "gpt_image_2",
+        "prompt": "Art-directed cinematic developer studio for Keith Vergara, a full-stack web developer. Use the supplied actual 3D blockout as the composition and geometry reference. Preserve the precise sculptural workstation: rectangular graphite architectural frame, satin-metal supports on a low plinth, exactly three blank dark glass display planes and modular application layers. Refine material realism, beveled edges, contact shadows and elegant reflections. Restrained muted blue and purple accents. Sophisticated editorial technology product photography, coherent perspective, readable depth. A seamless pale neutral-gray studio background. No people, no text, no watermarks, no invented brand marks, no fake project interfaces, no glowing orb, no random technology-logo cloud. Blank screens only. Keep the entire object inside the frame. Portrait 3:4 composition designed independently: more frontal elevated camera, narrow centered silhouette with full plinth visible, balanced vertical spacing. Match the supplied portrait reference.",
+        "aspect_ratio": "3:4",
+        "resolution": "1k",
+        "quality": "medium",
+        "count": 1,
+        "medias": [
+          {
+            "role": "image",
+            "value": "c0b2ca86-d93a-427b-9ba7-79567a5dabac"
+          }
+        ]
+      },
+      "outputDimensions": [
+        880,
+        1168
+      ],
+      "destination": "/studio/poster-portrait.webp",
+      "deliveryDimensions": [
+        640,
+        849
+      ],
+      "review": "Accepted: preserves blockout silhouette, blank screens, coherent lighting; loading/static fallback.",
+      "estimatedCredits": 1
+    },
+    {
+      "model": "seedance_2_5",
+      "jobId": "720a37da-c2b1-4534-8ff4-1c430bd94343",
+      "request": {
+        "model": "seedance_2_5",
+        "prompt": "One continuous controlled camera move through the supplied modular developer-studio composition. Begin with the assembled display structure exactly as supplied, gently dolly forward and arc slightly to reveal exactly three dark glass interface planes tilting backward and separating vertically into a clear three-layer application structure. Preserve the rectangular metal support frame, low base plinth, graphite material palette, pale gray studio background, muted blue-purple edge lighting, object identity, and screen placement. End calmly with the three screens separated as slanted horizontal shelves, still fully inside the frame. Maintain stable perspective and a readable beginning, middle, and ending. No cuts, no camera shake, no rapid zoom, no text, no people, no flickering geometry, no extra panels, no added logos. All screens remain blank dark glass. Compose for a silent scroll-controlled website transition. Keep the whole structure inside the frame with generous margins throughout.",
+        "mode": "omni_reference",
+        "duration": 5,
+        "resolution": "720p",
+        "generate_audio": false,
+        "bitrate_mode": "standard",
+        "aspect_ratio": "4:3",
+        "count": 1,
+        "medias": [
+          {
+            "role": "start_image",
+            "value": "ff924450-c132-4bcf-890b-6f426e5642de"
+          }
+        ]
+      },
+      "outputDimensions": [
+        1112,
+        834
+      ],
+      "outputDuration": 5.041667,
+      "requestedResolution": "720p",
+      "destination": "/studio/layers-transition.mp4",
+      "deliveryDimensions": [
+        960,
+        720
+      ],
+      "deliveryBytes": 598552,
+      "encoding": "H.264, yuv420p, 24 fps, GOP 6, CRF 24, faststart, no audio",
+      "review": "Accepted as labeled illustrative transition. Framing remains stable. Generated ending fans planes instead of reproducing exact vertical layer separation; realtime scene supplies exact transform. Mild edge shimmer in generated frame. Not claimed to be frame-exact geometry.",
+      "referenceUpload": "Only sanitized blank-screen scene captures and generated poster. No client screenshots uploaded.",
+      "estimatedCredits": 35
+    }
+  ],
+  "estimatedGenerationCredits": 37,
+  "observedBalanceBefore": 1810,
+  "observedBalanceAfter": 1766.5,
+  "observedBalanceDelta": 43.5,
+  "actualJobCharges": null,
+  "billingNote": "Preflight estimates for three submitted jobs totaled 37 credits against the approved 39-credit cap. Observed account delta was 43.5 credits. Available MCP tools provide no itemized charges; discrepancy is unresolved and cannot be attributed conclusively. No additional generations submitted.",
+  "revisions": [
+    {
+      "date": "2026-09-25",
+      "approvedAdditionalCreditCap": 2,
+      "observedBalanceBefore": 1681.5,
+      "observedBalanceAfter": 1680.66,
+      "observedCreditDelta": 0.84,
+      "estimatedExactCredits": 0.84,
+      "attempts": [
+        {
+          "jobId": "42c38b3d-e48d-46cf-b413-837d85728394",
+          "model": "soul_cinematic",
+          "request": {
+            "model": "soul_cinematic",
+            "quality": "2k",
+            "aspect_ratio": "4:3",
+            "count": 1,
+            "prompt": "Cinematic design-object photography for a sophisticated software developer portfolio. Follow the reference's sculptural architecture and camera: one low rectangular graphite plinth, a thin rectangular brushed-titanium frame, and exactly three staggered floating dark-glass display panels. Elevated three-quarter perspective, entire structure inside the frame, compact centered subject occupying the middle 70 percent with generous clean negative space. Make it beautiful and tactile: precision-milled chamfered edges, smoky optical glass, soft silver highlights, subtle indigo and violet rim lighting, restrained reflections, exquisite material contrast and realistic contact shadows. Shot like a premium industrial design campaign on a large-format cinema camera, 50mm lens, crisp object with gentle atmospheric depth, clean art direction. Screens are entirely blank, no interface, text, logos, people or watermarks. No excessive bloom, no science-fiction clutter. Preserve the reference's three-panel workstation silhouette. DARK EDITION: seamless near-black charcoal studio background (#111111), a barely visible midnight floor, dramatic soft side key with delicate lavender edge highlights. Rich blacks, luminous but controlled metal edges, understated cinematic luxury. No pale gray background or bright backdrop.",
+            "medias": [
+              {
+                "role": "image",
+                "value": "36a8141a-8413-4078-b6c0-4683fc918bbe"
+              }
+            ]
+          },
+          "estimatedExactCredits": 0.12,
+          "selected": false,
+          "review": "Rejected: dark brief returned bright background and distorted architecture."
+        },
+        {
+          "jobId": "826da12f-f56f-4a56-a2e7-82cf5c3ddf0d",
+          "model": "soul_cinematic",
+          "request": {
+            "model": "soul_cinematic",
+            "quality": "2k",
+            "aspect_ratio": "4:3",
+            "count": 1,
+            "prompt": "Cinematic design-object photography for a sophisticated software developer portfolio. Follow the reference's sculptural architecture and camera: one low rectangular graphite plinth, a thin rectangular brushed-titanium frame, and exactly three staggered floating dark-glass display panels. Elevated three-quarter perspective, entire structure inside the frame, compact centered subject occupying the middle 70 percent with generous clean negative space. Make it beautiful and tactile: precision-milled chamfered edges, smoky optical glass, soft silver highlights, subtle indigo and violet rim lighting, restrained reflections, exquisite material contrast and realistic contact shadows. Shot like a premium industrial design campaign on a large-format cinema camera, 50mm lens, crisp object with gentle atmospheric depth, clean art direction. Screens are entirely blank, no interface, text, logos, people or watermarks. No excessive bloom, no science-fiction clutter. Preserve the reference's three-panel workstation silhouette. LIGHT EDITION: seamless warm off-white studio background (#f7f7f8), luminous softbox lighting, delicate pale lavender floor reflections, elegant soft grounding shadow. High-key gallery atmosphere with a clearly separated graphite object. No dark vignette or black background.",
+            "medias": [
+              {
+                "role": "image",
+                "value": "36a8141a-8413-4078-b6c0-4683fc918bbe"
+              }
+            ]
+          },
+          "estimatedExactCredits": 0.12,
+          "selected": false,
+          "review": "Rejected: clipped, stretched architecture."
+        },
+        {
+          "jobId": "a982e639-337e-473f-baef-f022b72d4dd1",
+          "model": "soul_cinematic",
+          "request": {
+            "model": "soul_cinematic",
+            "quality": "2k",
+            "aspect_ratio": "4:3",
+            "count": 1,
+            "prompt": "Luxury industrial design photograph. A small architectural sculpture made of three parallel smoked-glass rectangular panels suspended inside a slim brushed titanium rectangular frame on a low black plinth. Clearly visible precise rectangular geometry, three staggered panels, satin black metal, chamfered edges. Entire object centered and fully visible, elevated three-quarter camera view, generous empty margins. Seamless near-black charcoal background and floor, extremely dark studio, no white areas in the background. A large soft violet rim light from the left and a narrow silver key light trace the edges. Tactile, refined, photorealistic, sophisticated product photography, crisp focus, 50mm lens. Blank glass panels. No text, no logos, no interface, no people."
+          },
+          "estimatedExactCredits": 0.12,
+          "selected": false,
+          "review": "Rejected: vertical composition and dim subject."
+        },
+        {
+          "jobId": "93a0e5a7-6943-4f50-a7f7-046a1ae56381",
+          "model": "soul_cinematic",
+          "request": {
+            "model": "soul_cinematic",
+            "quality": "2k",
+            "aspect_ratio": "4:3",
+            "count": 1,
+            "prompt": "Premium cinematic product photograph of a futuristic desktop display sculpture, wide horizontal composition. THREE WIDESCREEN LANDSCAPE glass monitors, each screen twice as wide as tall, stacked front-to-back with visible gaps and floating above a broad low metal platform. A thin silver rectangular frame surrounds them. The entire sculpture is WIDER THAN IT IS TALL. Elevated three-quarter view from the front right, looking slightly down onto the platform. Beautiful brushed titanium and graphite surfaces, crisp chamfered edges, smoked black glass screens with soft reflections, thin lavender highlights. The screens are blank with no text. A real luxury design object photographed with a 50mm cinema lens, precise perspective, sharp product details, subtle film texture, natural contact shadow, exquisite studio lighting. Entire object visible with empty margins on all sides. No people, no logos, no wires. Dark version: pure charcoal-black seamless background, soft violet rim light and luminous silver key light. Clearly lit object against dark surroundings, premium cinematic contrast."
+          },
+          "estimatedExactCredits": 0.12,
+          "selected": false,
+          "review": "Rejected: insufficient panel separation and overly dark subject."
+        },
+        {
+          "jobId": "4bc75c7f-d3ef-437b-8222-0587f872fb4c",
+          "model": "soul_cinematic",
+          "request": {
+            "model": "soul_cinematic",
+            "quality": "2k",
+            "aspect_ratio": "4:3",
+            "count": 1,
+            "prompt": "Premium cinematic product photograph of a futuristic desktop display sculpture, wide horizontal composition. THREE WIDESCREEN LANDSCAPE glass monitors, each screen twice as wide as tall, stacked front-to-back with visible gaps and floating above a broad low metal platform. A thin silver rectangular frame surrounds them. The entire sculpture is WIDER THAN IT IS TALL. Elevated three-quarter view from the front right, looking slightly down onto the platform. Beautiful brushed titanium and graphite surfaces, crisp chamfered edges, smoked black glass screens with soft reflections, thin lavender highlights. The screens are blank with no text. A real luxury design object photographed with a 50mm cinema lens, precise perspective, sharp product details, subtle film texture, natural contact shadow, exquisite studio lighting. Entire object visible with empty margins on all sides. No people, no logos, no wires. Light version: clean off-white seamless background, broad soft white key light and subtle pale lavender reflections. Airy high-key product campaign, elegant soft gray shadows."
+          },
+          "estimatedExactCredits": 0.12,
+          "selected": false,
+          "review": "Rejected: merged display geometry."
+        },
+        {
+          "jobId": "a4601b41-f767-435a-8461-7d49ef14d7ac",
+          "model": "soul_cinematic",
+          "request": {
+            "model": "soul_cinematic",
+            "quality": "2k",
+            "aspect_ratio": "4:3",
+            "count": 1,
+            "prompt": "Editorial architectural still life: three thin rectangular slabs of smoked glass float in a staggered ascending staircase over a square graphite plinth. A precise, elegant sculpture expressing the layers of software. Polished silver edges and subtle lavender reflections. Elevated three-quarter view. Soft silver and violet studio lighting clearly illuminates the glass. Seamless charcoal-black background. Centered entire sculpture with generous negative space. Beautiful tactile materials, fine-art product photography, cinematic 50mm lens, sharp focus. No text."
+          },
+          "estimatedExactCredits": 0.12,
+          "selected": true,
+          "review": "Selected: distinct glass layers with controlled silver edges and dark background. Conceptual sculpture, not an exact replica of the coded scene."
+        },
+        {
+          "jobId": "566943c3-ef36-4836-94f1-972c69e4a161",
+          "model": "soul_cinematic",
+          "request": {
+            "model": "soul_cinematic",
+            "quality": "2k",
+            "aspect_ratio": "4:3",
+            "count": 1,
+            "prompt": "Editorial architectural still life: three thin rectangular slabs of smoked glass float in a staggered ascending staircase over a square graphite plinth. A precise, elegant sculpture expressing the layers of software. Polished silver edges and subtle lavender reflections. Elevated three-quarter view. Diffused daylight and a soft grounding shadow. Seamless warm off-white background. Centered entire sculpture with generous negative space. Beautiful tactile materials, fine-art product photography, cinematic 50mm lens, sharp focus. No text."
+          },
+          "estimatedExactCredits": 0.12,
+          "selected": true,
+          "review": "Selected: light architectural layer study. Different geometry from the coded scene; treated as illustrative art, not an endpoint for a video morph."
+        }
+      ],
+      "delivery": {
+        "dark": "/studio/soul-dark.webp",
+        "light": "/studio/soul-light.webp",
+        "desktop": [
+          1200,
+          900
+        ],
+        "small": [
+          640,
+          480
+        ],
+        "original": [
+          2048,
+          1536
+        ],
+        "role": "Theme-matched loading and static fallback posters. Inline geometry is used until saved theme is resolved, preventing a wrong-theme flash."
+      },
+      "motionChange": "Automatic full-stage video replacement removed. Existing clip remains available as an opt-in link. Native-scroll 3D remains continuous with quintic easing and frame-rate-independent damping; its first reveal waits for textures and the correct pose."
+    },
+    {
+      "date": "2026-09-25",
+      "name": "Folded titanium ribbon",
+      "approvedCreditCap": 25,
+      "estimatedCredits": 5.5,
+      "observedCredits": 5.5,
+      "balanceBefore": 1559.16,
+      "balanceAfter": 1553.66,
+      "model": "gpt_image_2_5",
+      "variant": "sunburst",
+      "modelSubstituted": false,
+      "variantNote": "Sunburst is the model variant, not an instruction for radial artwork.",
+      "assets": [
+        {
+          "jobId": "abca0901-ca79-4943-bc12-b064c94419e1",
+          "request": {
+            "model": "gpt_image_2_5",
+            "variant": "sunburst",
+            "quality": "high",
+            "resolution": "2k",
+            "aspect_ratio": "4:3",
+            "background": "opaque",
+            "count": 1,
+            "prompt": "Create one extraordinary hero asset for a high-end creative frontend developer portfolio. A floating sculptural RIBBON KNOT: a single broad, flat, substantial band of polished liquid titanium with a deep iridescent violet inner surface, folded through three sweeping asymmetric loops. This is a ribbon with a wide flat face and softly beveled edges, never a tube. The silhouette is tall and dynamic, with an open oval negative space in its upper half and a sweeping diagonal lower tail; a beautiful continuous flowing folded form, like a meticulously designed kinetic sculpture. Elegant tension between hard architectural edges and fluid folds. The outer silver surface reflects enormous white studio softboxes as crisp elongated highlight bands; the inner fold catches saturated cobalt and plum. Sophisticated precision-made material, nuanced reflections, gorgeous light-to-dark gradients across the ribbon width. Hovering freely against seamless near-black charcoal #111114, barely perceptible violet ambient halo and faint soft grounding shadow. A slightly elevated three-quarter camera makes the dimensional folds legible. Entire object inside the frame with generous margins, occupying 75 percent of height and 65 percent of width. Museum-grade contemporary industrial sculpture meets luxury motion-design title sequence. Stunning photoreal 3D render, ray-traced reflections, tack-sharp silhouette, delicate texture, dramatic controlled lighting. No monitor, screens, desk, plinth, circular sunburst, radial spokes, letters, logo, interface, people, particles, or neon bloom. Single image, no contact sheet."
+          },
+          "credits": 2.75,
+          "output": "/studio/ribbon-dark.webp"
+        },
+        {
+          "jobId": "f9b71326-f20d-4686-a79b-0a28258588bb",
+          "request": {
+            "model": "gpt_image_2_5",
+            "variant": "sunburst",
+            "quality": "high",
+            "resolution": "2k",
+            "aspect_ratio": "4:3",
+            "background": "opaque",
+            "count": 1,
+            "prompt": "Re-light this exact ribbon sculpture for the light theme of the same portfolio. Preserve the reference sculpture's silhouette, folds, silver outer face, violet inner face, camera angle, centered scale and generous margins. Replace the charcoal backdrop with seamless very pale cool gray #f6f6f8. Use a sophisticated high-key product studio: broad softbox reflections, polished silver with readable edges against the light background, saturated deep violet folded interiors, and a delicate soft shadow underneath. Maintain striking depth and sharp refined material detail. The entire sculpture is visible. No additional objects, text, logos, interface, radial forms, or collage.",
+            "medias": [
+              {
+                "role": "image",
+                "value": "abca0901-ca79-4943-bc12-b064c94419e1"
+              }
+            ]
+          },
+          "credits": 2.75,
+          "output": "/studio/ribbon-light.webp"
+        }
+      ],
+      "delivery": {
+        "original": [
+          2336,
+          1744
+        ],
+        "desktop": [
+          1200,
+          896
+        ],
+        "small": [
+          640,
+          478
+        ],
+        "role": "Theme-matched generated artwork for loading and static fallback. Scroll-driven Three.js geometry interprets the ribbon concept; it is not an exact reconstruction of the raster artwork."
+      },
+      "motionChange": "Monitor rig replaced by three custom beveled ribbon sections, silver/violet physical materials, baked studio reflections, project reveals and progressive layer separation. Quintic easing and damping retained. Old video link retired."
+    }
+  ]
+}

@@ -1,6 +1,21 @@
+// Qualitative summaries of the existing case studies. Original numerical
+// claims remain below for the owner's evidence review.
+export const selectedWork = [
+  { slug: "tracky", category: "Personal finance / AI", summary: "A clearer picture of everyday spending.", problem: "Make receipt capture and everyday budgeting easier to manage in one place.", contribution: "Designed the interface, receipt parsing pipeline, duplicate detection, and real-time persistence.", decision: "Pre-process receipt images before API submission and validate structured responses before saving transactions." },
+  { slug: "coop-tracker", category: "Financial operations", summary: "Connected records for a cooperative.", problem: "Bring member records, loans, and capital shares together instead of managing separate spreadsheets.", contribution: "Built the PostgreSQL schema, typed financial calculations, validation, and member-facing workflows.", decision: "Keep financial calculations in deterministic functions, tested before database writes." },
+  { slug: "371admin", category: "Internal business systems", summary: "One view of devices in the field.", problem: "Give operations teams a shared view of device health, deliveries, and advertisement schedules.", contribution: "Built the PHP MVC dashboard, connectivity checks, booking calculator, and GPS location maps.", decision: "Use a modular PHP and MySQL foundation with lightweight AJAX polling for operational updates." },
+] as const;
+
+export const buildLayers = [
+  { name: "Interface", description: "Turn complex workflows into interfaces people can use.", evidence: "TRACKY’s receipt capture and budgeting views.", tech: ["React", "TypeScript", "Tailwind CSS"], slug: "tracky" },
+  { name: "Application", description: "Give each workflow clear rules and reliable integrations.", evidence: "371admin’s booking logic; TRACKY’s AI receipt parsing.", tech: ["PHP", "JavaScript", "Next.js"], slug: "371admin" },
+  { name: "Data", description: "Model the relationships behind the product.", evidence: "Coop-Tracker’s members, loans, shares, and financial calculations.", tech: ["PostgreSQL", "Supabase", "MySQL"], slug: "coop-tracker" },
+];
+
 export const resumeData = {
   name: "Keith Vergara",
   title: "Full-Stack Web Developer",
+  introduction: "I build practical software, from business systems to AI-powered tools.",
   location: "Las Piñas City, Philippines",
   email: "kdv062997@gmail.com",
   phone: "0955-558-3927",
@@ -140,18 +155,18 @@ export const resumeData = {
       status: "current" as const,
       link: "",
       images: [
-        { src: "/images/371admin-maindashboard.webp", label: "Main Dashboard", caption: "High-level overview of active devices, connectivity metrics, and system alert summaries." },
-        { src: "/images/371admin-maindashboard-1.webp", label: "Dashboard Overview", caption: "Live operational telemetry view showing status distributions." },
-        { src: "/images/371admin-odermonitoring-mainui.webp", label: "Order Monitoring", caption: "End-to-end device order lifecycle tracking from order dispatch to field deployment." },
-        { src: "/images/371admin-backend-alldevicemonitoring.webp", label: "All Device Monitoring", caption: "Comprehensive device inventory showing current IP, SIM carrier, and connection heartbeat." },
-        { src: "/images/371admin-backend-offlinedevices.webp", label: "Offline Devices", caption: "Filtered triage console highlighting unresponsive units requiring on-site maintenance." },
-        { src: "/images/371admin-backend-notinstalled.webp", label: "Not Installed Devices", caption: "Queue of unassigned units pending field activation." },
-        { src: "/images/371admin-backend-simdata-monitoring.webp", label: "SIM Data Monitoring", caption: "Cellular data consumption tracker to prevent data exhaustion and billing overages." },
-        { src: "/images/371admin-ads-listbooking.webp", label: "Ads - Booking List", caption: "Commercial advertising campaign inventory and venue scheduling." },
-        { src: "/images/371admin-ads-bookingform.webp", label: "Ads - Booking Form", caption: "Ad flight creation interface with date filtering and device cluster targeting." },
-        { src: "/images/371admin-ads-dailymonitoringreport.webp", label: "Ads - Daily Monitoring Report", caption: "Auditable verification reports verifying that ads aired as contracted." },
-        { src: "/images/371admin-ads-weeklymonitoring.webp", label: "Ads - Weekly Monitoring", caption: "Aggregated multi-day performance trends for advertising partners." },
-        { src: "/images/371admin-ads-playplancalculator.webp", label: "Ads - Play Plan Calculator", caption: "Automated playback capacity estimator based on active device screen hours." },
+        { src: "/images/371admin-maindashboard.webp", width: 1423, height: 728, label: "Main Dashboard", caption: "High-level overview of active devices, connectivity metrics, and system alert summaries." },
+        { src: "/images/371admin-maindashboard-1.webp", width: 1418, height: 729, label: "Dashboard Overview", caption: "Live operational telemetry view showing status distributions." },
+        { src: "/images/371admin-odermonitoring-mainui.webp", width: 1419, height: 729, label: "Order Monitoring", caption: "End-to-end device order lifecycle tracking from order dispatch to field deployment." },
+        { src: "/images/371admin-backend-alldevicemonitoring.webp", width: 1424, height: 729, label: "All Device Monitoring", caption: "Comprehensive device inventory showing current IP, SIM carrier, and connection heartbeat." },
+        { src: "/images/371admin-backend-offlinedevices.webp", width: 1426, height: 727, label: "Offline Devices", caption: "Filtered triage console highlighting unresponsive units requiring on-site maintenance." },
+        { src: "/images/371admin-backend-notinstalled.webp", width: 1426, height: 728, label: "Not Installed Devices", caption: "Queue of unassigned units pending field activation." },
+        { src: "/images/371admin-backend-simdata-monitoring.webp", width: 1422, height: 725, label: "SIM Data Monitoring", caption: "Cellular data consumption tracker to prevent data exhaustion and billing overages." },
+        { src: "/images/371admin-ads-listbooking.webp", width: 1428, height: 731, label: "Ads - Booking List", caption: "Commercial advertising campaign inventory and venue scheduling." },
+        { src: "/images/371admin-ads-bookingform.webp", width: 1427, height: 730, label: "Ads - Booking Form", caption: "Ad flight creation interface with date filtering and device cluster targeting." },
+        { src: "/images/371admin-ads-dailymonitoringreport.webp", width: 1422, height: 731, label: "Ads - Daily Monitoring Report", caption: "Auditable verification reports verifying that ads aired as contracted." },
+        { src: "/images/371admin-ads-weeklymonitoring.webp", width: 1424, height: 728, label: "Ads - Weekly Monitoring", caption: "Aggregated multi-day performance trends for advertising partners." },
+        { src: "/images/371admin-ads-playplancalculator.webp", width: 1425, height: 728, label: "Ads - Play Plan Calculator", caption: "Automated playback capacity estimator based on active device screen hours." },
       ],
     },
     {
@@ -193,12 +208,12 @@ export const resumeData = {
       status: "personal" as const,
       link: "https://budget-tracker-two-inky.vercel.app/",
       images: [
-        { src: "/images/tracky-maindashboard.webp", label: "Main Dashboard", caption: "Monthly spending overview with dynamic category progress bars and quick receipt upload." },
-        { src: "/images/tracky-transactions.webp", label: "Transactions", caption: "Searchable transaction ledger showing parsed receipts and category tags." },
-        { src: "/images/tracky-recurring.webp", label: "Recurring Payments", caption: "Subscription and regular bill detection to prevent unexpected auto-renewals." },
-        { src: "/images/tracky-budgets.webp", label: "Budgets", caption: "Granular category budgeting with visual percentage thresholds." },
-        { src: "/images/tracky-savings.webp", label: "Savings Goals", caption: "Target milestone trackers with projected completion forecasts." },
-        { src: "/images/tracky-calendarview.webp", label: "Calendar View", caption: "Monthly distribution of daily cash inflows and outlays." },
+        { src: "/images/tracky-maindashboard.webp", width: 1427, height: 728, label: "Main Dashboard", caption: "Monthly spending overview with dynamic category progress bars and quick receipt upload." },
+        { src: "/images/tracky-transactions.webp", width: 1422, height: 736, label: "Transactions", caption: "Searchable transaction ledger showing parsed receipts and category tags." },
+        { src: "/images/tracky-recurring.webp", width: 1435, height: 730, label: "Recurring Payments", caption: "Subscription and regular bill detection to prevent unexpected auto-renewals." },
+        { src: "/images/tracky-budgets.webp", width: 1426, height: 729, label: "Budgets", caption: "Granular category budgeting with visual percentage thresholds." },
+        { src: "/images/tracky-savings.webp", width: 1420, height: 728, label: "Savings Goals", caption: "Target milestone trackers with projected completion forecasts." },
+        { src: "/images/tracky-calendarview.webp", width: 1423, height: 727, label: "Calendar View", caption: "Monthly distribution of daily cash inflows and outlays." },
       ],
     },
     {
@@ -220,12 +235,12 @@ export const resumeData = {
       status: "personal" as const,
       link: "https://coop-tracker.vercel.app/",
       images: [
-        { src: "/images/coop-tracker-maindashboard.webp", label: "Main Dashboard", caption: "Executive summary of total cooperative assets, active loan balances, and membership stats." },
-        { src: "/images/coop-tracker-members.webp", label: "Members", caption: "Member profile directory tracking shares, savings, and credit standing." },
-        { src: "/images/coop-tracker-loans.webp", label: "Loans", caption: "Automated loan lifecycle manager showing principal, calculated interest, and repayment status." },
-        { src: "/images/coop-tracker-ledger.webp", label: "Ledger", caption: "Immutable double-entry transaction history for end-of-year audit trails." },
-        { src: "/images/coop-tracker-shares.webp", label: "Shares", caption: "Capital share distribution records for accurate annual dividend disbursements." },
-        { src: "/images/coop-tracker-archives.webp", label: "Archives", caption: "Historical records repository ensuring permanent audit compliance." },
+        { src: "/images/coop-tracker-maindashboard.webp", width: 1425, height: 733, label: "Main Dashboard", caption: "Executive summary of total cooperative assets, active loan balances, and membership stats." },
+        { src: "/images/coop-tracker-members.webp", width: 1424, height: 728, label: "Members", caption: "Member profile directory tracking shares, savings, and credit standing." },
+        { src: "/images/coop-tracker-loans.webp", width: 1420, height: 729, label: "Loans", caption: "Automated loan lifecycle manager showing principal, calculated interest, and repayment status." },
+        { src: "/images/coop-tracker-ledger.webp", width: 1423, height: 731, label: "Ledger", caption: "Immutable double-entry transaction history for end-of-year audit trails." },
+        { src: "/images/coop-tracker-shares.webp", width: 1421, height: 730, label: "Shares", caption: "Capital share distribution records for accurate annual dividend disbursements." },
+        { src: "/images/coop-tracker-archives.webp", width: 1423, height: 729, label: "Archives", caption: "Historical records repository ensuring permanent audit compliance." },
       ],
     },
     {

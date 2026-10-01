@@ -1,0 +1,79 @@
+[
+  {
+    "src": "/studio/work-tracky-0.webp",
+    "ratio": 1.7704011065006915,
+    "project": 0,
+    "detail": 0,
+    "label": "Spending overview"
+  },
+  {
+    "src": "/studio/work-tracky-1.webp",
+    "ratio": 1.3782542113323124,
+    "project": 0,
+    "detail": 1,
+    "label": "Transactions"
+  },
+  {
+    "src": "/studio/work-tracky-2.webp",
+    "ratio": 1.3953488372093024,
+    "project": 0,
+    "detail": 2,
+    "label": "Category budgets"
+  },
+  {
+    "src": "/studio/work-coop-tracker-0.webp",
+    "ratio": 1.7582417582417582,
+    "project": 1,
+    "detail": 0,
+    "label": "Financial overview"
+  },
+  {
+    "src": "/studio/work-coop-tracker-1.webp",
+    "ratio": 1.3953488372093024,
+    "project": 1,
+    "detail": 1,
+    "label": "Member records"
+  },
+  {
+    "src": "/studio/work-coop-tracker-2.webp",
+    "ratio": 1.3888888888888888,
+    "project": 1,
+    "detail": 2,
+    "label": "Loan management"
+  },
+  {
+    "src": "/studio/work-371admin-0.webp",
+    "ratio": 1.7655172413793103,
+    "project": 2,
+    "detail": 0,
+    "label": "Operations overview"
+  },
+  {
+    "src": "/studio/work-371admin-1.webp",
+    "ratio": 1.3931888544891642,
+    "project": 2,
+    "detail": 1,
+    "label": "Device monitoring"
+  },
+  {
+    "src": "/studio/work-371admin-2.webp",
+    "ratio": 1.3953488372093024,
+    "project": 2,
+    "detail": 2,
+    "label": "Playback planning"
+  },
+  {
+    "src": "/studio/work-application.webp",
+    "ratio": 2,
+    "project": 2,
+    "detail": "application",
+    "label": "02 / APPLICATION"
+  },
+  {
+    "src": "/studio/work-data.webp",
+    "ratio": 2,
+    "project": 2,
+    "detail": "data",
+    "label": "03 / DATA"
+  }
+]
