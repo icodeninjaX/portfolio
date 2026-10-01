@@ -1254,6 +1254,7 @@ html.lenis body {
 
 .stack-project__links {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 

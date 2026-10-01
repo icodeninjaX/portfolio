@@ -145,6 +145,54 @@ export const resumeData = {
 
   projects: [
     {
+      slug: "atlas",
+      name: "ATLAS",
+      description:
+        "A personal operating system connecting goals, tasks, knowledge, and finances with owner-scoped relationships and AI-assisted analysis.",
+      details:
+        "A Philippines-first life-management app bringing daily planning, money, debts, career applications, and weekly reflection into one workspace, with knowledge capture and a relationship graph.",
+      problem:
+        "Goals, daily tasks, financial records, and learning notes often live in separate tools. ATLAS connects those records so people can review priorities and follow their context across modules.",
+      role:
+        "Creator & Full-Stack Developer. Built the Next.js and Supabase application, responsive planning and finance workflows, knowledge workspace, owner-scoped graph, and evidence-backed analyst features.",
+      decision:
+        "Keep financial calculations deterministic and store pesos as integer centavos. Scope related records to the authenticated owner and ground AI-assisted analysis in retrieved evidence.",
+      result:
+        "Implemented a connected workspace for planning, finances, and reflection. The scoped MVP is in release-candidate validation, with authentication and database launch checks still pending.",
+      tech: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL"],
+      status: "personal" as const,
+      stage: "Release candidate",
+      link: "",
+      source: "https://github.com/icodeninjaX/project-atlas",
+      images: [
+        { src: "/images/atlas-system-core.webp", width: 1200, height: 630, label: "System Core brand artwork", caption: "ATLAS's existing public brand artwork. This is a project cover, not an authenticated dashboard or user-data preview." },
+      ],
+    },
+    {
+      slug: "kdv-website-services",
+      name: "KDV Website Services",
+      description:
+        "A service website for Philippine businesses to explore websites, business dashboards, and custom web apps, review selected work, and start an inquiry.",
+      details:
+        "The public website for Keith's web development studio, with service pages, project case studies, a scroll-driven Three.js story, and a validated contact form.",
+      problem:
+        "Business owners need a clear way to understand the available services, see relevant work, and explain what their business needs before starting a project.",
+      role:
+        "Founder & Full-Stack Developer. Designed and built the service website, responsive layouts, project case studies, interactive homepage, and inquiry workflow.",
+      decision:
+        "Pair a scroll-driven Three.js story with accessible page content and reduced-motion support. Validate inquiries on the server with Zod and send contact emails through Resend.",
+      result:
+        "The public site brings service information, selected work, and project inquiries into one place at kdvwebsiteservices.com.",
+      tech: ["Next.js", "TypeScript", "Tailwind CSS", "Three.js", "Resend"],
+      status: "current" as const,
+      stage: "Live website",
+      link: "https://kdvwebsiteservices.com/",
+      source: "https://github.com/icodeninjaX/KDV-Website-Services",
+      images: [
+        { src: "/images/kdv-website-services-home.webp", width: 1440, height: 820, label: "Public homepage", caption: "The live KDV Website Services homepage, captured with reduced motion enabled on 2026-10-01." },
+      ],
+    },
+    {
       slug: "371admin",
       name: "371admin",
       description:

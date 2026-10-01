@@ -88,7 +88,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         {/* Header section */}
         <header className="section-box mt-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
+            <div className="flex min-w-0 flex-wrap items-center gap-2.5">
               <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                 {project.name}
               </h1>
@@ -97,17 +97,30 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               </span>
             </div>
 
-            {project.link && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 font-display text-xs font-medium text-background transition-opacity hover:opacity-90 active:scale-95"
-              >
-                <span>Live Demo</span>
-                <LuExternalLink className="h-3 w-3" />
-              </a>
-            )}
+            <div className="flex flex-wrap items-center gap-2">
+              {project.link && (
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 font-display text-xs font-medium text-background transition-opacity hover:opacity-90 active:scale-95"
+                >
+                  <span>{project.stage === "Live website" ? "Visit Website" : "Live Demo"}</span>
+                  <LuExternalLink className="h-3 w-3" />
+                </a>
+              )}
+              {project.source && (
+                <a
+                  href={project.source}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-border-hover px-3.5 py-1.5 font-display text-xs font-medium text-foreground transition-colors hover:bg-section-bg"
+                >
+                  <span>Source Code</span>
+                  <LuExternalLink className="h-3 w-3" />
+                </a>
+              )}
+            </div>
           </div>
 
           <p className="mt-4 text-justify font-display text-base leading-relaxed text-foreground/80 sm:text-lg">
@@ -122,7 +135,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </div>
             <div className="rounded-lg border border-border-hover bg-card p-2.5 shadow-xs">
               <span className="block text-[10px] text-muted">Deployment</span>
-              <span className="mt-0.5 font-medium text-foreground">{project.link ? "Production" : "Internal"}</span>
+              <span className="mt-0.5 font-medium text-foreground">{project.stage ?? (project.link ? "Production" : "Internal")}</span>
             </div>
           </div>
         </header>
@@ -200,14 +213,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <h2 className="section-heading text-xl text-accent sm:text-2xl">
-                    Interface Showcase
+                    Project Showcase
                   </h2>
                   <p className="mt-0.5 font-display text-xs text-muted">
-                    Walkthrough of key modules and production screens.
+                    Project visuals, with context for each view.
                   </p>
                 </div>
-                <span className="rounded-full border border-border-hover bg-section-bg px-2.5 py-0.5 font-mono text-[10px] text-muted">
-                  {project.images.length} views
+                <span className="shrink-0 rounded-full border border-border-hover bg-section-bg px-2.5 py-0.5 font-mono text-[10px] text-muted">
+                  {project.images.length} {project.images.length === 1 ? "view" : "views"}
                 </span>
               </div>
 

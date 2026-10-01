@@ -178,7 +178,7 @@ export function ProjectSection({ project, index, total }: { project: Project; in
       <div className="stack-sticky">
         <article className="stack-copy stack-copy--wide">
           <Chapter index="L4" name={index === 0 ? "Interface — Selected work" : "Interface"} meta={`${n} / ${String(total).padStart(2, "0")}`} />
-          <p className="stack-project__status">{statusLabel[project.status]}</p>
+          <p className="stack-project__status">{project.stage ?? statusLabel[project.status]}</p>
           <h2 id={`p-${project.slug}`} className="stack-project__name">
             {project.name}
           </h2>
@@ -210,6 +210,11 @@ export function ProjectSection({ project, index, total }: { project: Project; in
               {project.link && (
                 <a href={project.link} target="_blank" rel="noopener noreferrer" className="stack-link stack-link--ghost">
                   Live <span aria-hidden>↗</span>
+                </a>
+              )}
+              {project.source && (
+                <a href={project.source} target="_blank" rel="noopener noreferrer" className="stack-link stack-link--ghost">
+                  Source <span aria-hidden>&#8599;</span>
                 </a>
               )}
             </div>
