@@ -165,7 +165,7 @@ export const resumeData = {
       link: "",
       source: "https://github.com/icodeninjaX/project-atlas",
       images: [
-        { src: "/images/atlas-system-core.webp", width: 1200, height: 630, label: "System Core brand artwork", caption: "ATLAS's existing public brand artwork. This is a project cover, not an authenticated dashboard or user-data preview." },
+        { src: "/images/atlas-landing-page.webp", width: 1440, height: 900, label: "Public landing page", caption: "ATLAS's public landing page at atlas.kdvwebsiteservices.com, featuring the System Core and introduction to the personal operating system." },
       ],
     },
     {
