@@ -243,7 +243,10 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
       status: "internship" as const,
       link: "",
-      images: [],
+      images: [
+        { src: "/images/new-zion-add-customer.webp", width: 1909, height: 921, label: "Customer registration", caption: "Existing New Zion POS screenshot from the KDV case study, showing the empty customer form and location fields." },
+        { src: "/images/new-zion-search-customers.webp", width: 1901, height: 921, label: "Customer search", caption: "Existing New Zion POS screenshot from the KDV case study, showing the search interface before any customer records are displayed." },
+      ],
     },
     {
       slug: "tracky",
@@ -317,7 +320,10 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "HTMX", "MySQL"],
       status: "personal" as const,
       link: "",
-      images: [],
+      images: [
+        { src: "/images/plantpal-garden-landing.webp", width: 1440, height: 820, label: "Garden public landing page", caption: "PlantPal's current Garden branding, captured from the public landing page with reduced motion enabled." },
+        { src: "/images/plantpal-garden-library.webp", width: 1440, height: 820, label: "Garden plant library", caption: "The public care-guide library with plant search, experience, and light filters. No signed-in garden or personal records are shown." },
+      ],
     },
   ],
 };
