@@ -59,6 +59,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   if (projectIndex === -1) notFound();
 
   const project = resumeData.projects[projectIndex];
+  const mobileImages = "mobileImages" in project ? project.mobileImages : undefined;
+  const viewCount = project.images.length + (mobileImages?.length ?? 0);
   const prevProject = projectIndex > 0 ? resumeData.projects[projectIndex - 1] : null;
   const nextProject =
     projectIndex < resumeData.projects.length - 1
@@ -220,9 +222,36 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   </p>
                 </div>
                 <span className="shrink-0 rounded-full border border-border-hover bg-section-bg px-2.5 py-0.5 font-mono text-[10px] text-muted">
-                  {project.images.length} {project.images.length === 1 ? "view" : "views"}
+                  {viewCount} {viewCount === 1 ? "view" : "views"}
                 </span>
               </div>
+
+              {mobileImages && mobileImages.length > 0 && (
+                <>
+                  <nav aria-label="Screenshot views" className="mb-6 flex flex-wrap gap-2 font-display text-xs">
+                    <a href="#phone-views" className="inline-flex min-h-11 items-center rounded-full border border-border-hover bg-section-bg px-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent">Phone views</a>
+                    <a href="#desktop-views" className="inline-flex min-h-11 items-center rounded-full border border-border-hover px-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent">Desktop views</a>
+                  </nav>
+                  <div id="phone-views" className="mb-8 scroll-mt-6">
+                    <h3 className="font-display text-sm font-semibold text-foreground">Phone views</h3>
+                    <p className="mb-4 mt-1 font-display text-xs text-muted">Captured at a 390 × 844 phone viewport. Open an image to inspect it at full size.</p>
+                    <div className={`grid items-start gap-6 ${mobileImages.length > 1 ? "sm:grid-cols-2" : "mx-auto max-w-sm"}`}>
+                      {mobileImages.map((img) => (
+                        <figure key={img.src} className="min-w-0 rounded-xl border border-border-hover bg-card p-4">
+                          <a href={img.src} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.name} ${img.label} at full size (new tab)`} className="mx-auto block max-w-[280px] overflow-hidden rounded-2xl border border-border-hover bg-section-bg shadow-xs focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent">
+                            <Image src={img.src} alt={img.alt} width={img.width} height={img.height} sizes="(max-width: 359px) 72vw, (max-width: 639px) 280px, 260px" className="h-auto w-full" />
+                          </a>
+                          <figcaption className="mt-4 font-display">
+                            <span className="block text-xs font-semibold text-foreground">{img.label}</span>
+                            <span className="mt-1 block text-xs leading-relaxed text-muted">{img.caption}</span>
+                          </figcaption>
+                        </figure>
+                      ))}
+                    </div>
+                  </div>
+                  <h3 id="desktop-views" className="mb-4 scroll-mt-6 font-display text-sm font-semibold text-foreground">Desktop views</h3>
+                </>
+              )}
 
               <div className="space-y-6">
                 {project.images.map((img, i) => {

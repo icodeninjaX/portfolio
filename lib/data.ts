@@ -164,6 +164,10 @@ export const resumeData = {
       stage: "Release candidate",
       link: "",
       source: "https://github.com/icodeninjaX/project-atlas",
+      mobileImages: [
+        {"src": "/images/atlas-mobile-landing.webp", "width": 780, "height": 1688, "label": "Public landing · phone", "alt": "ATLAS phone layout with compact navigation, introductory headline and stacked calls to action.", "caption": "The public landing page, rendered locally from the saved ATLAS source with reduced motion."},
+        {"src": "/images/atlas-mobile-tasks.webp", "width": 780, "height": 1688, "label": "Task preview · phone", "alt": "ATLAS public task preview arranged vertically at phone width.", "caption": "The landing page’s illustrative task preview. This is public demo content, not a signed-in workspace."},
+      ],
       images: [
         { src: "/images/atlas-landing-page.webp", width: 1440, height: 900, label: "Public landing page", caption: "ATLAS's public landing page at atlas.kdvwebsiteservices.com, featuring the System Core and introduction to the personal operating system." },
       ],
@@ -188,6 +192,10 @@ export const resumeData = {
       stage: "Live website",
       link: "https://kdvwebsiteservices.com/",
       source: "https://github.com/icodeninjaX/KDV-Website-Services",
+      mobileImages: [
+        {"src": "/images/kdv-mobile-home.webp", "width": 780, "height": 1688, "label": "Homepage · phone", "alt": "KDV Website Services phone homepage with a collapsed menu and stacked inquiry links.", "caption": "The public homepage, rendered locally from the saved KDV source with reduced motion."},
+        {"src": "/images/kdv-mobile-menu.webp", "width": 780, "height": 1688, "label": "Navigation · phone", "alt": "KDV Website Services expanded mobile navigation with links to services, work and contact.", "caption": "The homepage menu opened at phone width, showing the responsive navigation."},
+      ],
       images: [
         { src: "/images/kdv-website-services-home.webp", width: 1440, height: 820, label: "Public homepage", caption: "The live KDV Website Services homepage, captured with reduced motion enabled on 2026-10-01." },
       ],
@@ -293,6 +301,9 @@ export const resumeData = {
       tech: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS"],
       status: "personal" as const,
       link: "https://coop-tracker.vercel.app/",
+      mobileImages: [
+        { src: "/images/coop-mobile-login.webp", width: 780, height: 1688, label: "Sign-in · phone", alt: "CoopTracker public sign-in form at phone width with empty email and password fields.", caption: "The public sign-in screen rendered locally from the saved source. This view does not show the authenticated cooperative dashboard." },
+      ],
       images: [
         { src: "/images/coop-tracker-maindashboard.webp", width: 1425, height: 733, label: "Main Dashboard", caption: "Executive summary of total cooperative assets, active loan balances, and membership stats." },
         { src: "/images/coop-tracker-members.webp", width: 1424, height: 728, label: "Members", caption: "Member profile directory tracking shares, savings, and credit standing." },
@@ -320,6 +331,10 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "HTMX", "MySQL"],
       status: "personal" as const,
       link: "",
+      mobileImages: [
+        {"src": "/images/plantpal-mobile-home.webp", "width": 780, "height": 1688, "label": "Garden landing · phone", "alt": "Garden public landing page with botanical artwork and its introductory content at phone width.", "caption": "PlantPal’s Garden branding on the public landing page, rendered locally from the saved source."},
+        {"src": "/images/plantpal-mobile-care.webp", "width": 780, "height": 1688, "label": "Garden story · phone", "alt": "Garden public care story with a single-column layout at phone width.", "caption": "The public landing page’s care section, captured with reduced motion. No personal garden records are shown."},
+      ],
       images: [
         { src: "/images/plantpal-garden-landing.webp", width: 1440, height: 820, label: "Garden public landing page", caption: "PlantPal's current Garden branding, captured from the public landing page with reduced motion enabled." },
         { src: "/images/plantpal-garden-library.webp", width: 1440, height: 820, label: "Garden plant library", caption: "The public care-guide library with plant search, experience, and light filters. No signed-in garden or personal records are shown." },
