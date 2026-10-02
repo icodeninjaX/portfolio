@@ -19,9 +19,9 @@ Google Fonts was also blocked. The same named font families were loaded from Fon
 
 ## Remaining coverage
 
-- **TRACKY:** confirmed URL `https://budget-tracker-two-inky.vercel.app/` blocked by the cloud proxy; no local source checkout available. No mobile capture added.
-- **371admin:** no public URL or sanitized runnable source in this environment; existing desktop images only. No authenticated access attempted.
-- **New Z1on LPG (`new-z1on-lpg`):** only approved desktop empty-state images are available. Those cannot authentically be converted into phone screenshots; no mobile capture added.
+- **TRACKY:** populated local offline dashboard and Activity captures completed with synthetic demo entries.
+- **371admin:** meaningful workflow capture blocked on sanctioned demo authentication; rejected login-only preview excluded.
+- **New Z1on LPG (`new-z1on-lpg`):** real dashboard and customer-directory captures completed with an isolated synthetic database and normal authentication.
 - **Coop-Tracker:** public sign-in captured; authenticated dashboard requires a separately authorized sanitized demo.
 
 ## Integration and verification
@@ -33,3 +33,41 @@ The capture files include the native viewport boundaries; they are not full-page
 Run `node scripts/verify-project-showcase.mjs` with a running portfolio server. Set `SHOWCASE_URL`, `PLAYWRIGHT_MODULE`, or `CHROMIUM_PATH` as needed. It checks all seven case studies at 320, 390, 768 and 1440 pixels, image decoding, overflow, keyboard section navigation, full-size image links, and JavaScript errors. Review previews and a JSON report are written under `.artifacts/project-showcase/`.
 
 Coop-Tracker source commit: `5a71b75759c7130713bf535f2e24e9a8625a7f18`.
+
+## Isolated workflow captures — 2026-10-02
+
+The earlier login-only proposal was rejected and is not included. Four useful workflow captures now supplement the original seven phone images, which remain unchanged. Every desktop image is also unchanged.
+
+All four new images are native Chrome captures at 390 x 844 CSS pixels, DPR 2 (780 x 1688 image pixels), mobile/touch emulation and reduced motion. No CSS/layout substitution, desktop cropping, screenshot compositing, or authentication bypass was used. WebP quality is 86. Captions and alt text explicitly identify synthetic demo content.
+
+### New Zion
+
+Source: unchanged copy of `C:/Dev/LPG-System`, remote `icodeninjaX/newzionpos1`, HEAD `220e96ac78257096c5f451a1ef3851d7a54519e2`. The source checkout was not edited. The copy runs at `http://127.0.0.1:3192` with its own `.env` pointing at a fresh MySQL instance bound only to loopback port 3318, with a new data directory and `newzion_demo` database. The owner's existing MySQL data directory and databases were not used.
+
+Imported the repository's clean-install schema plus login-enhancement schema. The only schema-import compatibility adjustment removes MariaDB's `IF NOT EXISTS` on ADD COLUMN/INDEX for the new MySQL 8 database. No application PHP, UI, authorization logic, or password checks were changed. A demo user was created through the existing CSRF-protected public signup form and subsequent captures used the normal login form.
+
+Synthetic fixture rows: `DEMO-001` / `Demo Household A`, `DEMO-002` / `Demo Household B`, and `DEMO-003` / `Demo Shop C`, fictional Sample addresses in Demo District / Demo City, no phone numbers, plus three fictional orders (two pending). No source/customer-record export or production connection occurred. The fixture's optional telephone fields use empty strings: null values initially triggered a source PHP deprecation warning; correcting the fixture removed the warning without modifying application code.
+
+- `newzion-mobile-demo-customers.webp`: `/search-customer.php`, real responsive customer directory with synthetic rows.
+- `newzion-mobile-demo-dashboard.webp`: `/dashboard.php`, normal scroll to the dashboard totals. Existing fixed navigation/footer and large phone cards remain as implemented; not all totals fit in one viewport.
+
+Final normal-login captures return HTTP 200, have 390px document width, and no JavaScript errors. An initial signup success-page JavaScript error was not present during final normal-login captures.
+
+### TRACKY
+
+Source: byte-for-byte copy of the existing built app from `C:/Dev/Tracky/dist`, served at `http://127.0.0.1:3193`; source checkout remote `icodeninjaX/Budget-tracker`, HEAD `6f435aa0683060ff527dd8878337065af8228dcf`. No application code was edited. This is a local-build capture, not a production capture; the exact compiled artifact is retained in the capture workspace.
+
+Used the app's existing Continue Offline and Skip for Now controls in a fresh disposable browser context. Three fictional transactions were entered via the actual manual-entry form: `DEMO — Sample earnings` (Salary, PHP 15,000), `DEMO — Sample groceries` (Food, PHP 800), and `DEMO — Sample commute` (Transportation, PHP 150). The application computed the PHP 14,050 balance. No account login, real finances, AI call, geolocation request, or production service was used. Browser requests were restricted to loopback and font hosts; no blocked external-service attempt was recorded.
+
+- `tracky-mobile-demo-dashboard.webp`: actual Home dashboard calculated from synthetic entries.
+- `tracky-mobile-demo-activity.webp`: actual Activity view scrolled to expose the DEMO-labeled entries.
+
+Both captures have 390px document width and no JavaScript errors. Native notifications were allowed to expire before capture.
+
+### 371admin blocker
+
+Source located at `E:/xampp/htdocs/371admin/371admin_ver1`, remote `icodeninjaX/371admin_ver1`, HEAD `b5fc152756d4ce2286737212fe56a27a2fd471c4` plus existing owner edits to login/config files. Those edits remain intact. No phone screenshot is added for this project in the final proposal.
+
+The repository's users/RBAC setup contains seeded password hashes but no verified demo login password. The current user-creation route requires a logged-in administrator with USERS_CREATE permission and a valid CSRF token; there is no public signup flow. Proceeding needs a working sanctioned demo login or an approved supported demo-account provisioning step. Passwords were not reset, sessions were not fabricated, and authorization checks were not changed. Device-monitoring workflows additionally use a separate production RDS configuration; no production connection was attempted. A calculator may provide a useful local-only view after sanctioned demo authentication is established.
+
+The prior login preview is excluded. Its existing source layout overflow remains a diagnostic observation, not a claim about dashboard responsiveness.

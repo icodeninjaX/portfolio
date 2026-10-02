@@ -39,6 +39,8 @@ fs.mkdirSync(out, { recursive: true });
         "kdv-website-services",
         "plantpal",
         "coop-tracker",
+        "new-z1on-lpg",
+        "tracky",
       ].includes(slug);
       assert.equal(await p.locator("#phone-views").count(), hasPhone ? 1 : 0);
       assert.ok(
