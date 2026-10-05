@@ -21,6 +21,6 @@ export function StudioControls() {
   </div>;
 }
 
-export function PrintButton() {
-  return <button className="studio-button print-hidden" onClick={() => window.print()}>Print / Save as PDF ↗</button>;
+export function PrintButton({ label = "Print / Save as PDF ↗" }: { label?: string }) {
+  return <button className="studio-button print-hidden" onClick={() => window.print()}>{label}</button>;
 }
