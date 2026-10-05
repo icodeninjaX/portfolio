@@ -1,0 +1,37 @@
+{
+  "voice": "en_US-joe-medium",
+  "lines": [
+    {
+      "at": 0.8,
+      "text": "A field guide to Garden, the plant care app."
+    },
+    {
+      "at": 5.3,
+      "text": "Sign in, and your garden is ready."
+    },
+    {
+      "at": 9.0,
+      "text": "Today shows what to water, and what to feed."
+    },
+    {
+      "at": 12.7,
+      "text": "Every plant is catalogued, growing or retired."
+    },
+    {
+      "at": 16.4,
+      "text": "The calendar keeps care on schedule."
+    },
+    {
+      "at": 20.1,
+      "text": "Eighty seven care guides help you choose what thrives."
+    },
+    {
+      "at": 23.8,
+      "text": "And every watering is logged."
+    },
+    {
+      "at": 30.6,
+      "text": "Garden. A little care, every day. Built by Keith Vergara."
+    }
+  ]
+}
