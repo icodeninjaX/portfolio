@@ -15,7 +15,8 @@
   - `app/about/page.tsx` - About: scroll-driven 3D gyroscope (see `components/about/`)
   - `app/page.tsx` - Homepage: "Full stack, literally." scroll-driven 3D tower (see `components/stack/`)
   - `app/experience/page.tsx` - Journey: scroll-driven 3D route up a mountain (see `components/journey/`)
-  - `app/creative/page.tsx` - 3D interactive office mode (FPS-style walkable office)
+  - `app/resume/page.tsx` - "Simple mode": a single premium resume sheet built from `components/resume/` and styled in `app/resume/resume.css` (`rs-` prefix, own light/dark tokens, A4 print layout for Save as PDF)
+- `app/creative/page.tsx` - 3D interactive office mode (FPS-style walkable office)
   - `app/globals.css` - Global styles, CSS variables, animations, print styles
 - `components/` - Resume page components (header, summary, experience, education, skills, projects, footer, scroll-progress, sticky-nav, theme-toggle)
 - `components/stack/` - Homepage 3D experience. `stages.ts` is the single source of truth: each DOM section with `data-stage` maps in order to one camera keyframe in `CAMERA_KEYS`. `scrollStore.ts` shares scroll state with the canvas without React re-renders. Layers: `SiliconLayer`, `NetworkLayer`, `DataLayer`, `InterfaceLayer` (project screenshots on panels), `Spine` (signal bus, crown, dust). `Sections.tsx` holds the copy.
@@ -46,6 +47,7 @@
 - Resume components live as flat files in `components/` (still used by `/experience`, `/projects/[slug]`)
 - Homepage, About and Journey are dark-only; their styles live under the `stack-` prefix at the end of `globals.css` (About-only pieces in the "About" block, Journey-only in the "Journey" block)
 - Adding a milestone to `journey` in `lib/data.ts` automatically adds a waypoint, monolith and camera stop on the Journey page; give it a `kit` list
+- Resume-only content lives in `lib/data.ts` too: `resume.headline`, `highlights` on each `experience` item, `skillGroups` (software / hardware, `core` = bolded), `certifications`
 - Adding a project to `lib/data.ts` automatically adds a panel + camera stop; give it `images` or add a cover in `COVERS` in `app/page.tsx`
 - 3D/creative components live in `components/creative/`
 

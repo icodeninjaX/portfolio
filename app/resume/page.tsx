@@ -1,24 +1,40 @@
 import Link from "next/link";
-import Image from "next/image";
+import { LuArrowLeft } from "react-icons/lu";
 import { resumeData } from "@/lib/data";
-import { Experience } from "@/components/experience";
-import { Education } from "@/components/education";
-import { Projects } from "@/components/projects";
-import { Footer } from "@/components/footer";
 import { PrintButton, StudioControls } from "@/components/cinematic/controls";
+import { ResumeHeader } from "@/components/resume/ResumeHeader";
+import { AtAGlance, Education, Experience, Growth, Profile, Projects, Skills } from "@/components/resume/ResumeBody";
 import "../studio.css";
+import "./resume.css";
 
-export const metadata = { title: "Resume | Keith Vergara", alternates: { canonical: "/resume" } };
+export const metadata = {
+  title: "Resume | Keith Vergara",
+  description: `${resumeData.name}, ${resumeData.title}. Experience, software and hardware skills, projects, education and certifications.`,
+  alternates: { canonical: "/resume" },
+};
+
 export default function Resume() {
-  return <div className="portfolio-studio resume-view">
-    <a href="#main-content" className="skip-link">Skip to resume</a>
-    <div className="resume-toolbar print-hidden"><Link href="/">← Portfolio</Link><StudioControls /><PrintButton /></div>
-    <main id="main-content" className="resume-content" tabIndex={-1}>
-      <header className="resume-header"><Image src="/profile.webp" width={80} height={80} alt={`Portrait of ${resumeData.name}`} /><div><h1>{resumeData.name}</h1><p>{resumeData.title}</p><p>{resumeData.location}</p><a href={`mailto:${resumeData.email}`}>{resumeData.email}</a></div></header>
-      <p className="resume-summary">{resumeData.summary}</p>
-      <Experience items={resumeData.experience} />
-      <section className="section-box"><h2 className="section-heading">Technologies</h2><ul className="studio-tags">{resumeData.skills.map(skill => <li key={skill.name}>{skill.name}</li>)}</ul></section>
-      <Projects items={resumeData.projects} /><Education items={resumeData.education} /><Footer data={resumeData} />
-    </main>
-  </div>;
+  return (
+    <div className="portfolio-studio rs">
+      <a href="#main-content" className="skip-link">Skip to resume</a>
+      <div className="rs-toolbar print-hidden">
+        <Link href="/" className="rs-back"><LuArrowLeft aria-hidden="true" /> Portfolio</Link>
+        <div className="rs-toolbar-actions"><StudioControls /><PrintButton /></div>
+      </div>
+      <main id="main-content" className="rs-sheet" tabIndex={-1}>
+        <ResumeHeader />
+        <AtAGlance />
+        <Profile index={1} />
+        <Skills index={2} />
+        <Experience index={3} />
+        <Projects index={4} />
+        <Growth index={5} />
+        <Education index={6} />
+        <footer className="rs-foot">
+          <p>{resumeData.name} · <a href={`mailto:${resumeData.email}`}>{resumeData.email}</a></p>
+          <p>Open to full-stack roles · {resumeData.location}</p>
+        </footer>
+      </main>
+    </div>
+  );
 }

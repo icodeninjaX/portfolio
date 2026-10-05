@@ -26,6 +26,12 @@ export const resumeData = {
   summary:
     "I'm a full-stack web developer with hands-on experience building internal tools, POS systems, and real-time monitoring platforms. Proficient in PHP, JavaScript, TypeScript, and modern frameworks like React and Next.js. Passionate about building practical, production-grade applications, from AI-powered financial tools to cooperative management systems.",
 
+  // Copy that only the resume page (/resume) uses.
+  resume: {
+    headline:
+      "I build business software end to end, from the database to the interface, on a hardware and networking foundation I started in 2014.",
+  },
+
   about: {
     bio: "I'm Keith Vergara, a full-stack web developer based in Las Piñas City, Philippines. My background in tech started from the ground up during a 2-year vocational program in hardware servicing and computer programming (earning NC II & NC IV qualifications), before pursuing my BS in Information Systems in college. Since then, I've been constantly learning and shipping, from internal business tools to personal projects that solve real problems.",
     background: "My journey started way before web development. I spent two years in a vocational program learning how computers actually work, from the hardware side, the networking side, and eventually the programming side with languages like Java, Turbo C, and VB6. That hands-on foundation carried me into college where I earned my BS in Information Systems, expanding into database design, systems analysis, IT security, and enterprise architectures while honing my focus on modern web applications. During my internship, I built a complete POS and CMS system for an LPG company, which gave me real-world experience. Now I'm at X-META Technologies Inc., building a real-time device monitoring platform, while shipping personal projects like TRACKY (AI-powered budget tracker) and Coop-Tracker on the side.",
@@ -50,6 +56,12 @@ export const resumeData = {
       endDate: "Present",
       description: "Building a real-time device monitoring platform with dashboard interfaces for order tracking, ads management, and GPS-based device location mapping.",
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
+      highlights: [
+        "Built 371admin, the operations dashboard that brings device health, order fulfillment, ad campaigns, and GPS location into one interface.",
+        "Implemented connectivity checks that flag offline and not-yet-installed field devices, replacing manual phone outreach and database lookups.",
+        "Added SIM data monitoring so the team can spot cellular data exhaustion on deployed units before it becomes a billing or uptime problem.",
+        "Wrote the ad booking and play-plan calculator, plus daily and weekly reports that show whether ads aired as contracted.",
+      ],
     },
     {
       company: "New Z1on LPG",
@@ -60,7 +72,33 @@ export const resumeData = {
       endDate: "Jul 2023",
       description: "Built a POS and CMS system for an LPG company with customer management, order processing, and SMS-based order routing to the nearest branch.",
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
+      highlights: [
+        "Designed and built a multi-branch POS and CMS on my own, from the database schema to the cashier checkout screen.",
+        "Integrated the Semaphore SMS API to send each delivery order to the nearest branch automatically, replacing paper order slips.",
+        "Added branch inventory reconciliation and customer records so stock and delivery history live in one system.",
+      ],
     },
+  ],
+
+  // Grouped for the resume page (/resume). `core` marks the strongest skills.
+  skillGroups: {
+    software: [
+      { label: "Languages", items: ["JavaScript", "TypeScript", "PHP", "HTML", "CSS", "SQL"], core: ["JavaScript", "PHP", "TypeScript"] },
+      { label: "Frontend", items: ["React", "Next.js", "Tailwind CSS", "HTMX", "Three.js"], core: ["React", "Next.js"] },
+      { label: "Backend & data", items: ["PHP MVC", "Node.js", "MySQL", "PostgreSQL", "Supabase", "REST & SMS APIs"], core: ["MySQL"] },
+      { label: "Tooling & delivery", items: ["Git", "GitHub", "Vercel", "Bun", "Vite", "NPM", "WSL", "Jest", "Zod"], core: ["Git"] },
+      { label: "AI-assisted development", items: ["Claude Code", "Gemini", "OpenAI Codex", "Receipt OCR & structured output"], core: [] },
+    ],
+    hardware: [
+      { label: "Computer hardware", items: ["PC assembly & disassembly", "Component diagnosis & repair", "Hardware troubleshooting", "OS & driver installation"], core: ["Hardware troubleshooting"] },
+      { label: "Networking", items: ["LAN setup & cabling", "Network configuration", "Connectivity troubleshooting"], core: [] },
+      { label: "Field devices & telemetry", items: ["Device health monitoring", "SIM & cellular data tracking", "GPS device mapping", "Install & deployment tracking"], core: ["Device health monitoring"] },
+    ],
+  },
+
+  certifications: [
+    { name: "NC II", detail: "Computer hardware servicing & networking", issuer: "TESDA · Vocational program", year: "2014–2016" },
+    { name: "NC IV", detail: "Computer programming (Java, Turbo C, VB6)", issuer: "TESDA · Vocational program", year: "2014–2016" },
   ],
 
   journey: [
@@ -189,6 +227,7 @@ export const resumeData = {
         "The public site brings service information, selected work, and project inquiries into one place at kdvwebsiteservices.com.",
       tech: ["Next.js", "TypeScript", "Tailwind CSS", "Three.js", "Resend"],
       status: "current" as const,
+      kind: "Own studio",
       stage: "Live website",
       link: "https://kdvwebsiteservices.com/",
       source: "https://github.com/icodeninjaX/KDV-Website-Services",
