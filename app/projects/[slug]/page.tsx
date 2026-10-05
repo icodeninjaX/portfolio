@@ -31,6 +31,11 @@ function splitRole(role: string) {
   return i === -1 ? ["", role] : [role.slice(0, i), role.slice(i + 2)];
 }
 
+// "Public landing · phone" / "Dashboard — phone demo" → "Public landing" / "Dashboard"; the stage already says it's a phone.
+function deviceLabel(label: string) {
+  return label.replace(/\s*[·—-]\s*phone( demo)?$/i, "");
+}
+
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const index = orderedProjects.findIndex((p) => p.slug === slug);
@@ -105,17 +110,23 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <ResumeSection index={++n} title="Gallery" id="gallery" wide>
             {mobileImages.length > 0 && (
               <>
-                <h3 className="rs-case-subhead">On a phone <span>390 × 844</span></h3>
-                <div className="rs-case-phones">
+                <h3 className="rs-case-subhead">On a phone <span>Responsive · 390 × 844</span></h3>
+                {/* Phone views as devices on a stage (a swipeable row on phones); the longer notes sit below. */}
+                <div className="rs-devices">
                   {mobileImages.map((img, i) => (
-                    <figure key={img.src} className="rs-shot rs-shot-phone">
+                    <figure key={img.src} className="rs-device">
                       <a href={img.src} target="_blank" rel="noopener noreferrer" aria-label={`Open ${img.label} at full size (new tab)`}>
-                        <Image src={img.src} alt={img.alt} width={img.width} height={img.height} sizes="(max-width: 639px) 70vw, 240px" />
+                        <span className="rs-device-frame">
+                          <Image src={img.src} alt={img.alt} width={img.width} height={img.height} sizes="(max-width: 639px) 62vw, 230px" />
+                        </span>
                       </a>
-                      <figcaption><span>Fig. {projectNumber(i)}</span> {img.label}<small>{img.caption}</small></figcaption>
+                      <figcaption><span>{projectNumber(i)}</span> {deviceLabel(img.label)}</figcaption>
                     </figure>
                   ))}
                 </div>
+                <ol className="rs-device-notes" aria-label="Notes on the phone views">
+                  {mobileImages.map((img, i) => <li key={img.src}><span>Fig. {projectNumber(i)}</span>{img.caption}</li>)}
+                </ol>
               </>
             )}
             {project.images.length > 0 && (
