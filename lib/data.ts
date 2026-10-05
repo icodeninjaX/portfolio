@@ -403,6 +403,13 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "HTMX", "MySQL"],
       status: "personal" as const,
       link: "",
+      video: {
+        mp4: "/videos/plantpal-demo.mp4",
+        webm: "/videos/plantpal-demo.webm",
+        poster: "/videos/plantpal-demo-poster.webp",
+        label: "Garden product demo styled as a botanical field guide: a stem grows from a seed while each app screen is pressed onto the page like a specimen, ending with the whole plant in bloom.",
+        caption: "A 36-second field guide to Garden: one continuous shot up a growing stem, with each screen pressed in like a specimen.",
+      },
       mobileNote: "Captured in a phone browser on the live site at kdv-garden.ct.ws, signed in to Keith's own garden.",
       mobileImages: [
         { src: "/images/plantpal-mobile-app-login.webp", width: 780, height: 1519, label: "Log in · phone", alt: "Garden sign-in screen on a phone with the headline Welcome back, email and password fields, and a Log in button.", caption: "Sign in. A calm welcome-back screen with show/hide password, password reset and a link to start a new garden." },
