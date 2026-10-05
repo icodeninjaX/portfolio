@@ -2,6 +2,7 @@
 
 import { savePreference, useStudioPreferences } from "./preferences";
 import Link from "next/link";
+import type React from "react";
 
 export function SkipLink() {
   return <Link href="#main-content" className="skip-link" onClick={() => {
@@ -21,6 +22,6 @@ export function StudioControls() {
   </div>;
 }
 
-export function PrintButton({ label = "Print / Save as PDF ↗" }: { label?: string }) {
+export function PrintButton({ label = "Print / Save as PDF ↗" }: { label?: React.ReactNode }) {
   return <button className="studio-button print-hidden" onClick={() => window.print()}>{label}</button>;
 }

@@ -183,6 +183,46 @@
 
 .rs :focus-visible { outline: 2px solid var(--rs-accent); outline-offset: 3px; border-radius: 2px; }
 
+/* Phones: one-row toolbar, edge-to-edge sheet, photo above the name,
+   timeline years stacked over titles, and 40px+ tap targets. */
+@media (max-width: 639px) {
+  .rs-wide-only { display: none; }
+  .rs-toolbar { flex-wrap: nowrap; padding: 8px 16px; }
+  .rs-toolbar .studio-controls > button:not(.studio-theme) { display: none; }
+  .rs-toolbar .studio-button { min-height: 40px; padding: 10px 16px; gap: 8px; }
+  .rs-sheet { margin: 4px 0 0; padding: 26px 20px 28px; border-radius: 0; }
+  .rs { padding-bottom: 0; }
+
+  .rs-head { grid-template-columns: 1fr; gap: 16px; }
+  .rs-photo { grid-row: 2; justify-self: start; align-self: start; width: 72px; height: 72px; }
+  .rs-head-main { grid-row: 3; }
+  .rs-head h1 { margin-top: 0; }
+  .rs-letterhead { font-size: 10.5px; }
+  .rs-contact { gap: 0 20px; }
+
+  .rs-section-label h2 { font-size: 26px; }
+  .rs-project-meta, .rs-skill-col dt, .rs-growth-year { font-size: 10.5px; }
+
+  .rs-growth > li { grid-template-columns: 1fr; gap: 2px; padding: 0 0 18px 24px; }
+  .rs-growth > li::before { left: 4px; top: 8px; bottom: -8px; }
+  .rs-growth-year { padding-right: 0; text-align: left; }
+  .rs-growth > li > div { padding-left: 0; position: static; }
+  .rs-growth > li > div::before { left: 0; top: 4px; }
+
+  .rs-foot { flex-direction: column; align-items: flex-start; }
+}
+
+/* Touch screens (phones and tablets): links get at least a 40px tap area. */
+@media (pointer: coarse), (max-width: 639px) {
+  .rs-contact li { min-height: 40px; }
+  .rs-contact a { padding: 10px 0; }
+  .rs-project h3 a { display: inline-block; padding: 6px 0; margin: -6px 0; }
+  .rs-project-links a { min-height: 40px; }
+  .rs-note a { display: inline-block; padding: 10px 0; }
+  .rs-project h3 a { padding: 9px 0; margin: -9px 0; }
+  .rs-foot a { display: inline-block; padding: 12px 0; margin: -12px 0; }
+}
+
 /* Print / Save as PDF: the designed sheet is swapped for the Harvard-style,
    ATS-friendly resume (components/resume/HarvardResume.tsx). */
 .hv { display: none; }

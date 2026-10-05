@@ -20,7 +20,7 @@ export default function Resume() {
       <a href="#main-content" className="skip-link">Skip to resume</a>
       <div className="rs-toolbar print-hidden">
         <Link href="/" className="rs-back"><LuArrowLeft aria-hidden="true" /> Portfolio</Link>
-        <div className="rs-toolbar-actions"><StudioControls /><PrintButton label="Download PDF (ATS) ↓" /></div>
+        <div className="rs-toolbar-actions"><StudioControls /><PrintButton label={<><span className="rs-wide-only">Download </span>PDF<span className="rs-wide-only"> (ATS)</span> ↓</>} /></div>
       </div>
       <main id="main-content" className="rs-sheet" tabIndex={-1}>
         <ResumeHeader />
