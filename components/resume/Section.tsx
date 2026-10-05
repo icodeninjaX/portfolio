@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
 
 // One resume block: a numbered label column on the left, content on the right
-// (stacked on phones). Every section on /resume goes through this so the
+// (stacked on phones). Every Simple-mode section goes through this so the
 // rhythm stays identical on screen and on paper.
-export function ResumeSection({ index, title, id, children }: { index: number; title: string; id: string; children: ReactNode }) {
+// `wide` stacks the label above the body so content like screenshots can use
+// the sheet's full width.
+export function ResumeSection({ index, title, id, wide, children }: { index: number; title: string; id: string; wide?: boolean; children: ReactNode }) {
   return (
-    <section className="rs-section" id={id} aria-labelledby={`${id}-title`}>
+    <section className={wide ? "rs-section rs-section-wide" : "rs-section"} id={id} aria-labelledby={`${id}-title`}>
       <header className="rs-section-label">
         <span aria-hidden="true">{String(index).padStart(2, "0")}</span>
         <h2 id={`${id}-title`}>{title}</h2>
