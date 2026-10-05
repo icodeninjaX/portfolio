@@ -15,7 +15,7 @@
   - `app/about/page.tsx` - About: scroll-driven 3D gyroscope (see `components/about/`)
   - `app/page.tsx` - Homepage: "Full stack, literally." scroll-driven 3D tower (see `components/stack/`)
   - `app/experience/page.tsx` - Journey: scroll-driven 3D route up a mountain (see `components/journey/`)
-  - `app/resume/page.tsx` - "Simple mode": a single premium resume sheet built from `components/resume/` and styled in `app/resume/resume.css` (`rs-` prefix, own light/dark tokens, A4 print layout for Save as PDF)
+  - `app/resume/page.tsx` - "Simple mode": a single premium resume sheet built from `components/resume/` and styled in `app/resume/resume.css` (`rs-` prefix, own light/dark tokens). Printing / Save as PDF swaps the sheet for `components/resume/HarvardResume.tsx`, a one-page Harvard-style, ATS-friendly resume (`hv-` prefix, print-only)
 - `app/creative/page.tsx` - 3D interactive office mode (FPS-style walkable office)
   - `app/globals.css` - Global styles, CSS variables, animations, print styles
 - `components/` - Resume page components (header, summary, experience, education, skills, projects, footer, scroll-progress, sticky-nav, theme-toggle)

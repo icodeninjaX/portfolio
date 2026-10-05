@@ -3,6 +3,7 @@ import { LuArrowLeft } from "react-icons/lu";
 import { resumeData } from "@/lib/data";
 import { PrintButton, StudioControls } from "@/components/cinematic/controls";
 import { ResumeHeader } from "@/components/resume/ResumeHeader";
+import { HarvardResume } from "@/components/resume/HarvardResume";
 import { AtAGlance, Education, Experience, Growth, Profile, Projects, Skills } from "@/components/resume/ResumeBody";
 import "../studio.css";
 import "./resume.css";
@@ -19,7 +20,7 @@ export default function Resume() {
       <a href="#main-content" className="skip-link">Skip to resume</a>
       <div className="rs-toolbar print-hidden">
         <Link href="/" className="rs-back"><LuArrowLeft aria-hidden="true" /> Portfolio</Link>
-        <div className="rs-toolbar-actions"><StudioControls /><PrintButton /></div>
+        <div className="rs-toolbar-actions"><StudioControls /><PrintButton label="Download PDF (ATS) ↓" /></div>
       </div>
       <main id="main-content" className="rs-sheet" tabIndex={-1}>
         <ResumeHeader />
@@ -38,6 +39,7 @@ export default function Resume() {
           <p><a href={`mailto:${resumeData.email}`}>{resumeData.email}</a><br />{resumeData.location}</p>
         </footer>
       </main>
+      <HarvardResume />
     </div>
   );
 }

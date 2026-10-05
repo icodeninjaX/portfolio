@@ -183,72 +183,36 @@
 
 .rs :focus-visible { outline: 2px solid var(--rs-accent); outline-offset: 3px; border-radius: 2px; }
 
+/* Print / Save as PDF: the designed sheet is swapped for the Harvard-style,
+   ATS-friendly resume (components/resume/HarvardResume.tsx). */
+.hv { display: none; }
+
 @media print {
-  @page { size: A4; margin: 12mm 13mm; }
-  .rs {
-    --rs-backdrop: #fff; --rs-paper: #fff; --rs-ink: #111; --rs-muted: #3f424a; --rs-faint: #6b6e76;
-    --rs-rule: #d6d3cb; --rs-chip: #fff; --rs-accent: #2f3a99; --rs-hardware: #8a4520;
-    padding: 0; min-height: 0; background: #fff;
-    -webkit-print-color-adjust: exact; print-color-adjust: exact;
-  }
-  .rs-toolbar, .print-hidden { display: none !important; }
-  /* globals.css keeps whole sections together and prints link URLs; a resume needs neither. */
-  .rs-section, .rs-section-body, .rs-head, .rs-foot { break-inside: auto; }
-  .rs a::after { content: none !important; }
-  .rs-sheet { max-width: none; margin: 0; padding: 8px 0 0; box-shadow: none; border-radius: 0; animation: none; }
-  .rs-letterhead { padding-bottom: 10px; font-size: 8px; }
-  .rs-monogram { width: 26px; height: 26px; font-size: 12px; }
-  .rs-role-sub { font-size: 14px; }
-  .rs-section-label h2 { font-size: 17px; }
-  .rs-skill-col h3 { font-size: 15px; }
-  .rs-skill-col h3 svg { padding: 3px; width: 10px; height: 10px; }
-  .rs-org { font-size: 11px; }
-  .rs-list > .rs-item + .rs-item { padding-top: 12px; }
-  .rs-chips { font-size: 8.5px; }
-  .rs-chips li:not(:last-child)::after { margin: 0 5px; }
-  .rs-project-meta { font-size: 8px; }
-  .rs-signature { font-size: 22px; }
-  .rs-foot { font-size: 9px; padding-top: 12px; }
-  .rs-head { padding-bottom: 14px; gap: 10px 20px; }
-  .rs-head h1 { font-size: 40px; margin-top: 6px; }
-  .rs-role { margin-top: 8px; font-size: 13px; }
-  .rs-headline { font-size: 11px; margin-top: 6px; max-width: none; }
-  .rs-photo { width: 76px; height: 76px; }
-  .rs-contact { font-size: 10px; gap: 2px 16px; }
-  .rs-contact li { min-height: 0; }
-  .rs-glance { grid-template-columns: repeat(4, 1fr); }
-  .rs-glance > div { padding: 10px 12px 10px 0; }
-  .rs-glance > div + div { padding-left: 12px; border-left: 1px solid var(--rs-rule); }
-  .rs-glance > div:nth-child(n + 3) { border-top: 0; }
-  .rs-glance dd { font-size: 22px; }
-  .rs-glance dt { font-size: 9px; }
-  .rs-section { grid-template-columns: 120px 1fr; gap: 16px; padding: 14px 0; }
-  .rs-section-label { flex-direction: column; gap: 4px; position: static; }
-  .rs-lead { font-size: 11px; line-height: 1.6; }
-  .rs-skills { grid-template-columns: 1fr 1fr; gap: 20px; }
-  .rs-skill-col h3 { font-size: 12px; padding-bottom: 6px; }
-  .rs-skill-col dl > div { padding: 6px 0; }
-  .rs-skill-col dd, .rs-bullets li, .rs-item-summary { font-size: 10.5px; line-height: 1.55; }
-  .rs-list { gap: 14px; }
-  .rs-item h3 { font-size: 13px; }
-  .rs-project h3 { font-size: 13px; }
-  .rs-org { font-size: 11px; }
-  .rs-dates { font-size: 9.5px; text-align: right; }
-  .rs-dates span { display: block; margin: 0; }
-  .rs-chips { margin-top: 6px; gap: 3px; }
-  .rs-projects { grid-template-columns: 1fr 1fr; column-gap: 20px; }
-  .rs-project { padding: 10px 0; }
-  .rs-project:nth-child(2) { border-top: 0; padding-top: 0; }
-  .rs-project > p:not([class]) { font-size: 10px; line-height: 1.5; }
-  .rs-project-links a { min-height: 0; }
-  .rs-project-links { font-size: 9.5px; padding-top: 6px; }
-  .rs-growth > li { grid-template-columns: 70px 1fr; padding-bottom: 8px; }
-  .rs-growth > li::before { left: 76px; }
-  .rs-growth > li > div::before { left: -12.5px; }
-  .rs-growth > li > div { padding-left: 14px; }
-  .rs-growth h3 { font-size: 13px; }
-  .rs-growth-year { font-size: 9.5px; }
-  .rs-note { font-size: 9px; margin-top: 6px; }
-  .rs-item, .rs-project, .rs-growth > li, .rs-skill-col dl > div { break-inside: avoid; }
-  .rs-section-label { break-after: avoid; }
+  @page { size: A4; margin: 12mm 14mm; }
+  .rs { padding: 0; min-height: 0; background: #fff; color: #000; }
+  .rs-toolbar, .rs-sheet, .skip-link, .print-hidden { display: none !important; }
+
+  .hv { display: block; font: 10.25pt/1.22 "Times New Roman", Times, "Liberation Serif", Georgia, serif; color: #000; }
+  .hv * { animation: none !important; }
+  /* globals.css keeps whole sections together and prints link URLs; neither suits a resume. */
+  .hv section, .hv header { break-inside: auto; }
+  .hv a::after { content: none !important; }
+
+  .hv-head { text-align: center; margin-bottom: 4pt; }
+  .hv-head h1 { font-family: inherit; font-size: 18pt; font-weight: 700; line-height: 1.1; letter-spacing: .02em; }
+  .hv-head p { margin-top: 2pt; font-size: 9.5pt; }
+
+  .hv section { margin-top: 7pt; }
+  .hv h2 { font-family: inherit; font-size: 10.5pt; font-weight: 700; line-height: 1.2; text-transform: uppercase; letter-spacing: .06em; border-bottom: .75pt solid #000; padding-bottom: 1.5pt; margin-bottom: 5pt; break-after: avoid; }
+  .hv section > p { text-align: justify; }
+
+  .hv-entry { margin-bottom: 4pt; break-inside: avoid; }
+  .hv-line { display: flex; justify-content: space-between; gap: 12pt; }
+  .hv-line > span { flex: none; text-align: right; }
+  .hv strong { font-weight: 700; }
+  .hv-normal { font-weight: 400; }
+
+  .hv ul { list-style: disc; padding-left: 14pt; margin-top: 2pt; }
+  .hv li { margin-top: 1pt; padding-left: 2pt; }
+  .hv-skills { list-style: none !important; padding-left: 0 !important; }
 }
