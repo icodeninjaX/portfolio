@@ -7,7 +7,7 @@ import { resumeData } from "@/lib/data";
 
 const d = resumeData;
 
-const SITE = "keithvergara.dev";
+const SITE = "portfolio.kdvwebsiteservices.com";
 const plain = (url: string) => url.replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/$/, "");
 
 // Employer projects are already covered under Experience; PlantPal is left

@@ -35,7 +35,7 @@ const jetbrainsMono = localFont({
   display: "swap",
 });
 
-const siteUrl = "https://keithvergara.dev";
+const siteUrl = "https://portfolio.kdvwebsiteservices.com";
 
 export const metadata: Metadata = {
   title: "Keith Vergara | Full-Stack Web Developer",
