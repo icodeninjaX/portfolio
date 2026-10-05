@@ -1,6 +1,7 @@
-/* Resume (/resume, "Simple mode"): a single premium sheet that reads like a
-   printed resume on screen and exports cleanly to PDF. Everything is scoped
-   under .rs and uses the rs- prefix. */
+/* Simple mode: /resume, the project case studies (/projects/[slug]) and the
+   404 page share one premium "sheet" design. Everything is scoped under .rs
+   and uses the rs- prefix; case-study-only pieces use rs-case-, the printed
+   ATS resume uses hv-. */
 
 .rs {
   --rs-backdrop: #eeece6;
@@ -183,6 +184,66 @@
 
 .rs :focus-visible { outline: 2px solid var(--rs-accent); outline-offset: 3px; border-radius: 2px; }
 
+/* Wide sections: label above the body, body uses the full sheet width. */
+@media (min-width: 760px) {
+  .rs-section-wide { grid-template-columns: 1fr; gap: 22px; }
+  .rs-section-wide .rs-section-label { position: static; flex-direction: row; align-items: baseline; gap: 12px; }
+}
+
+/* Buttons (case-study and 404 actions) */
+.rs .rs-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border: 1px solid var(--rs-ink); border-radius: 3px; font: 500 13px var(--font-display), sans-serif; background-image: none; transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
+.rs .rs-btn:hover { color: var(--rs-paper); background-color: var(--rs-ink); }
+.rs .rs-btn-primary { background-color: var(--rs-ink); color: var(--rs-paper); }
+.rs .rs-btn-primary:hover { background-color: var(--rs-accent); border-color: var(--rs-accent); color: var(--rs-paper); }
+
+/* Case study */
+.rs-case-head { grid-template-columns: 1fr; }
+.rs-case-kicker { font: 500 10.5px/1 var(--font-geist-mono), monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--rs-accent); }
+.rs-head .rs-case-title { margin-top: 12px; font: 600 clamp(40px, 9vw, 64px)/1 var(--font-display), sans-serif; letter-spacing: -.04em; }
+.rs-case-lead { margin-top: 16px; max-width: 600px; font-size: 16px; line-height: 1.75; color: var(--rs-muted); }
+.rs-case-actions { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px; }
+.rs-case-facts dd { font: 500 15px/1.35 var(--font-display), sans-serif; letter-spacing: -.01em; }
+.rs-case-facts > div { flex-direction: column; justify-content: flex-start; gap: 6px; }
+.rs-case-facts dt { font: 500 10px var(--font-geist-mono), monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--rs-faint); }
+.rs-case-role { margin-bottom: 8px; font: italic 400 19px/1.3 var(--font-serif), Georgia, serif; color: var(--rs-accent); }
+.rs-case-stack { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); border-top: 1px solid var(--rs-rule); }
+.rs-case-stack li { padding: 12px 0; border-bottom: 1px solid var(--rs-rule); font: 500 13px var(--font-geist-mono), monospace; }
+.rs-case-stack li::before { content: "/"; margin-right: 10px; color: var(--rs-accent); }
+.rs-case-subhead { display: flex; align-items: baseline; gap: 12px; margin: 6px 0 16px; font: 400 20px var(--font-serif), Georgia, serif; }
+.rs-case-subhead span { font: 500 10px var(--font-geist-mono), monospace; letter-spacing: .1em; color: var(--rs-faint); }
+.rs-case-subhead:not(:first-child) { margin-top: 40px; }
+.rs-case-phones { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 260px)); justify-content: start; gap: 28px; }
+.rs-case-desktops { display: grid; gap: 36px; }
+/* Many screenshots: lead with the first one large, the rest two-up. */
+@media (min-width: 760px) {
+  .rs-case-desktops-grid { grid-template-columns: 1fr 1fr; gap: 36px 24px; }
+  .rs-case-desktops-grid > :first-child { grid-column: 1 / -1; }
+  .rs-case-desktops-grid > :not(:first-child) figcaption { font-size: 15px; }
+}
+
+/* Figures: a thin frame on a quiet mat, captioned like a book plate. */
+.rs-shot { margin: 0; min-width: 0; }
+.rs .rs-shot a { display: block; padding: 10px; background: var(--rs-chip); border: 1px solid var(--rs-rule); border-radius: 4px; background-image: none; transition: border-color .2s ease, transform .3s ease; }
+.rs .rs-shot a:hover { border-color: var(--rs-faint); transform: translateY(-2px); }
+.rs-shot img { display: block; width: 100%; height: auto; border-radius: 2px; box-shadow: 0 1px 2px #0000001a; }
+.rs-shot-phone img { border-radius: 14px; }
+.rs-shot figcaption { margin-top: 12px; font: 400 16px/1.35 var(--font-serif), Georgia, serif; }
+.rs-shot figcaption span { margin-right: 6px; font: 500 10px var(--font-geist-mono), monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--rs-accent); }
+.rs-shot figcaption small { display: block; margin-top: 4px; font: 400 12.5px/1.6 var(--font-body), sans-serif; color: var(--rs-muted); }
+
+/* Previous / next */
+.rs-case-pager { display: grid; grid-template-columns: 1fr 1fr; margin-top: 8px; border-top: 1px solid var(--rs-rule); }
+.rs .rs-case-pager a { display: flex; flex-direction: column; gap: 6px; padding: 24px 16px 24px 0; background-image: none; }
+.rs .rs-case-pager a.rs-case-pager-next { align-items: flex-end; text-align: right; padding: 24px 0 24px 16px; border-left: 1px solid var(--rs-rule); }
+.rs-case-pager span { display: inline-flex; align-items: center; gap: 6px; font: 500 10px var(--font-geist-mono), monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--rs-faint); }
+.rs-case-pager strong { font: 600 18px/1.25 var(--font-display), sans-serif; letter-spacing: -.02em; }
+.rs .rs-case-pager a:hover strong { color: var(--rs-accent); }
+
+/* 404 */
+.rs-404 .rs-sheet { margin-top: 8px; }
+.rs-404 .rs-head { border-bottom: 0; padding-bottom: 40px; }
+.rs-404-title { margin-top: 12px; max-width: 620px; font: 400 clamp(44px, 9vw, 72px)/1 var(--font-serif), Georgia, serif; letter-spacing: -.02em; }
+
 /* Phones: one-row toolbar, edge-to-edge sheet, photo above the name,
    timeline years stacked over titles, and 40px+ tap targets. */
 @media (max-width: 639px) {
@@ -210,6 +271,11 @@
   .rs-growth > li > div::before { left: 0; top: 4px; }
 
   .rs-foot { flex-direction: column; align-items: flex-start; }
+  .rs-case-facts dd { font-size: 14px; }
+  .rs-case-phones { grid-template-columns: minmax(0, 260px); justify-content: center; }
+  .rs .rs-case-pager a { padding-right: 10px; }
+  .rs .rs-case-pager a.rs-case-pager-next { padding-left: 10px; }
+  .rs-case-pager strong { font-size: 15px; }
 }
 
 /* Touch screens (phones and tablets): links get at least a 40px tap area. */
@@ -230,7 +296,16 @@
 @media print {
   @page { size: A4; margin: 12mm 14mm; }
   .rs { padding: 0; min-height: 0; background: #fff; color: #000; }
-  .rs-toolbar, .rs-sheet, .skip-link, .print-hidden { display: none !important; }
+  .rs-toolbar, .skip-link, .print-hidden { display: none !important; }
+  .rs-resume .rs-sheet { display: none !important; }
+  /* Case studies print as the sheet itself, minus screen chrome. */
+  .rs-case .rs-sheet { max-width: none; margin: 0; padding: 0; box-shadow: none; animation: none; }
+  .rs-case .rs-sheet::before, .rs-case .rs-case-actions, .rs-case .rs-case-pager { display: none; }
+  .rs-case .rs-section { break-inside: auto; grid-template-columns: 120px 1fr; padding: 16px 0; }
+  .rs-case .rs-section-label { position: static; }
+  .rs-case .rs-shot, .rs-case .rs-glance { break-inside: avoid; }
+  .rs-case .rs-glance { grid-template-columns: repeat(4, 1fr); }
+  .rs-case a::after { content: none !important; }
 
   .hv { display: block; font: 10.25pt/1.22 "Times New Roman", Times, "Liberation Serif", Georgia, serif; color: #000; }
   .hv * { animation: none !important; }

@@ -15,7 +15,7 @@
   - `app/about/page.tsx` - About: scroll-driven 3D gyroscope (see `components/about/`)
   - `app/page.tsx` - Homepage: "Full stack, literally." scroll-driven 3D tower (see `components/stack/`)
   - `app/experience/page.tsx` - Journey: scroll-driven 3D route up a mountain (see `components/journey/`)
-  - `app/resume/page.tsx` - "Simple mode": a single premium resume sheet built from `components/resume/` and styled in `app/resume/resume.css` (`rs-` prefix, own light/dark tokens). Printing / Save as PDF swaps the sheet for `components/resume/HarvardResume.tsx`, a one-page Harvard-style, ATS-friendly resume (`hv-` prefix, print-only)
+  - `app/resume/page.tsx` - "Simple mode" résumé. Simple mode = `/resume`, every `/projects/[slug]` case study and `app/not-found.tsx`; all three share one premium "sheet" design built from `components/resume/` (`SimpleToolbar`, `Section`, `SimpleFooter`, `projects.ts` for the shared project order/numbering) and styled in `app/simple.css` (`rs-` prefix, own light/dark tokens). Printing `/resume` swaps the sheet for `components/resume/HarvardResume.tsx`, a one-page Harvard-style, ATS-friendly resume (`hv-` prefix, print-only)
 - `app/creative/page.tsx` - 3D interactive office mode (FPS-style walkable office)
   - `app/globals.css` - Global styles, CSS variables, animations, print styles
 - `components/` - Resume page components (header, summary, experience, education, skills, projects, footer, scroll-progress, sticky-nav, theme-toggle)
@@ -44,7 +44,7 @@
 - Use Tailwind utility classes for styling; custom CSS variables defined in `globals.css`
 - Dark mode uses a `data-theme` attribute toggle with `prefers-color-scheme` fallback
 - Print styles are supported for PDF export
-- Resume components live as flat files in `components/` (still used by `/experience`, `/projects/[slug]`)
+- The old flat resume components in `components/` (experience, projects, footer, page-background, theme-toggle, …) are no longer used by any page
 - Homepage, About and Journey are dark-only; their styles live under the `stack-` prefix at the end of `globals.css` (About-only pieces in the "About" block, Journey-only in the "Journey" block)
 - Adding a milestone to `journey` in `lib/data.ts` automatically adds a waypoint, monolith and camera stop on the Journey page; give it a `kit` list
 - Resume-only content lives in `lib/data.ts` too: `resume.headline`, `highlights` on each `experience` item, `skillGroups` (software / hardware, `core` = bolded), `certifications`

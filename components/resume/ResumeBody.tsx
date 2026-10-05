@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LuArrowUpRight, LuCode, LuCpu } from "react-icons/lu";
 import { resumeData } from "@/lib/data";
 import { Chips, ResumeSection } from "./Section";
+import { orderedProjects as projects, projectKind as kind, projectNumber } from "./projects";
 
 const d = resumeData;
 
@@ -16,16 +17,6 @@ function duration(start: string, end: string) {
   const months = total % 12;
   return [years && `${years} yr`, months && `${months} mo`].filter(Boolean).join(" ");
 }
-
-const PROJECT_KIND = { current: "Work", internship: "Internship", personal: "Personal" } as const;
-
-function kind(p: (typeof d.projects)[number]) {
-  return "kind" in p && p.kind ? p.kind : PROJECT_KIND[p.status];
-}
-
-// Employer work first (job, then internship), then own projects in data order.
-const RANK: Record<string, number> = { Work: 0, Internship: 1 };
-const projects = [...d.projects].sort((a, b) => (RANK[kind(a)] ?? 2) - (RANK[kind(b)] ?? 2));
 
 export function AtAGlance() {
   const stats = [
@@ -121,7 +112,7 @@ export function Projects({ index }: { index: number }) {
         {projects.map((p, i) => (
           <li key={p.slug} className="rs-project">
             <p className="rs-project-meta">
-              <span className="rs-project-no">{String(i + 1).padStart(2, "0")}</span>
+              <span className="rs-project-no">{projectNumber(i)}</span>
               <span>{kind(p)}</span>
               {"stage" in p && p.stage ? <span>{p.stage}</span> : null}
             </p>
