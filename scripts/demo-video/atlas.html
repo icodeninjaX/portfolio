@@ -1,0 +1,223 @@
+<!doctype html>
+<!--
+  ATLAS motion-graphics demo (case study video). A deterministic timeline:
+  `render(t)` draws the frame at t seconds, so `render.mjs atlas` can capture
+  every frame at a fixed rate. Open this file in a browser and add `?play` to
+  the URL to preview it in real time.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ATLAS demo</title>
+<style>
+  @font-face { font-family: "Space Grotesk"; src: url("../../app/fonts/space-grotesk-var.woff2") format("woff2"); font-weight: 300 700; }
+  @font-face { font-family: "Inter"; src: url("../../app/fonts/inter-var.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Instrument Serif"; src: url("../../app/fonts/instrument-serif-italic.woff2") format("woff2"); font-style: italic; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../app/fonts/jetbrains-mono-var.woff2") format("woff2"); font-weight: 100 800; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #04060c; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: #eef2ff; font-family: "Inter", sans-serif;
+    background: radial-gradient(ellipse 60% 55% at 72% 45%, #1b3a8c40, transparent 70%), radial-gradient(ellipse 50% 50% at 15% 85%, #2a1d7a30, transparent 70%), #04060c; }
+  .layer { position: absolute; inset: 0; will-change: opacity, transform; }
+  .grid { position: absolute; inset: -10%; background-image: linear-gradient(#ffffff08 1px, transparent 1px), linear-gradient(90deg, #ffffff08 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%); }
+  .mono { font-family: "JetBrains Mono", monospace; letter-spacing: .22em; text-transform: uppercase; }
+
+  /* 1. Emblem */
+  #core { position: absolute; inset: 0; background: url("../../public/images/atlas-system-core.webp") center 8% / auto 860px no-repeat; mask-image: radial-gradient(ellipse 48% 60% at 50% 34%, #000 55%, transparent 80%); }
+  #core-shade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, #04060ce6 88%); }
+  #wordmark { position: absolute; left: 0; right: 0; top: 780px; text-align: center; }
+  #wordmark h1 { font: 700 112px/1 "Space Grotesk", sans-serif; letter-spacing: .32em; padding-left: .32em; }
+  #wordmark p { margin-top: 26px; font-size: 18px; color: #8fb0ff; }
+
+  /* 2. Headline + landing page */
+  #headline { position: absolute; left: 150px; top: 120px; }
+  #headline .a { font: 700 76px/1.05 "Space Grotesk", sans-serif; letter-spacing: -.035em; }
+  #headline .b { font: italic 400 96px/1.05 "Instrument Serif", serif; color: #a9c1ff; letter-spacing: -.01em; }
+  #browser { position: absolute; left: 860px; top: 250px; width: 1180px; border-radius: 14px; overflow: hidden; background: #0d1220; box-shadow: 0 0 0 1px #ffffff1a, 0 60px 120px -30px #000, 0 0 120px -20px #2f6bff55; transform-origin: 0 50%; }
+  #browser .bar { height: 46px; display: flex; align-items: center; gap: 9px; padding: 0 18px; background: #121829; border-bottom: 1px solid #ffffff12; }
+  #browser .bar i { width: 11px; height: 11px; border-radius: 50%; background: #2c3550; }
+  #browser .bar span { margin-left: 18px; padding: 6px 16px; border-radius: 6px; background: #0a0f1c; font: 14px "JetBrains Mono", monospace; color: #8a96b8; }
+  #browser img { display: block; width: 100%; }
+
+  /* 3. Phone carousel */
+  #feat-text { position: absolute; left: 150px; top: 300px; width: 520px; }
+  #feat-kicker { font-size: 18px; color: #8fb0ff; }
+  #feat-title { margin-top: 26px; font: 700 92px/1 "Space Grotesk", sans-serif; letter-spacing: -.035em; }
+  #feat-head { margin-top: 26px; font: italic 400 52px/1.1 "Instrument Serif", serif; color: #c9d6ff; }
+  #feat-body { margin-top: 22px; font-size: 26px; line-height: 1.55; color: #9aa6c7; max-width: 500px; }
+  #dots { position: absolute; left: 150px; top: 860px; display: flex; gap: 12px; }
+  #dots i { display: block; height: 4px; width: 36px; border-radius: 2px; background: #ffffff1f; overflow: hidden; }
+  #dots i b { display: block; height: 100%; width: 0; background: #4d7dff; }
+  #section-label { position: absolute; left: 150px; top: 150px; font-size: 16px; color: #6f7ea6; }
+  .phone { position: absolute; top: 120px; left: 0; width: 400px; padding: 30px 12px; border-radius: 56px; background: linear-gradient(160deg, #2b2f3a, #0e1016 45%); box-shadow: inset 0 0 0 1.5px #ffffff22, 0 50px 90px -30px #000, 0 0 0 1px #000; transform-origin: 50% 50%; }
+  .phone::before { content: ""; position: absolute; top: 12px; left: 50%; width: 60px; height: 6px; border-radius: 3px; background: #000; transform: translateX(-50%); }
+  .phone::after { content: ""; position: absolute; bottom: 11px; left: 50%; width: 92px; height: 5px; border-radius: 3px; background: #ffffff38; transform: translateX(-50%); }
+  .phone img { display: block; width: 100%; border-radius: 8px; }
+
+  /* 4. End card */
+  #end { text-align: center; }
+  #end-logo { position: absolute; left: 50%; top: 70px; width: 820px; height: 430px; transform: translateX(-50%); background: url("../../public/images/atlas-system-core.webp") center / contain no-repeat; mask-image: radial-gradient(ellipse 45% 50% at 50% 50%, #000 50%, transparent 78%); }
+  #end h2 { position: absolute; left: 0; right: 0; top: 470px; font: 700 96px/1 "Space Grotesk", sans-serif; letter-spacing: .3em; padding-left: .3em; }
+  #end .line { position: absolute; left: 0; right: 0; top: 600px; font: italic 400 48px/1.2 "Instrument Serif", serif; color: #c9d6ff; }
+  #end .stack { position: absolute; left: 0; right: 0; top: 700px; font-size: 17px; color: #7f8db3; }
+  #end .by { position: absolute; left: 0; right: 0; top: 790px; font-size: 24px; color: #dfe6ff; }
+  #end .url { position: absolute; left: 0; right: 0; top: 836px; font: 18px "JetBrains Mono", monospace; color: #8fb0ff; }
+  #fade { position: absolute; inset: 0; background: #000; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="grid" id="grid"></div>
+
+  <div class="layer" id="s1">
+    <div id="core"></div><div id="core-shade"></div>
+    <div id="wordmark"><h1>ATLAS</h1><p class="mono">Your personal operating system</p></div>
+  </div>
+
+  <div class="layer" id="s2">
+    <div id="headline"><div class="a" id="h-a">Your whole life,</div><div class="b" id="h-b">on one route.</div></div>
+    <div id="browser"><div class="bar"><i></i><i></i><i></i><span>atlas.kdvwebsiteservices.com</span></div><img src="../../public/images/atlas-landing-page.webp" alt=""></div>
+  </div>
+
+  <div class="layer" id="s3">
+    <div id="section-label" class="mono">One workspace · eight views</div>
+    <div id="phones"></div>
+    <div id="feat-text">
+      <div id="feat-kicker" class="mono"></div>
+      <div id="feat-title"></div>
+      <div id="feat-head"></div>
+      <div id="feat-body"></div>
+    </div>
+    <div id="dots"></div>
+  </div>
+
+  <div class="layer" id="end">
+    <div id="end-logo"></div>
+    <h2>ATLAS</h2>
+    <div class="line">Plans, money, goals and career, in one connected workspace.</div>
+    <div class="stack mono">Next.js · TypeScript · Supabase · PostgreSQL · AI analyst</div>
+    <div class="by">Designed &amp; built by Keith Vergara</div>
+    <div class="url">atlas.kdvwebsiteservices.com</div>
+  </div>
+
+  <div id="fade"></div>
+</div>
+
+<script>
+const FEATURES = [
+  ["today", "Today", "One clear move, now.", "The Dayline picks what to do next and shows how full the day already is."],
+  ["money", "Money", "Every peso, one total.", "Accounts, transfers and how the balance is split by purpose."],
+  ["tasks", "Tasks", "A plan that fits the day.", "Scheduled tasks with start times, durations and priority."],
+  ["goals", "Goals", "Progress that updates itself.", "Milestones roll up into each goal's completion."],
+  ["analyst", "Analyst", "Ask your records anything.", "Plain-language answers, with every figure checked against its sources."],
+  ["capture", "Capture", "Say it once.", "Describe what happened; ATLAS splits it into cards to review."],
+  ["career", "Career", "Every application, one next step.", "Roles by stage, date and follow-up, as a list or a board."],
+  ["timeline", "Timeline", "Your life, in order.", "Choices, progress and money movement on one timeline."],
+];
+
+// Timeline (seconds)
+// Scenes barely overlap: each fades out before the next one's text arrives.
+const S1 = [0, 4.2], S2 = [4.0, 8.3], S3 = [8.2, 28.9], S4 = [28.8, 34];
+const PER = 2.5, MOVE = 0.7;          // seconds per feature, slide duration
+const DURATION = 34;
+
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const ease = (x) => (x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const out = (x) => 1 - Math.pow(1 - x, 3);
+const fadeWin = (t, [a, b], fin = .6, fout = .6) => Math.min(out(prog(t, a, a + fin)), 1 - ease(prog(t, b - fout, b)));
+
+// Build the carousel and progress dots once.
+const phones = FEATURES.map(([slug]) => {
+  const el = document.createElement("div");
+  el.className = "phone";
+  el.innerHTML = `<img src="../../public/images/atlas-mobile-app-${slug}.webp" alt="">`;
+  $("phones").appendChild(el);
+  return el;
+});
+const dots = FEATURES.map(() => { const i = document.createElement("i"); i.appendChild(document.createElement("b")); $("dots").appendChild(i); return i.firstChild; });
+
+function render(t) {
+  // Background grid drifts slowly the whole time.
+  $("grid").style.transform = `translate(${-t * 6}px, ${-t * 3}px)`;
+
+  // 1. Emblem: fade in from black, slow push-in, wordmark rises.
+  const s1 = fadeWin(t, S1, 1.2, .8);
+  $("s1").style.opacity = s1;
+  $("core").style.transform = `scale(${1.04 + .1 * prog(t, 0, 4.2)})`;
+  const wm = out(prog(t, 1.1, 2.4));
+  $("wordmark").style.opacity = wm;
+  $("wordmark").style.transform = `translateY(${(1 - wm) * 40}px)`;
+  $("wordmark").querySelector("h1").style.letterSpacing = `${.6 - .28 * wm}em`;
+
+  // 2. Headline lines stagger in, browser rises with a perspective tilt.
+  const s2 = fadeWin(t, S2, .5, .6);
+  $("s2").style.opacity = s2;
+  const ha = out(prog(t, 4.0, 4.9)), hb = out(prog(t, 4.6, 5.5));
+  $("h-a").style.cssText = `opacity:${ha};transform:translateY(${(1 - ha) * 50}px)`;
+  $("h-b").style.cssText = `opacity:${hb};transform:translateY(${(1 - hb) * 50}px)`;
+  const br = out(prog(t, 5.0, 6.4));
+  const drift = prog(t, 5, 8.6);
+  $("browser").style.opacity = br;
+  $("browser").style.transform = `perspective(2200px) translate(${(1 - br) * 160 - drift * 40}px, ${(1 - br) * 120}px) rotateY(${-16 + 6 * drift}deg) rotateX(${4 - 2 * drift}deg)`;
+
+  // 3. Feature carousel.
+  const s3 = fadeWin(t, S3, .6, .6);
+  $("s3").style.opacity = s3;
+  const local = Math.max(0, t - (S3[0] + .4));
+  const idx = Math.min(FEATURES.length - 1, Math.floor(local / PER));
+  const within = local - idx * PER;
+  // Continuous position: holds on each phone, slides during the first MOVE seconds.
+  const pos = idx === 0 ? 0 : (idx - 1) + ease(clamp(within / MOVE));
+  phones.forEach((el, i) => {
+    const d = i - pos;                            // distance from the active slot
+    const x = 1360 + d * 480 - 200;               // centre the active phone at x=1360
+    const s = 1 - Math.min(Math.abs(d), 1.4) * .2;
+    const o = Math.abs(d) > 2.2 ? 0 : 1 - Math.min(Math.abs(d), 1.6) * .5;
+    el.style.opacity = o;
+    el.style.zIndex = String(100 - Math.round(Math.abs(d) * 10));
+    el.style.transform = `translateX(${x}px) scale(${s}) rotateY(${clamp(-d, -1, 1) * 8}deg)`;
+    el.style.filter = `brightness(${1 - Math.min(Math.abs(d), 1) * .35})`;
+  });
+  // Text swaps: fade out at the end of a feature, in at the start of the next.
+  const [slug, title, head, body] = FEATURES[idx];
+  const textIn = idx === 0 ? out(prog(local, .3, 1.0)) : out(prog(within, .25, .85));
+  const textOut = idx === FEATURES.length - 1 ? 1 : 1 - ease(prog(within, PER - .35, PER));
+  const tv = Math.min(textIn, textOut);
+  $("feat-kicker").textContent = `${String(idx + 1).padStart(2, "0")} / ${String(FEATURES.length).padStart(2, "0")}`;
+  $("feat-title").textContent = title;
+  $("feat-head").textContent = head;
+  $("feat-body").textContent = body;
+  $("feat-text").style.opacity = tv;
+  $("feat-text").style.transform = `translateY(${(1 - tv) * 24}px)`;
+  dots.forEach((b, i) => { b.style.width = `${i < idx ? 100 : i > idx ? 0 : clamp(within / PER) * 100}%`; });
+
+  // 4. End card.
+  const s4 = fadeWin(t, S4, .8, .01);
+  $("end").style.opacity = s4;
+  const e = out(prog(t, S4[0] + .2, S4[0] + 1.6));
+  $("end-logo").style.transform = `translateX(-50%) scale(${.9 + .1 * e})`;
+  $("end").querySelectorAll("h2,.line,.stack,.by,.url").forEach((el, i) => {
+    const v = out(prog(t, S4[0] + .5 + i * .18, S4[0] + 1.4 + i * .18));
+    el.style.opacity = v;
+    el.style.transform = `translateY(${(1 - v) * 26}px)`;
+  });
+
+  // Fade from and to black so the loop is seamless.
+  $("fade").style.opacity = Math.max(1 - prog(t, 0, .8), prog(t, DURATION - .9, DURATION));
+}
+
+window.DURATION = DURATION;
+window.POSTER_AT = 13.2; // the Money view in the phone carousel
+window.render = render;
+render(0);
+if (location.search.includes("play")) {
+  const start = performance.now();
+  const loop = () => { render(((performance.now() - start) / 1000) % DURATION); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>

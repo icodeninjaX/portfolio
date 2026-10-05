@@ -202,6 +202,13 @@ export const resumeData = {
       stage: "Release candidate",
       link: "",
       source: "https://github.com/icodeninjaX/project-atlas",
+      video: {
+        mp4: "/videos/atlas-demo.mp4",
+        webm: "/videos/atlas-demo.webm",
+        poster: "/videos/atlas-demo-poster.webp",
+        label: "ATLAS product demo: the emblem, the landing page, then the Today, Money, Tasks, Goals, Analyst, Capture, Career and Timeline screens on a phone.",
+        caption: "A 34-second walkthrough of ATLAS, from the landing page to each of its eight views on a phone.",
+      },
       mobileNote: "Captured on an Android phone, signed in to Keith's own ATLAS workspace.",
       mobileImages: [
         { src: "/images/atlas-mobile-app-today.webp", width: 780, height: 1628, label: "Today · phone", alt: "ATLAS Today screen on a phone: the Dayline card puts one task under Now, with a day-load ring showing 90 of 180 planned minutes.", caption: "The Today screen. The Dayline picks one thing to do now and explains why it comes first; Day load shows how much of the day is already planned." },

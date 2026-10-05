@@ -243,6 +243,12 @@
   .rs-case-desktops-grid > :not(:first-child) figcaption { font-size: 15px; }
 }
 
+/* Product demo video */
+.rs-demo { margin: 0; }
+.rs-demo-video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 6px; background: #04060c; box-shadow: 0 0 0 1px var(--rs-rule), 0 30px 60px -30px #10123a66; }
+.rs-demo figcaption { margin-top: 12px; }
+@media print { .rs-demo { display: none; } }
+
 /* Figures: a thin frame on a quiet mat, captioned like a book plate. */
 .rs-shot { margin: 0; min-width: 0; }
 .rs .rs-shot a { display: block; padding: 10px; background: var(--rs-chip); border: 1px solid var(--rs-rule); border-radius: 4px; background-image: none; transition: border-color .2s ease, transform .3s ease; }
