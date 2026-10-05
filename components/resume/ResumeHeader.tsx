@@ -3,6 +3,8 @@ import { LuGithub, LuGlobe, LuLinkedin, LuMail, LuMapPin } from "react-icons/lu"
 import { resumeData } from "@/lib/data";
 
 const SITE = "keithvergara.dev";
+// Stamped at build time; every deploy refreshes it.
+const UPDATED = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
 function href(url: string) {
   return url.startsWith("http") ? url : `https://${url}`;
@@ -24,8 +26,12 @@ export function ResumeHeader() {
 
   return (
     <header className="rs-head">
+      <div className="rs-letterhead">
+        <span className="rs-monogram" aria-hidden="true">{d.name.split(" ").map((w) => w[0]).join("")}</span>
+        <span>Curriculum vitae</span>
+        <span className="rs-letterhead-date">Updated {UPDATED}</span>
+      </div>
       <div className="rs-head-main">
-        <p className="rs-kicker">Résumé</p>
         <h1>{d.name}</h1>
         <p className="rs-role">{d.title}<span className="rs-role-dot" aria-hidden="true"> · </span><span className="rs-role-sub">Software & hardware</span></p>
         <p className="rs-headline">{d.resume.headline}</p>

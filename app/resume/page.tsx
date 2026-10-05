@@ -31,8 +31,11 @@ export default function Resume() {
         <Growth index={5} />
         <Education index={6} />
         <footer className="rs-foot">
-          <p>{resumeData.name} · <a href={`mailto:${resumeData.email}`}>{resumeData.email}</a></p>
-          <p>Open to full-stack roles · {resumeData.location}</p>
+          <div>
+            <p className="rs-signature">{resumeData.name}</p>
+            <p>Open to full-stack roles · References available on request</p>
+          </div>
+          <p><a href={`mailto:${resumeData.email}`}>{resumeData.email}</a><br />{resumeData.location}</p>
         </footer>
       </main>
     </div>

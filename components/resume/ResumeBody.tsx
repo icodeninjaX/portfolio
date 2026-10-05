@@ -118,9 +118,10 @@ export function Projects({ index }: { index: number }) {
   return (
     <ResumeSection index={index} title="Selected projects" id="projects">
       <ul className="rs-projects">
-        {projects.map((p) => (
+        {projects.map((p, i) => (
           <li key={p.slug} className="rs-project">
             <p className="rs-project-meta">
+              <span className="rs-project-no">{String(i + 1).padStart(2, "0")}</span>
               <span>{kind(p)}</span>
               {"stage" in p && p.stage ? <span>{p.stage}</span> : null}
             </p>
