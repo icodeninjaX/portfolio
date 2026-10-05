@@ -1,10 +1,13 @@
-// Adds a voice-over to a rendered case-study video, fully offline: each line in
-// scripts/demo-video/<name>.voice.json is spoken with Piper (open-source TTS),
-// placed at its `at` time, mixed, loudness-normalised and muxed into
-// public/videos/<name>-demo.{mp4,webm}. The video stream is copied, not
-// re-encoded, so this can be re-run after editing the script.
+// Adds a voice-over and background music to a rendered case-study video, fully
+// offline: each line in scripts/demo-video/<name>.voice.json is spoken with
+// Piper (open-source TTS) and placed at its `at` time; the score for <name> is
+// synthesised by music.py (numpy) and ducked under the voice; the mix is
+// loudness-normalised and muxed into public/videos/<name>-demo.{mp4,webm}. The
+// video stream is copied, not re-encoded, so this can be re-run after editing
+// the script or the score. Set "music": false in the voice file to skip music.
 //
-//   PIPER=/path/to/piper PIPER_VOICES=/path/to/voices node scripts/demo-video/narrate.mjs atlas
+//   PIPER=/path/to/piper PIPER_VOICES=/path/to/voices PYTHON=/path/to/python-with-numpy \
+//     node scripts/demo-video/narrate.mjs atlas
 //
 // Voices are Piper models (<voice>.onnx + .onnx.json). Missing ones are
 // downloaded from huggingface.co/rhasspy/piper-voices. Use only voices whose
@@ -21,7 +24,7 @@ if (!name || !existsSync(scriptFile)) {
   console.error("usage: node scripts/demo-video/narrate.mjs <atlas|coop|plantpal>");
   process.exit(1);
 }
-const { voice, lines } = JSON.parse(readFileSync(scriptFile, "utf8"));
+const { voice, lines, music = true } = JSON.parse(readFileSync(scriptFile, "utf8"));
 const root = path.resolve(here, "../..");
 const video = (ext) => path.join(root, "public/videos", `${name}-demo${ext}`);
 const piper = process.env.PIPER || "piper";
@@ -54,18 +57,36 @@ const clips = lines.map((line, i) => {
   return { wav, at: line.at };
 });
 
-// 3. Place, mix and normalise into one track the length of the video.
-const narration = path.join(work, "narration.wav");
+// 3. Place and mix the voice into one track the length of the video.
+const speech = path.join(work, "speech.wav");
 const inputs = clips.flatMap((c) => ["-i", c.wav]);
 const placed = clips.map((c, i) => `[${i}:a]aresample=48000,adelay=${Math.round(c.at * 1000)}:all=1[a${i}]`).join(";");
-const mix = `${placed};${clips.map((_, i) => `[a${i}]`).join("")}amix=inputs=${clips.length}:normalize=0,apad,atrim=0:${duration},loudnorm=I=-16:TP=-1.5:LRA=11,afade=t=out:st=${(duration - 0.6).toFixed(2)}:d=0.6[out]`;
-run("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", mix, "-map", "[out]", "-ar", "48000", "-ac", "2", narration]);
+const voiceMix = `${placed};${clips.map((_, i) => `[a${i}]`).join("")}amix=inputs=${clips.length}:normalize=0,apad,atrim=0:${duration},loudnorm=I=-16:TP=-1.5:LRA=11[out]`;
+run("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", voiceMix, "-map", "[out]", "-ar", "48000", "-ac", "2", speech]);
 
-// 4. Mux into both encodes (video copied as-is).
+// 4. Music: synthesise the score, sit it well below the voice and duck it a
+// further ~8 dB while someone is speaking (sidechain keyed by the voice).
+const narration = path.join(work, "narration.wav");
+const fadeOut = `afade=t=out:st=${(duration - 0.6).toFixed(2)}:d=0.6`;
+if (music) {
+  const score = path.join(work, "music.wav");
+  run(process.env.PYTHON || "python3", [path.join(here, "music.py"), name, String(duration), score]);
+  const graph = [
+    "[0:a]asplit=2[voice][key]",
+    "[1:a]loudnorm=I=-25:TP=-6:LRA=11,aresample=48000[bed]",
+    "[bed][key]sidechaincompress=threshold=0.03:ratio=5:attack=40:release=600:makeup=1[ducked]",
+    `[voice][ducked]amix=inputs=2:normalize=0,alimiter=limit=0.84:level=false,atrim=0:${duration},${fadeOut}[out]`,
+  ].join(";");
+  run("ffmpeg", ["-y", "-loglevel", "error", "-i", speech, "-i", score, "-filter_complex", graph, "-map", "[out]", "-ar", "48000", "-ac", "2", narration]);
+} else {
+  run("ffmpeg", ["-y", "-loglevel", "error", "-i", speech, "-af", fadeOut, narration]);
+}
+
+// 5. Mux into both encodes (video copied as-is).
 for (const [ext, codec] of [[".mp4", ["-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart"]], [".webm", ["-c:a", "libopus", "-b:a", "96k"]]]) {
   const tmp = path.join(work, `out${ext}`);
   run("ffmpeg", ["-y", "-loglevel", "error", "-i", video(ext), "-i", narration, "-map", "0:v", "-map", "1:a", "-c:v", "copy", ...codec, "-shortest", tmp]);
   copyFileSync(tmp, video(ext)); // copy, not rename: the temp dir may be on another filesystem
 }
 rmSync(work, { recursive: true, force: true });
-console.log(`done: voice-over muxed into public/videos/${name}-demo.{mp4,webm}`);
+console.log(`done: voice-over${music ? " and music" : ""} muxed into public/videos/${name}-demo.{mp4,webm}`);

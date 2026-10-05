@@ -5,7 +5,7 @@ import { LuVolume2, LuVolumeX } from "react-icons/lu";
 
 // Case-study demo video: muted, looping and inline like a motion graphic, but
 // it only autoplays when the visitor hasn't asked for reduced motion. The
-// videos carry a voice-over, so a "Play with sound" button restarts the video
+// videos carry a voice-over and music, so a "Play with sound" button restarts the video
 // from the top with sound on (browsers never autoplay with sound).
 export function DemoVideo({ mp4, webm, poster, label }: { mp4: string; webm?: string; poster: string; label: string }) {
   const ref = useRef<HTMLVideoElement>(null);
