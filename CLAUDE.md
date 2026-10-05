@@ -48,7 +48,7 @@
 - Homepage, About and Journey are dark-only; their styles live under the `stack-` prefix at the end of `globals.css` (About-only pieces in the "About" block, Journey-only in the "Journey" block)
 - Adding a milestone to `journey` in `lib/data.ts` automatically adds a waypoint, monolith and camera stop on the Journey page; give it a `kit` list
 - Resume-only content lives in `lib/data.ts` too: `resume.headline`, `highlights` on each `experience` item, `skillGroups` (software / hardware, `core` = bolded), `certifications`
-- Case-study demo videos are rendered in code, not with a video service: `scripts/demo-video/<name>.html` is a deterministic HTML/CSS timeline (`render(t)`, preview with `?play`) and `node scripts/demo-video/render.mjs <name>` captures it frame by frame with Playwright and encodes `public/videos/<name>-demo.{mp4,webm}` + poster with ffmpeg. Wire one up with `video` on the project in `lib/data.ts`
+- Case-study demo videos are rendered in code, not with a video service: `scripts/demo-video/<name>.html` is a deterministic HTML/CSS timeline (`render(t)`, preview with `?play`) and `node scripts/demo-video/render.mjs <name>` (atlas, coop, plantpal) captures it frame by frame with Playwright and encodes `public/videos/<name>-demo.{mp4,webm}` + poster with ffmpeg. Wire one up with `video` on the project in `lib/data.ts`
 - Screenshots that show other people (e.g. Coop-Tracker members) get their names blurred before publishing; log crops/redactions in `docs/mobile-screenshots.md`
 - Adding a project to `lib/data.ts` automatically adds a panel + camera stop; give it `images` or add a cover in `COVERS` in `app/page.tsx`
 - 3D/creative components live in `components/creative/`
