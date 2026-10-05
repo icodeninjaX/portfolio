@@ -1,0 +1,12 @@
+{
+  "voice": "en_US-joe-medium",
+  "lines": [
+    { "at": 0.7, "text": "This is ATLAS, a personal operating system." },
+    { "at": 4.4, "text": "It puts your whole life on one route: money, tasks, goals and career." },
+    { "at": 8.9, "text": "Today picks your next move, and Money keeps every peso in one total." },
+    { "at": 13.9, "text": "Tasks fit the plan to your day, and goals update as milestones get done." },
+    { "at": 18.9, "text": "Ask the Analyst about your records, or capture a whole day in one message." },
+    { "at": 23.9, "text": "Career tracks every application, and the Timeline keeps it all in order." },
+    { "at": 29.3, "text": "ATLAS. Designed and built by Keith Vergara." }
+  ]
+}
