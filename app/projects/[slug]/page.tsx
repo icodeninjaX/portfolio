@@ -110,9 +110,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <ResumeSection index={++n} title="Gallery" id="gallery" wide>
             {mobileImages.length > 0 && (
               <>
-                <h3 className="rs-case-subhead">On a phone <span>Responsive · 390 × 844</span></h3>
+                <h3 className="rs-case-subhead">On a phone <span>{mobileImages.length} {mobileImages.length === 1 ? "view" : "views"}</span></h3>
                 {/* Phone views as devices on a stage (a swipeable row on phones); the longer notes sit below. */}
-                <div className="rs-devices">
+                <div className={mobileImages.length > 3 ? "rs-devices rs-devices-many" : "rs-devices"}>
                   {mobileImages.map((img, i) => (
                     <figure key={img.src} className="rs-device">
                       <a href={img.src} target="_blank" rel="noopener noreferrer" aria-label={`Open ${img.label} at full size (new tab)`}>
@@ -124,6 +124,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     </figure>
                   ))}
                 </div>
+                {"mobileNote" in project && project.mobileNote && <p className="rs-note rs-device-source">{project.mobileNote}</p>}
                 <ol className="rs-device-notes" aria-label="Notes on the phone views">
                   {mobileImages.map((img, i) => <li key={img.src}><span>Fig. {projectNumber(i)}</span>{img.caption}</li>)}
                 </ol>
