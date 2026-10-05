@@ -21,7 +21,7 @@ Google Fonts was also blocked. The same named font families were loaded from Fon
 
 - **TRACKY:** populated local offline dashboard and Activity captures completed with synthetic demo entries.
 - **371admin:** meaningful workflow capture blocked on sanctioned demo authentication; rejected login-only preview excluded.
-- **New Z1on LPG (`new-z1on-lpg`):** real dashboard and customer-directory captures completed with an isolated synthetic database and normal authentication.
+- **New Z1on LPG (`new-z1on-lpg`):** real dashboard and customer-directory captures completed with an isolated synthetic database and normal authentication. Removed from the case study on 2026-10-05 at the owner's request; the files below were deleted.
 - **Coop-Tracker:** public sign-in captured; authenticated dashboard requires a separately authorized sanitized demo.
 
 ## Integration and verification

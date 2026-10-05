@@ -290,10 +290,6 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
       status: "internship" as const,
       link: "",
-      mobileImages: [
-        { src: "/images/newzion-mobile-demo-customers.webp", width: 780, height: 1688, label: "Customer directory — phone demo", alt: "New Zion phone customer directory showing explicitly fictional Demo Household records.", caption: "Actual customer-directory UI in an isolated local database, reached through normal authentication. All displayed names, addresses, and counts are synthetic demo data." },
-        { src: "/images/newzion-mobile-demo-dashboard.webp", width: 780, height: 1688, label: "Dashboard totals — phone demo", alt: "New Zion dashboard totals at phone width, calculated from three fictional customers and orders.", caption: "The real dashboard scrolled to its totals, calculated from isolated synthetic fixtures. No production customer or order records were used." },
-      ],
       images: [
         { src: "/images/new-zion-add-customer.webp", width: 1909, height: 921, label: "Customer registration", caption: "Existing New Zion POS screenshot from the KDV case study, showing the empty customer form and location fields." },
         { src: "/images/new-zion-search-customers.webp", width: 1901, height: 921, label: "Customer search", caption: "Existing New Zion POS screenshot from the KDV case study, showing the search interface before any customer records are displayed." },
