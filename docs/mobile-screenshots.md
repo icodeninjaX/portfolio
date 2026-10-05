@@ -75,3 +75,13 @@ The prior login preview is excluded. Its existing source layout overflow remains
 ## Update 2026-10-05: ATLAS in-app phone views
 
 The two ATLAS public-landing captures above (`atlas-mobile-landing.webp`, `atlas-mobile-tasks.webp`) were replaced and deleted. The owner sent eight screenshots taken on their own Android phone, signed in to their own ATLAS workspace: Today, Money, Tasks, Goals, Analyst, Capture, Career and Timeline. Each was cropped to remove the Android status bar (rows 0–103) and gesture bar (rows 2358+), resized from 1080 to 780 px wide and saved as `public/images/atlas-mobile-app-*.webp` (780 × 1628). No pixels inside the app were edited. These show the owner's real records, not demo data.
+
+## Update 2026-10-05: PlantPal (Garden) in-app phone views
+
+The two Garden public-landing captures (`plantpal-mobile-home.webp`, `plantpal-mobile-care.webp`) were replaced and deleted. The owner sent six screenshots taken in their phone's browser on the live site (`kdv-garden.ct.ws`), signed in to their own garden: Log in, Today, Plants, Calendar, Library and Activity. Each was cropped to remove the Android status bar and Chrome's address bar (rows 0–256) and the gesture pill (rows 2360+), resized from 1080 to 780 px wide and saved as `public/images/plantpal-mobile-app-*.webp` (780 × 1519). No pixels inside the site were edited.
+
+## Update 2026-10-05: CoopTracker in-app phone views
+
+The CoopTracker public sign-in capture (`coop-mobile-login.webp`) was replaced and deleted. The owner sent eight screenshots from the live app on their Android phone, signed in as the cooperative's administrator: Sign in, Dashboard, Current period, Collections, Members, Loans, Shares and Profile. Each was cropped to remove the status bar (rows 0–109) and gesture bar (rows 2360+), resized from 1080 to 780 px and saved as `public/images/coop-mobile-app-*.webp` (780 × 1625).
+
+**Redaction:** the screens list real cooperative members. Every member name other than the owner's was blurred (Gaussian, before cropping) on Collections, Members and Loans, including a name showing faintly through the Loans tab bar. Amounts, shares and statuses are left as captured. The owner's own name is not blurred. No other pixels were edited.

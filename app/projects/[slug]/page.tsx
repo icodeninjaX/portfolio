@@ -6,6 +6,7 @@ import { resumeData } from "@/lib/data";
 import { SimpleToolbar } from "@/components/resume/SimpleToolbar";
 import { ResumeSection } from "@/components/resume/Section";
 import { SimpleFooter } from "@/components/resume/SimpleFooter";
+import { DemoVideo } from "@/components/resume/DemoVideo";
 import { orderedProjects, projectKind, projectNumber } from "@/components/resume/projects";
 import "../../studio.css";
 import "../../simple.css";
@@ -92,6 +93,15 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <div><dt>Role</dt><dd>{roleTitle || "Developer"}</dd></div>
           <div><dt>Stack</dt><dd>{project.tech.length} technologies</dd></div>
         </dl>
+
+        {"video" in project && project.video && (
+          <ResumeSection index={++n} title="Product demo" id="demo" wide>
+            <figure className="rs-demo">
+              <DemoVideo mp4={project.video.mp4} webm={project.video.webm} poster={project.video.poster} label={project.video.label} />
+              <figcaption className="rs-note">{project.video.caption}</figcaption>
+            </figure>
+          </ResumeSection>
+        )}
 
         {sections.map((s) => (
           <ResumeSection key={s.id} index={++n} title={s.title} id={s.id}>

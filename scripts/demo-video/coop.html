@@ -1,0 +1,292 @@
+<!doctype html>
+<!--
+  Coop-Tracker motion-graphics demo (case study video). Same contract as
+  atlas.html: `render(t)` draws the frame at t seconds; `render.mjs coop`
+  captures every frame. Add `?play` to the URL to preview in real time.
+  Member names in the phone screenshots are already blurred.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Coop-Tracker demo</title>
+<style>
+  @font-face { font-family: "Space Grotesk"; src: url("../../app/fonts/space-grotesk-var.woff2") format("woff2"); font-weight: 300 700; }
+  @font-face { font-family: "Inter"; src: url("../../app/fonts/inter-var.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Instrument Serif"; src: url("../../app/fonts/instrument-serif-italic.woff2") format("woff2"); font-style: italic; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../app/fonts/jetbrains-mono-var.woff2") format("woff2"); font-weight: 100 800; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #f5f3ff; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: #1d1b3a; font-family: "Inter", sans-serif; background: linear-gradient(160deg, #f8f7ff 0%, #f1edff 55%, #fdf2f8 100%); }
+  .layer { position: absolute; inset: 0; }
+  .mono { font-family: "JetBrains Mono", monospace; letter-spacing: .2em; text-transform: uppercase; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; }
+  #b1 { width: 620px; height: 620px; background: #8b5cf6; }
+  #b2 { width: 520px; height: 520px; background: #ec4899; }
+  #b3 { width: 560px; height: 560px; background: #6366f1; }
+  #b4 { width: 300px; height: 300px; background: #10b981; opacity: .25; }
+
+  /* Logo tile */
+  .tile { position: absolute; border-radius: 28%; background: #eef2fe url("assets/coop-logo.png") center / 86% no-repeat; box-shadow: 0 30px 60px -24px #4c1d9580, 0 0 0 1px #6366f11a; }
+  #s1 .tile { left: 50%; top: 300px; width: 190px; height: 190px; margin-left: -95px; }
+  #s1 h1 { position: absolute; left: 0; right: 0; top: 540px; text-align: center; font: 700 116px/1 "Space Grotesk", sans-serif; letter-spacing: -.04em; }
+  #s1 p { position: absolute; left: 0; right: 0; top: 690px; text-align: center; font-size: 19px; color: #6d5bd0; }
+
+  /* Spreadsheets → one source of truth */
+  #sheet { position: absolute; left: 860px; top: 120px; width: 960px; height: 840px; background-image: linear-gradient(#6366f126 1px, transparent 1px), linear-gradient(90deg, #6366f126 1px, transparent 1px); background-size: 120px 42px; border: 1px solid #6366f133; }
+  #sheet span { position: absolute; font: 14px "JetBrains Mono", monospace; color: #6d6a9a; }
+  #s2-text { position: absolute; left: 150px; top: 250px; width: 680px; }
+  #s2-text .a { position: relative; display: inline-block; font: 700 92px/1.05 "Space Grotesk", sans-serif; letter-spacing: -.04em; color: #8b88b5; }
+  #strike { position: absolute; left: -6px; top: 52%; height: 8px; border-radius: 4px; background: #ec4899; transform-origin: 0 50%; }
+  #s2-text .b { margin-top: 10px; font: italic 400 100px/1.02 "Instrument Serif", serif; color: #4f46e5; }
+  #s2-text .c { margin-top: 30px; font-size: 26px; line-height: 1.55; color: #5b5880; max-width: 560px; }
+  .card { position: absolute; padding: 26px 30px; border-radius: 22px; background: #ffffffe6; box-shadow: 0 0 0 1px #6366f11f, 0 30px 60px -30px #4c1d9566; }
+  .card small { display: block; font: 600 14px "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: #6d6a9a; }
+  .card b { display: block; margin-top: 12px; font: 700 60px/1 "Space Grotesk", sans-serif; letter-spacing: -.03em; }
+  .card em { display: inline-block; margin-top: 12px; padding: 5px 12px; border-radius: 999px; font: 600 16px "Inter", sans-serif; font-style: normal; }
+  #c-bal { left: 900px; top: 170px; width: 860px; height: 420px; }
+  #c-bal svg { position: absolute; left: 30px; right: 30px; bottom: 30px; width: 800px; height: 210px; overflow: visible; }
+  #c-mem { left: 900px; top: 620px; width: 270px; }
+  #c-col { left: 1195px; top: 620px; width: 270px; }
+  #c-pool { left: 1490px; top: 620px; width: 270px; }
+  .green { background: #d1fae5; color: #047857; }
+  .violet { background: #ede9fe; color: #5b21b6; }
+
+  /* Phone carousel */
+  #s3-label { position: absolute; left: 150px; top: 150px; font-size: 16px; color: #7c79a8; }
+  #feat-text { position: absolute; left: 150px; top: 300px; width: 520px; }
+  #feat-kicker { font-size: 18px; color: #6d5bd0; }
+  #feat-title { margin-top: 26px; font: 700 88px/1 "Space Grotesk", sans-serif; letter-spacing: -.04em; }
+  #feat-head { margin-top: 24px; font: italic 400 50px/1.1 "Instrument Serif", serif; color: #4f46e5; }
+  #feat-body { margin-top: 22px; font-size: 26px; line-height: 1.55; color: #5b5880; max-width: 500px; }
+  #dots { position: absolute; left: 150px; top: 860px; display: flex; gap: 12px; }
+  #dots i { display: block; height: 4px; width: 40px; border-radius: 2px; background: #6366f12b; overflow: hidden; }
+  #dots i b { display: block; height: 100%; width: 0; background: #6366f1; }
+  .phone { position: absolute; top: 120px; left: 0; width: 400px; padding: 30px 12px; border-radius: 56px; background: linear-gradient(160deg, #2e2b45, #121022 45%); box-shadow: inset 0 0 0 1.5px #ffffff26, 0 50px 90px -34px #3b0764a6; transform-origin: 50% 50%; }
+  .phone::before { content: ""; position: absolute; top: 12px; left: 50%; width: 60px; height: 6px; border-radius: 3px; background: #000; transform: translateX(-50%); }
+  .phone::after { content: ""; position: absolute; bottom: 11px; left: 50%; width: 92px; height: 5px; border-radius: 3px; background: #ffffff40; transform: translateX(-50%); }
+  .phone img { display: block; width: 100%; border-radius: 8px; }
+
+  /* Dividend formula */
+  #s4 .kick { position: absolute; left: 0; right: 0; top: 250px; text-align: center; font-size: 18px; color: #7c79a8; }
+  #s4 h2 { position: absolute; left: 0; right: 0; top: 300px; text-align: center; font: italic 400 76px/1.1 "Instrument Serif", serif; color: #4f46e5; }
+  #eq { position: absolute; left: 0; right: 0; top: 470px; display: flex; justify-content: center; align-items: center; gap: 34px; }
+  #eq > span { display: inline-block; padding: 26px 38px; border-radius: 24px; background: #fff; box-shadow: 0 0 0 1px #6366f126, 0 30px 60px -30px #4c1d9566; font: 700 64px/1 "Space Grotesk", sans-serif; letter-spacing: -.03em; }
+  #eq > span small { display: block; margin-top: 10px; font: 600 15px "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: #7c79a8; }
+  #eq .op { padding: 0; background: none; box-shadow: none; color: #a5a3c9; font-weight: 400; }
+  #eq .res { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+  #eq .res small { color: #e0dcff; }
+  #s4 .note { position: absolute; left: 0; right: 0; top: 720px; text-align: center; font-size: 24px; color: #5b5880; }
+
+  /* End card */
+  #end .tile { left: 50%; top: 190px; width: 160px; height: 160px; margin-left: -80px; }
+  #end h2 { position: absolute; left: 0; right: 0; top: 400px; text-align: center; font: 700 100px/1 "Space Grotesk", sans-serif; letter-spacing: -.04em; }
+  #end .line { position: absolute; left: 0; right: 0; top: 530px; text-align: center; font: italic 400 50px/1.2 "Instrument Serif", serif; color: #4f46e5; }
+  #end .stack { position: absolute; left: 0; right: 0; top: 640px; text-align: center; font-size: 17px; color: #7c79a8; }
+  #end .by { position: absolute; left: 0; right: 0; top: 730px; text-align: center; font-size: 25px; }
+  #end .url { position: absolute; left: 0; right: 0; top: 778px; text-align: center; font: 19px "JetBrains Mono", monospace; color: #6d5bd0; }
+  #fade { position: absolute; inset: 0; background: #f5f3ff; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div><div class="blob" id="b4"></div>
+
+  <div class="layer" id="s1">
+    <div class="tile"></div>
+    <h1>CoopTracker</h1>
+    <p class="mono">Cooperative finance, without the spreadsheets</p>
+  </div>
+
+  <div class="layer" id="s2">
+    <div id="sheet"></div>
+    <div id="s2-text">
+      <div class="a">Spreadsheets<i id="strike"></i></div>
+      <div class="b">one source<br>of truth.</div>
+      <div class="c">Members, collections, loans and dividends in one place, always reconciled.</div>
+    </div>
+    <div class="card" id="c-bal">
+      <small>Total balance · cycle 2026</small>
+      <b id="n-bal">₱0</b>
+      <em class="green">↗ 4.5% vs last period</em>
+      <svg viewBox="0 0 800 210"><defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#8b5cf6" stop-opacity=".28"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient></defs><path id="area" fill="url(#fill)"/><path id="line" fill="none" stroke="#8b5cf6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle id="dot" r="9" fill="#fff" stroke="#8b5cf6" stroke-width="5"/></svg>
+    </div>
+    <div class="card" id="c-mem"><small>Members</small><b id="n-mem">0</b><em class="violet">52 shares</em></div>
+    <div class="card" id="c-col"><small>This period</small><b id="n-col">0/15</b><em class="green">₱26,000 in</em></div>
+    <div class="card" id="c-pool"><small>Interest pool</small><b id="n-pool">₱0</b><em class="violet">to share out</em></div>
+  </div>
+
+  <div class="layer" id="s3">
+    <div id="s3-label" class="mono">One app · six views</div>
+    <div id="phones"></div>
+    <div id="feat-text"><div id="feat-kicker" class="mono"></div><div id="feat-title"></div><div id="feat-head"></div><div id="feat-body"></div></div>
+    <div id="dots"></div>
+  </div>
+
+  <div class="layer" id="s4">
+    <div class="kick mono">Dividends</div>
+    <h2>Computed, not guessed.</h2>
+    <div id="eq">
+      <span id="e1">₱53,640<small>interest pool</small></span>
+      <span class="op" id="o1">÷</span>
+      <span id="e2">52<small>eligible shares</small></span>
+      <span class="op" id="o2">=</span>
+      <span class="res" id="e3"><b id="n-div">₱0.00</b><small>per share</small></span>
+    </div>
+    <div class="note" id="note">Every amortization, penalty and dividend runs through pure, unit-tested TypeScript before it's saved.</div>
+  </div>
+
+  <div class="layer" id="end">
+    <div class="tile"></div>
+    <h2>CoopTracker</h2>
+    <div class="line">Members, loans, shares and dividends, always reconciled.</div>
+    <div class="stack mono">Next.js · TypeScript · Supabase · PostgreSQL · Zod · Jest</div>
+    <div class="by">Designed &amp; built by Keith Vergara</div>
+    <div class="url">coop-tracker.vercel.app</div>
+  </div>
+
+  <div id="fade"></div>
+</div>
+
+<script>
+const FEATURES = [
+  ["dashboard", "Dashboard", "The whole co-op at a glance.", "Balance and its trend through the cycle, with collections, disbursements and repayments."],
+  ["period", "This period", "Who has paid, instantly.", "Collection progress for the current period, with members, loans and the interest pool."],
+  ["members", "Collections", "Paid against expected.", "Pick a period, then mark members paid, unpaid or forfeited."],
+  ["member-list", "Members", "Shares and capital, per member.", "Each member's stake and this period's status, with one-tap undo."],
+  ["loans", "Loans", "Every loan, to the last peso.", "Amount, monthly rate, term and repayment progress, plus interest earned."],
+  ["shares", "Shares", "Dividends, divided fairly.", "The interest pool split across eligible shares, and the equity it builds."],
+];
+
+const S1 = [0, 4.4], S2 = [4.45, 10.4], S3 = [10.3, 26.2], S4 = [26.1, 30.6], S5 = [30.5, 35];
+const PER = 2.5, MOVE = 0.7, DURATION = 35;
+
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const ease = (x) => (x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const out = (x) => 1 - Math.pow(1 - x, 3);
+const back = (x) => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const fadeWin = (t, [a, b], fin = .6, fout = .6) => Math.min(out(prog(t, a, a + fin)), 1 - ease(prog(t, b - fout, b)));
+const peso = (n, d = 0) => "₱" + n.toLocaleString("en-PH", { minimumFractionDigits: d, maximumFractionDigits: d });
+const rise = (el, v, dist = 30) => { el.style.opacity = v; el.style.transform = `translateY(${(1 - v) * dist}px)`; };
+
+// Spreadsheet cells (fake column of figures that fades away).
+for (let i = 0; i < 70; i++) {
+  const s = document.createElement("span");
+  s.style.left = `${(i % 7) * 120 + 14}px`; s.style.top = `${Math.floor(i / 7) * 42 + 13}px`;
+  s.textContent = i < 7 ? ["Member", "Shares", "Paid", "Loan", "Rate", "Due", "Int."][i] : ((i * 7919) % 9000 + 500).toLocaleString();
+  $("sheet").appendChild(s);
+}
+
+// Balance chart: an opening dip, a slow climb, a step up, then a gentle rise.
+const pts = [];
+for (let i = 0; i <= 60; i++) {
+  const x = i / 60;
+  let y = .82 - .1 * Math.sin(x * 3.2) * (x < .1 ? 1 : 0) - .25 * x - (x > .5 ? .22 : .22 * out(clamp((x - .45) / .05))) - .06 * Math.sin(x * 9) * .3;
+  if (x < .05) y = .7 + x * 2.4;
+  pts.push([x * 800, clamp(y, .04, .96) * 210]);
+}
+const pathOf = (n) => "M" + pts.slice(0, n).map((p) => p.map((v) => v.toFixed(1)).join(",")).join(" L");
+$("line").setAttribute("d", pathOf(pts.length));
+const LEN = $("line").getTotalLength();
+$("line").style.strokeDasharray = LEN;
+
+const phones = FEATURES.map(([slug]) => {
+  const el = document.createElement("div");
+  el.className = "phone";
+  el.innerHTML = `<img src="../../public/images/coop-mobile-app-${slug}.webp" alt="">`;
+  $("phones").appendChild(el);
+  return el;
+});
+const dots = FEATURES.map(() => { const i = document.createElement("i"); i.appendChild(document.createElement("b")); $("dots").appendChild(i); return i.firstChild; });
+
+function render(t) {
+  // Background blobs drift on slow loops.
+  [["b1", 300, 120, .12], ["b2", 1500, 700, .09], ["b3", 1350, 80, .07], ["b4", 200, 820, .1]].forEach(([id, x, y, s], k) => {
+    $(id).style.transform = `translate(${x - 300 + Math.sin(t * s * 6 + k) * 90}px, ${y - 300 + Math.cos(t * s * 5 + k * 2) * 70}px)`;
+  });
+
+  // 1. Logo pops, wordmark and kicker rise.
+  $("s1").style.opacity = fadeWin(t, S1, .4, .7);
+  const lp = clamp(back(prog(t, .5, 1.5)), 0, 1.2);
+  $("s1").querySelector(".tile").style.transform = `scale(${.5 + .5 * lp}) rotate(${(1 - clamp(lp)) * -12}deg)`;
+  $("s1").querySelector(".tile").style.opacity = out(prog(t, .5, .9));
+  rise($("s1").querySelector("h1"), out(prog(t, 1.2, 2.2)), 40);
+  rise($("s1").querySelector("p"), out(prog(t, 1.6, 2.6)), 20);
+
+  // 2. Strike through "Spreadsheets", sheet fades, live cards count up.
+  $("s2").style.opacity = fadeWin(t, S2, .5, .6);
+  rise($("s2-text").querySelector(".a"), out(prog(t, 4.55, 5.2)));
+  $("strike").style.width = "102%";
+  $("strike").style.transform = `scaleX(${ease(prog(t, 5.2, 5.8))})`;
+  rise($("s2-text").querySelector(".b"), out(prog(t, 5.8, 6.6)), 40);
+  rise($("s2-text").querySelector(".c"), out(prog(t, 6.3, 7.1)), 20);
+  $("sheet").style.opacity = .9 * out(prog(t, 4.45, 5.0)) * (1 - ease(prog(t, 5.6, 6.6)));
+  [["c-bal", 6.0], ["c-mem", 6.5], ["c-col", 6.7], ["c-pool", 6.9]].forEach(([id, at]) => rise($(id), out(prog(t, at, at + .7)), 40));
+  const cnt = ease(prog(t, 6.2, 8.4));
+  $("n-bal").textContent = peso(Math.round(599140 * cnt));
+  $("n-mem").textContent = Math.round(15 * ease(prog(t, 6.7, 8.0)));
+  $("n-col").textContent = `${Math.round(15 * ease(prog(t, 6.9, 8.4)))}/15`;
+  $("n-pool").textContent = peso(Math.round(53640 * ease(prog(t, 7.1, 8.6))));
+  const draw = ease(prog(t, 6.4, 8.8));
+  $("line").style.strokeDashoffset = LEN * (1 - draw);
+  const n = Math.max(2, Math.round(draw * (pts.length - 1)) + 1);
+  $("area").setAttribute("d", pathOf(n) + ` L${pts[n - 1][0]},210 L0,210 Z`);
+  const tip = $("line").getPointAtLength(LEN * draw);
+  $("dot").setAttribute("cx", tip.x); $("dot").setAttribute("cy", tip.y);
+  $("dot").style.opacity = draw > .02 ? 1 : 0;
+
+  // 3. Phone carousel.
+  $("s3").style.opacity = fadeWin(t, S3, .6, .6);
+  const local = Math.max(0, t - (S3[0] + .4));
+  const idx = Math.min(FEATURES.length - 1, Math.floor(local / PER));
+  const within = local - idx * PER;
+  const pos = idx === 0 ? 0 : (idx - 1) + ease(clamp(within / MOVE));
+  phones.forEach((el, i) => {
+    const d = i - pos;
+    el.style.opacity = Math.abs(d) > 2.2 ? 0 : 1 - Math.min(Math.abs(d), 1.6) * .5;
+    el.style.zIndex = String(100 - Math.round(Math.abs(d) * 10));
+    el.style.transform = `translateX(${1360 + d * 480 - 200}px) scale(${1 - Math.min(Math.abs(d), 1.4) * .2}) rotateY(${clamp(-d, -1, 1) * 8}deg)`;
+    el.style.filter = `saturate(${1 - Math.min(Math.abs(d), 1) * .5}) brightness(${1 - Math.min(Math.abs(d), 1) * .08})`;
+  });
+  const [, title, head, body] = FEATURES[idx];
+  const tIn = idx === 0 ? out(prog(local, .3, 1.0)) : out(prog(within, .25, .85));
+  const tOut = idx === FEATURES.length - 1 ? 1 : 1 - ease(prog(within, PER - .35, PER));
+  $("feat-kicker").textContent = `${String(idx + 1).padStart(2, "0")} / ${String(FEATURES.length).padStart(2, "0")}`;
+  $("feat-title").textContent = title; $("feat-head").textContent = head; $("feat-body").textContent = body;
+  rise($("feat-text"), Math.min(tIn, tOut), 24);
+  dots.forEach((b, i) => { b.style.width = `${i < idx ? 100 : i > idx ? 0 : clamp(within / PER) * 100}%`; });
+
+  // 4. Dividend formula assembles, result counts up.
+  $("s4").style.opacity = fadeWin(t, S4, .5, .6);
+  rise($("s4").querySelector(".kick"), out(prog(t, 26.2, 26.8)), 16);
+  rise($("s4").querySelector("h2"), out(prog(t, 26.4, 27.1)), 24);
+  [["e1", 26.9], ["o1", 27.2], ["e2", 27.4], ["o2", 27.7], ["e3", 27.9]].forEach(([id, at]) => {
+    const v = out(prog(t, at, at + .5));
+    $(id).style.opacity = v; $(id).style.transform = `translateY(${(1 - v) * 30}px) scale(${.92 + .08 * v})`;
+  });
+  $("n-div").textContent = peso(1031.54 * ease(prog(t, 28.0, 29.0)), 2);
+  rise($("note"), out(prog(t, 28.6, 29.3)), 16);
+
+  // 5. End card.
+  $("end").style.opacity = fadeWin(t, S5, .7, .01);
+  const e = clamp(back(prog(t, 30.6, 31.6)), 0, 1.2);
+  $("end").querySelector(".tile").style.transform = `scale(${.6 + .4 * e})`;
+  $("end").querySelectorAll("h2,.line,.stack,.by,.url").forEach((el, i) => rise(el, out(prog(t, 30.9 + i * .18, 31.8 + i * .18)), 26));
+
+  $("fade").style.opacity = Math.max(1 - prog(t, 0, .6), prog(t, DURATION - .8, DURATION));
+}
+
+window.DURATION = DURATION;
+window.POSTER_AT = 12.4; // the Dashboard view in the phone carousel
+window.render = render;
+render(0);
+if (location.search.includes("play")) {
+  const start = performance.now();
+  const loop = () => { render(((performance.now() - start) / 1000) % DURATION); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>
