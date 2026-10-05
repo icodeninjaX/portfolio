@@ -2,7 +2,7 @@ import Image from "next/image";
 import { LuGithub, LuGlobe, LuLinkedin, LuMail, LuMapPin } from "react-icons/lu";
 import { resumeData } from "@/lib/data";
 
-const SITE = "keithvergara.dev";
+const SITE = "portfolio.kdvwebsiteservices.com";
 // Stamped at build time; every deploy refreshes it.
 const UPDATED = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
 

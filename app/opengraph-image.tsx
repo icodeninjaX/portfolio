@@ -75,7 +75,7 @@ export default async function Image() {
               fontFamily: "monospace",
             }}
           >
-            keithvergara.dev
+            portfolio.kdvwebsiteservices.com
           </span>
         </div>
 
