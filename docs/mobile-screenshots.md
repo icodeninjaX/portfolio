@@ -71,3 +71,7 @@ Source located at `E:/xampp/htdocs/371admin/371admin_ver1`, remote `icodeninjaX/
 The repository's users/RBAC setup contains seeded password hashes but no verified demo login password. The current user-creation route requires a logged-in administrator with USERS_CREATE permission and a valid CSRF token; there is no public signup flow. Proceeding needs a working sanctioned demo login or an approved supported demo-account provisioning step. Passwords were not reset, sessions were not fabricated, and authorization checks were not changed. Device-monitoring workflows additionally use a separate production RDS configuration; no production connection was attempted. A calculator may provide a useful local-only view after sanctioned demo authentication is established.
 
 The prior login preview is excluded. Its existing source layout overflow remains a diagnostic observation, not a claim about dashboard responsiveness.
+
+## Update 2026-10-05: ATLAS in-app phone views
+
+The two ATLAS public-landing captures above (`atlas-mobile-landing.webp`, `atlas-mobile-tasks.webp`) were replaced and deleted. The owner sent eight screenshots taken on their own Android phone, signed in to their own ATLAS workspace: Today, Money, Tasks, Goals, Analyst, Capture, Career and Timeline. Each was cropped to remove the Android status bar (rows 0–103) and gesture bar (rows 2358+), resized from 1080 to 780 px wide and saved as `public/images/atlas-mobile-app-*.webp` (780 × 1628). No pixels inside the app were edited. These show the owner's real records, not demo data.
