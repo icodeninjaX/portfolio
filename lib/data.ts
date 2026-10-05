@@ -358,6 +358,13 @@ export const resumeData = {
       tech: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS"],
       status: "personal" as const,
       link: "https://coop-tracker.vercel.app/",
+      video: {
+        mp4: "/videos/coop-demo.mp4",
+        webm: "/videos/coop-demo.webm",
+        poster: "/videos/coop-demo-poster.webp",
+        label: "CoopTracker product demo: live balance and member totals counting up, six app screens on a phone, and the dividend calculation of 53,640 pesos divided by 52 shares.",
+        caption: "A 35-second walkthrough of CoopTracker: live totals, six views on a phone and the dividend math. Other members' names are blurred.",
+      },
       mobileNote: "Captured on an Android phone from the live app, signed in as the cooperative's administrator. Other members' names are blurred.",
       mobileImages: [
         { src: "/images/coop-mobile-app-login.webp", width: 780, height: 1625, label: "Sign in · phone", alt: "CoopTracker sign-in screen on a phone with email and password fields, a Sign in button, and links to reset a password or create an account.", caption: "Sign in. Email and password with password reset and account creation." },
