@@ -741,6 +741,9 @@ html.lenis body {
 .stack-content {
   position: relative;
   z-index: 3;
+  /* Decorative bleeds (e.g. the contact glow) must not widen the page on
+     phones; clip (not hidden) keeps the sticky chapters working. */
+  overflow-x: clip;
 }
 
 /* ---- top bar ---- */
