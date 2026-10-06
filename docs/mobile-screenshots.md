@@ -113,3 +113,11 @@ Added the same day: Branches, Sales report and three point-of-sale views (dashbo
 ## ATLAS desktop screenshots, part 2 (2026-10-06)
 
 Supplied by the owner from the desktop app: Money · Debts, Goals and Career. Cropped to a common 1891 × 987 frame and resized to 1440 × 752 WebP (quality 86) as `atlas-desktop-{debts,goals,career}.webp`. **Redaction:** on Debts, the total remaining, the repaid and borrowed amounts, the monthly minimums and the next lender's name are blurred; on Career, the company names, roles, locations and salaries of both closed applications are blurred. Goals needed none.
+
+## TRACKY desktop screenshots (2026-10-06)
+
+Supplied by the owner from the current version of the app, signed in to their own account: Dashboard, Transactions, Budgets, Savings and AI Advisor. Cropped to a common 1900 × 900 frame and resized to 1440 × 682 WebP (quality 86) as `tracky-desktop-{dashboard,transactions,budgets,savings,advisor}.webp`. They replace the six screenshots of the earlier design (`tracky-{maindashboard,transactions,recurring,budgets,savings,calendarview}.webp`). **Redaction:** the account email in the sidebar is blurred on all five. The owner's own figures are left visible, as they were on the earlier screenshots.
+
+## TRACKY phone screenshots (2026-10-06)
+
+Supplied by the owner from the live app at phone width, inside a phone mockup: Dashboard, Activity, Savings, AI Advisor and Calendar. Cropped to the app screen only (removing the drawn bezel and the teal status bar), then upscaled 2× to 700 × 1392 WebP (quality 90) as `tracky-mobile-{dashboard,activity,savings,advisor,calendar}.webp`. They replace the two synthetic demo captures `tracky-mobile-demo-{dashboard,activity}.webp`. No redaction: no email or other people's details are on these screens; the owner's own figures are left visible.
