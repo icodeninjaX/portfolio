@@ -372,12 +372,11 @@ export const resumeData = {
         { src: "/images/tracky-mobile-demo-activity.webp", width: 780, height: 1688, label: "Activity — phone demo", alt: "Tracky phone transaction list containing DEMO-labeled earnings, groceries, and commute entries.", caption: "The actual Activity workflow with clearly labeled fictional transactions. Captured by scrolling the phone viewport, with no screenshot content or layout substituted." },
       ],
       images: [
-        { src: "/images/tracky-maindashboard.webp", width: 1427, height: 728, label: "Main Dashboard", caption: "Monthly spending overview with dynamic category progress bars and quick receipt upload." },
-        { src: "/images/tracky-transactions.webp", width: 1422, height: 736, label: "Transactions", caption: "Searchable transaction ledger showing parsed receipts and category tags." },
-        { src: "/images/tracky-recurring.webp", width: 1435, height: 730, label: "Recurring Payments", caption: "Subscription and regular bill detection to prevent unexpected auto-renewals." },
-        { src: "/images/tracky-budgets.webp", width: 1426, height: 729, label: "Budgets", caption: "Granular category budgeting with visual percentage thresholds." },
-        { src: "/images/tracky-savings.webp", width: 1420, height: 728, label: "Savings Goals", caption: "Target milestone trackers with projected completion forecasts." },
-        { src: "/images/tracky-calendarview.webp", width: 1423, height: 727, label: "Calendar View", caption: "Monthly distribution of daily cash inflows and outlays." },
+        { src: "/images/tracky-desktop-dashboard.webp", width: 1440, height: 682, label: "Dashboard", caption: "The Bento dashboard: cashflow with what is safe to spend, total balance and days under budget, savings goals, top spending by category and this week's spend intensity. Switchable to Classic or Focus layouts." },
+        { src: "/images/tracky-desktop-transactions.webp", width: 1440, height: 682, label: "Transactions", caption: "Every income and expense grouped by day with daily totals, searchable and filterable by type and date range, with inline edit and delete." },
+        { src: "/images/tracky-desktop-budgets.webp", width: 1440, height: 682, label: "Budgets", caption: "Monthly category budgets with spent, remaining and at-risk totals, and an on-track status and progress bar for each category." },
+        { src: "/images/tracky-desktop-savings.webp", width: 1440, height: 682, label: "Savings", caption: "Savings goals with priority, progress toward the target, what is left to go and a target date, plus one-tap Add Funds." },
+        { src: "/images/tracky-desktop-advisor.webp", width: 1440, height: 682, label: "AI Advisor", caption: "The AI Advisor answers questions about your own spending, with suggested prompts, a monthly snapshot and smart insights alongside." },
       ],
     },
     {
