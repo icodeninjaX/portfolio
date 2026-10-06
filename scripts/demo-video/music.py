@@ -10,6 +10,8 @@ nothing to license. Each score is timed to its video's scenes.
             marimba groove, kick, clap and shaker, a hit on every cut.
   kdv       a dark paper-storm drone, an impact at the snap, then a warm
             electric-piano groove that lifts at each service.
+  newzion   a ticking clock under plucked strings, a minor 'before', then a
+            bright G major groove with a counter bell on every order.
   plantpal  warm and organic: D major pentatonic kalimba in 3/4, a soft pad
             and wind, a chime as each specimen is pressed, a harp gliss as
             the flower blooms.
@@ -393,7 +395,73 @@ def kdv(T):
     return reverb(tr.buf, 2.2, 0.28)
 
 
-SCORES = {"atlas": atlas, "coop": coop, "plantpal": plantpal, "kdv": kdv}
+def newzion(T):
+    """Bar-locked to newzion.html (120 bpm, scenes at 0, 6, 14, 22, 30, 38, 46 s):
+    a ticking clock under plucked strings, a sparse minor "before", a
+    hazard-stripe whoosh into a bright G major groove with a counter bell on
+    every order, and a resolve at close of day."""
+    tr = Track(T)
+    beat, bar = 0.5, 2.0
+
+    def tick(at, gain):
+        tr.add(noise_hit(0.03, 9500, 160), at, gain, pan=0.35)
+
+    def whoosh(at):
+        n = int(0.9 * SR)
+        w = rng.standard_normal(n) * np.sin(np.linspace(0, np.pi, n)) ** 2
+        tr.add(w - lowpass_fast(w, 1500), at - 0.45, 0.12, pan=-0.2)
+        tr.add(kick(0.5), at, 0.4)
+
+    # 0-6 s: the first call. A clock ticks; a light plucked motif.
+    for i in range(12):
+        tick(i * beat, 0.05 if i % 2 else 0.08)
+    for i, m in enumerate([67, 71, 74, 79, 74, 71]):
+        tr.add(pluck(m, 0.5, bright=2600, decay=7), 1.0 + i * beat, 0.26, pan=-0.2 + 0.08 * i)
+    tr.add(pad([55, 59, 62, 67], 6.0, shape="tri", cutoff=1400), 0, 0.4)
+    tr.add(sub(31, 6.0), 0, 0.18)
+    # 6-14 s: before. E minor, slower ticks, paper clicks.
+    tr.add(pad([40, 47, 52, 55], 8.2, shape="saw", cutoff=650, detune=0.15), 6, 0.22)
+    tr.add(sub(28, 8), 6, 0.16)
+    for i in range(16):
+        tick(6 + i * beat, 0.06)
+        if i % 4 == 0:
+            tr.add(pluck(52 + [0, 3, 7, 10][i // 4 % 4], 0.8, bright=1400, decay=4), 6 + i * beat, 0.11)
+    for i in range(22):
+        tr.add(noise_hit(0.025, 6000, 200), rng.uniform(10.2, 13.5), 0.05, pan=rng.uniform(-0.6, 0.6))
+    # 14-46 s: the working day. G - D - Em - C, plucked eighths, kick and ticks.
+    chords = [[55, 59, 62], [50, 54, 57], [52, 55, 59], [48, 52, 55]]
+    roots = [31, 26, 28, 24]
+    t0, k = 14.0, 0
+    while t0 < 46 - 0.01:
+        c = chords[k % 4]
+        tr.add(pad([n + 12 for n in c], bar + 0.2, shape="tri", cutoff=1700), t0, 0.11)
+        tr.add(sub(roots[k % 4] + 12, bar), t0, 0.26)
+        for j in range(8):
+            at = t0 + j * beat / 2
+            tr.add(pluck(c[[0, 1, 2, 1][j % 4]] + 12 + (12 if j in (3, 7) else 0), 0.3, bright=3000, decay=9), at, 0.12, pan=-0.25 + 0.5 * (j % 2))
+            tick(at, 0.045 if j % 2 else 0.065)
+            if j in (0, 4):
+                tr.add(kick(0.35), at, 0.3)
+            if j in (2, 6):
+                tr.add(noise_hit(0.08, 3000, 45), at, 0.05)
+        t0 += bar
+        k += 1
+    # Counter bell on each order landing in the queue, the delivered receipt and the stamps.
+    for at in [15.8 + i * 0.75 + 0.6 for i in range(5)] + [28.4, 42.6, 43.1]:
+        tr.add(bell(91, 1.2), at, 0.09, pan=0.3)
+    for at in (22, 30, 38):
+        tr.add(noise_hit(0.8, 5000, 4.5), at, 0.06)
+    for at in (14, 38, 46):
+        whoosh(at)
+    # 46 s: close of day. Resolve on G with bells and a long tail.
+    tr.add(pad([43, 55, 59, 62, 67, 71], T - 46, shape="tri", cutoff=1900), 46, 0.42)
+    tr.add(sub(31, T - 46), 46, 0.2)
+    for j, m in enumerate([79, 83, 86, 91]):
+        tr.add(bell(m, 3.0), 46.4 + j * 0.3, 0.1, pan=-0.3 + 0.2 * j)
+    return reverb(tr.buf, 1.8, 0.24)
+
+
+SCORES = {"atlas": atlas, "coop": coop, "plantpal": plantpal, "kdv": kdv, "newzion": newzion}
 
 
 def main():
