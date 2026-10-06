@@ -251,6 +251,13 @@ export const resumeData = {
       stage: "Live website",
       link: "https://kdvwebsiteservices.com/",
       source: "https://github.com/icodeninjaX/KDV-Website-Services",
+      video: {
+        mp4: "/videos/kdv-demo.mp4",
+        webm: "/videos/kdv-demo.webm",
+        poster: "/videos/kdv-demo-poster.webp",
+        label: "KDV Website Services product film in 3D: a camera drifts through a storm of loose paperwork that snaps into a grid and becomes the KDV homepage, flies past floating screens for websites, dashboards and custom apps with their prices, and pulls back to a wall of client work before the call to start a project.",
+        caption: "A 48-second film of KDV Website Services: from business chaos to a working system, then websites, dashboards and custom apps, with prices and timelines.",
+      },
       mobileNote: "Captured on an Android phone from the live site at kdvwebsiteservices.com. Client dashboards appear blurred, as they do on the site itself.",
       mobileImages: [
         { src: "/images/kdv-mobile-home.webp", width: 780, height: 1568, label: "Homepage · phone", alt: "KDV Website Services homepage on a phone: papers flying above the headline Turn business chaos into a system that works, with Start a project and View selected work buttons.", caption: "The hero. Scattered paperwork flies above the promise, Turn business chaos into a system that works, with one clear call to start a project." },

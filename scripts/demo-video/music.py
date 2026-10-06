@@ -8,6 +8,8 @@ nothing to license. Each score is timed to its video's scenes.
             arpeggio and soft ticks; chords change with each carousel view.
   coop      bright, punchy, bar-locked to the video's hard cuts: C major
             marimba groove, kick, clap and shaker, a hit on every cut.
+  kdv       a dark paper-storm drone, an impact at the snap, then a warm
+            electric-piano groove that lifts at each service.
   plantpal  warm and organic: D major pentatonic kalimba in 3/4, a soft pad
             and wind, a chime as each specimen is pressed, a harp gliss as
             the flower blooms.
@@ -319,7 +321,79 @@ def plantpal(T):
     return reverb(tr.buf, 3.2, 0.4)
 
 
-SCORES = {"atlas": atlas, "coop": coop, "plantpal": plantpal}
+def rhodes(m, dur=2.2, vel=1.0):
+    """Electric-piano-ish FM tone: bright attack mellowing into a warm sine."""
+    t = t_axis(dur)
+    f = hz(m)
+    index = 1.6 * vel * np.exp(-3.5 * t) + 0.15
+    sig = np.sin(2 * np.pi * f * t + index * np.sin(2 * np.pi * f * t))
+    sig *= 1 + 0.12 * np.sin(2 * np.pi * 4.2 * t)  # tremolo
+    return sig * np.exp(-1.6 * t) * env(len(t), a=0.004, d=0.05, s=1, r=0.25)
+
+
+def kdv(T):
+    """Bar-locked to kdv.html (100 bpm): dark paper storm, an impact at the
+    snap, then a warm electric-piano groove that lifts at each service and
+    resolves on the end card."""
+    tr = Track(T)
+    beat = 60 / 100
+    bar = 4 * beat
+    snap, web, dash, app, wall, end = 5 * bar, 8 * bar, 10 * bar, 12 * bar, 14 * bar, 17 * bar
+    # Chaos: a low D minor drone, rustling paper and a riser into the snap.
+    tr.add(pad([38, 45, 50, 53], snap + 0.4, shape="saw", cutoff=520, detune=0.18), 0, 0.15)
+    tr.add(sub(26, snap), 0, 0.14)
+    for i in range(46):
+        at = rng.uniform(0.3, snap - 0.4)
+        tr.add(noise_hit(rng.uniform(0.08, 0.22), rng.uniform(3000, 7000), rng.uniform(18, 40)), at, rng.uniform(0.02, 0.06), pan=rng.uniform(-0.8, 0.8))
+    n = int(2 * bar * SR)
+    riser = rng.standard_normal(n) * np.linspace(0, 1, n) ** 2.4
+    tr.add(riser - lowpass_fast(riser, 1800), snap - 2 * bar, 0.09)
+    # The snap: a deep impact and a bright chord.
+    tr.add(kick(0.9), snap, 0.75)
+    tr.add(sub(29, 2.2), snap, 0.55)
+    tr.add(noise_hit(1.4, 4000, 3.0), snap, 0.11)
+    # Warm groove: Fmaj7 - Am7 - Dm9 - Bbmaj7, one chord per bar.
+    chords = [[53, 57, 60, 64], [57, 60, 64, 67], [50, 57, 60, 64], [46, 53, 57, 62]]
+    roots = [29, 33, 26, 34]
+    k = 0
+    t0 = snap
+    while t0 < end - 0.01:
+        c = chords[k % 4]
+        full = t0 >= web
+        tr.add(pad([x + 12 for x in c], bar + 0.3, shape="tri", cutoff=1600), t0, 0.12)
+        for j, beat_at in enumerate([0, 1.5, 2.5] if full else [0, 2]):
+            for m in c:
+                tr.add(rhodes(m + 12, 1.8, 0.8 if j else 1.0), t0 + beat_at * beat, 0.07)
+        bass = [roots[k % 4] + 12, roots[k % 4] + 12, roots[k % 4] + 19, roots[k % 4] + 12]
+        for j, m in enumerate(bass):
+            tr.add(sub(m, beat * 0.9), t0 + j * beat, 0.28 if full else 0.2)
+        for j in range(4):
+            if full or j in (0, 2):
+                tr.add(kick(0.4), t0 + j * beat, 0.32 if full else 0.26)
+            if j in (1, 3):
+                tr.add(noise_hit(0.12, 2600, 30), t0 + j * beat, 0.08, pan=-0.1)
+        if full:
+            for j in range(8):
+                tr.add(noise_hit(0.04, 9000, 120), t0 + j * beat / 2 + beat / 4, 0.03 if j % 2 else 0.045, pan=0.45)
+        if t0 >= wall:  # lift: a bell arpeggio over the wall
+            for j, m in enumerate([c[0] + 24, c[2] + 24, c[1] + 24, c[3] + 24]):
+                tr.add(bell(m, 1.6), t0 + j * beat, 0.07, pan=-0.3 + 0.2 * j)
+        t0 += bar
+        k += 1
+    # A hit on each service.
+    for at in (web, dash, app, wall):
+        tr.add(noise_hit(0.9, 5000, 4.0), at, 0.08, pan=0.2)
+        tr.add(kick(0.6), at, 0.4)
+    # End card: resolve on Fmaj9 with a long tail.
+    tr.add(pad([41, 53, 57, 60, 64, 67], T - end, shape="tri", cutoff=1800), end, 0.5)
+    tr.add(sub(29, T - end), end, 0.22)
+    for j, m in enumerate([65, 69, 72, 76, 79]):
+        tr.add(rhodes(m, 3.5), end + j * 0.18, 0.18)
+    tr.add(bell(84, 3.0), end + 1.0, 0.1)
+    return reverb(tr.buf, 2.2, 0.28)
+
+
+SCORES = {"atlas": atlas, "coop": coop, "plantpal": plantpal, "kdv": kdv}
 
 
 def main():

@@ -1,0 +1,302 @@
+<!doctype html>
+<!--
+  KDV Website Services motion-graphics demo (case study video). Same contract
+  as the others: `render(t)` draws the frame at t seconds; `render.mjs kdv`
+  captures every frame. Add `?play` to the URL to preview in real time.
+
+  Style: a true 3D film in CSS perspective, in the site's own palette (amber
+  chaos, indigo system). A camera drifts through a storm of loose paperwork,
+  the papers snap into a grid that becomes the KDV homepage, the camera flies
+  past one floating screen per service, the screens fan into a studio wall,
+  and it closes on the call to action. Timed to a 100 bpm grid (BAR = 2.4 s)
+  shared with music.py; the voice-over (kdv.voice.json) is from Higgsfield.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>KDV Website Services demo</title>
+<style>
+  @font-face { font-family: "Space Grotesk"; src: url("../../app/fonts/space-grotesk-var.woff2") format("woff2"); font-weight: 300 700; }
+  @font-face { font-family: "Inter"; src: url("../../app/fonts/inter-var.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../app/fonts/jetbrains-mono-var.woff2") format("woff2"); font-weight: 100 800; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #08080b; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: #f4f2ee; font-family: "Inter", sans-serif; background: #08080b; perspective: 1200px; perspective-origin: 960px 540px; }
+  .mono { font: 500 16px "JetBrains Mono", monospace; letter-spacing: .24em; text-transform: uppercase; }
+  .glow { position: absolute; inset: 0; pointer-events: none; }
+  #amber { background: radial-gradient(ellipse 60% 55% at 62% 50%, #5a3a16 0%, #2a1a0a 38%, transparent 72%); }
+  #indigo { background: radial-gradient(ellipse 60% 55% at 50% 48%, #3b2f9a 0%, #1b1650 40%, transparent 74%); }
+  #world { position: absolute; left: 960px; top: 540px; width: 0; height: 0; transform-style: preserve-3d; }
+  .obj { position: absolute; left: 0; top: 0; transform-style: preserve-3d; backface-visibility: hidden; will-change: transform, opacity; transform-origin: 0 0; }
+
+  /* Paperwork */
+  .paper { width: 120px; height: 156px; border-radius: 2px; box-shadow: 0 8px 20px -8px #0009; }
+  .note { background: #f3efe4 repeating-linear-gradient(transparent 0 15px, #8aa3c94d 15px 16px); }
+  .note::before { content: ""; position: absolute; top: 0; bottom: 0; left: 18px; width: 1px; background: #d9707066; }
+  .sticky { width: 112px; height: 112px; }
+  .yellow { background: #e9d86a; } .pink { background: #e7a3b8; } .green { background: #a9cf93; } .orange { background: #ec9a52; }
+  .receipt { width: 76px; height: 178px; background: #ece8df repeating-linear-gradient(transparent 0 11px, #6b655a33 11px 12px); }
+  .kraft { background: #b69567 repeating-linear-gradient(90deg, transparent 0 22px, #00000014 22px 23px); }
+  .scrawl { position: absolute; left: 24px; right: 14px; height: 2px; background: #2c3a6699; border-radius: 1px; }
+
+  /* Floating words in the chaos */
+  .word { width: 1200px; text-align: left; }
+  .word .mono { color: #e6b778; margin-bottom: 18px; }
+  .word b { display: block; font: 700 108px/1 "Space Grotesk", sans-serif; letter-spacing: -.045em; text-shadow: 0 10px 40px #000a; }
+
+  /* App windows */
+  .win { width: 1500px; border-radius: 16px; overflow: hidden; background: #0e0f14; box-shadow: 0 0 0 1px #ffffff1c, 0 60px 140px -40px #000, 0 0 120px -30px #5b52ff55; }
+  .win header { display: flex; align-items: center; gap: 14px; height: 46px; padding: 0 18px; background: linear-gradient(#20222b, #17181f); border-bottom: 1px solid #ffffff12; font: 500 15px "JetBrains Mono", monospace; color: #8d909b; }
+  .win header i { width: 12px; height: 12px; border-radius: 50%; background: #e2665c; }
+  .win header i:nth-child(2) { background: #e0b148; } .win header i:nth-child(3) { background: #5fb455; }
+  .win header span { flex: 1; margin: 0 80px; padding: 6px 0; text-align: center; border-radius: 8px; background: #0b0c10; }
+  .win header span b { color: #eceef3; font-weight: 500; }
+  .win img { display: block; width: 100%; }
+  .card { width: 560px; padding: 40px 44px; border-radius: 20px; background: #12131acc; backdrop-filter: blur(6px); box-shadow: 0 0 0 1px #ffffff1a, 0 40px 90px -40px #000; }
+  .card .mono { color: #a5a0ff; font-size: 15px; }
+  .card h2 { margin-top: 22px; font: 700 72px/1 "Space Grotesk", sans-serif; letter-spacing: -.045em; }
+  .card p { margin-top: 20px; font-size: 25px; line-height: 1.45; color: #c9c7d4; }
+  .card .price { display: inline-block; margin-top: 28px; padding: 12px 20px; border-radius: 999px; background: #4f46e5; font: 600 22px "Inter", sans-serif; color: #fff; }
+
+  /* Screen-space type and HUD */
+  .hud { position: absolute; z-index: 5; }
+  #brand { left: 64px; top: 52px; display: flex; align-items: center; gap: 16px; font: 600 20px "Space Grotesk", sans-serif; }
+  .mark { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 10px; background: #000; box-shadow: 0 0 0 1px #ffffff22; font: italic 800 19px "Space Grotesk", sans-serif; letter-spacing: -.04em; color: #fff; }
+  #chapters { right: 64px; top: 64px; display: flex; gap: 26px; }
+  #chapters span { color: #ffffff4d; font-size: 13px; transition: none; }
+  #chapters span.on { color: #fff; }
+  #progress { left: 64px; right: 64px; bottom: 48px; height: 2px; background: #ffffff1a; }
+  #progress i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #e6b778, #6d64ff); }
+  #open { left: 0; right: 0; top: 400px; text-align: center; font: 700 96px/1.04 "Space Grotesk", sans-serif; letter-spacing: -.045em; }
+  #open .mono { display: block; margin-bottom: 30px; color: #e6b778; font-size: 17px; letter-spacing: .3em; }
+  .line { display: block; overflow: hidden; }
+  .line > span { display: inline-block; }
+  #system { left: 120px; bottom: 120px; }
+  #system .mono { color: #a5a0ff; }
+  #system b { display: block; margin-top: 14px; font: 700 54px/1.05 "Space Grotesk", sans-serif; letter-spacing: -.04em; }
+  #keith { left: 0; right: 0; bottom: 118px; text-align: center; }
+  #keith b { display: block; font: 700 76px/1.05 "Space Grotesk", sans-serif; letter-spacing: -.045em; text-shadow: 0 10px 50px #000; }
+  #keith .mono { color: #e6b778; margin-bottom: 22px; }
+  #end { inset: 0; display: grid; place-items: center; text-align: center; }
+  #end .mark { width: 104px; height: 104px; border-radius: 22px; margin: 0 auto 44px; font-size: 38px; }
+  #end h1 { font: 700 104px/1.02 "Space Grotesk", sans-serif; letter-spacing: -.05em; }
+  #end p { margin-top: 28px; font-size: 28px; color: #c9c7d4; }
+  #end .row { display: flex; justify-content: center; align-items: center; gap: 26px; margin-top: 52px; }
+  #end .cta { padding: 20px 34px; border-radius: 999px; background: #4f46e5; font: 600 28px "Inter", sans-serif; box-shadow: 0 20px 60px -16px #4f46e5; }
+  #end .url { font: 500 24px "JetBrains Mono", monospace; color: #e6b778; }
+  #grain { position: absolute; inset: -50%; z-index: 9; opacity: .05; pointer-events: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  #fade { position: absolute; inset: 0; z-index: 10; background: #08080b; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="glow" id="amber"></div>
+  <div class="glow" id="indigo"></div>
+  <div id="world"></div>
+
+  <div class="hud" id="brand"><span class="mark">KDV</span>Website Services</div>
+  <div class="hud mono" id="chapters"><span>Chaos</span><span>System</span><span>Websites</span><span>Dashboards</span><span>Apps</span><span>Launch</span></div>
+  <div class="hud" id="progress"><i></i></div>
+
+  <div class="hud" id="open"><span class="mono">Keith / KDV Website Services</span><span class="line"><span>Every growing business</span></span><span class="line"><span>hits the same wall.</span></span></div>
+  <div class="hud" id="system"><div class="mono">02 / Paper to system</div><b>Turn business chaos<br>into a system that works.</b></div>
+  <div class="hud" id="keith"><div class="mono">Work directly with Keith</div><b>From the first conversation to launch.</b></div>
+  <div class="hud" id="end">
+    <div>
+      <div class="mark">KDV</div>
+      <h1>Turn business chaos<br>into a system that works.</h1>
+      <p>Websites · Business dashboards · Custom web apps, for Philippine businesses</p>
+      <div class="row"><span class="cta">Start a project →</span><span class="url">kdvwebsiteservices.com</span></div>
+    </div>
+  </div>
+  <div id="grain"></div>
+  <div id="fade"></div>
+</div>
+
+<script>
+const BEAT = 60 / 100, BAR = 4 * BEAT;          // 2.4 s
+const T = { snap: 5 * BAR, web: 8 * BAR, dash: 10 * BAR, app: 12 * BAR, wall: 14 * BAR, end: 17 * BAR };
+const DURATION = 20 * BAR;                        // 48 s
+
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const ease = (x) => (x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const out = (x) => 1 - Math.pow(1 - x, 3);
+const expo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const win = (t, a, b, fin = .5, fout = .5) => Math.min(out(prog(t, a, a + fin)), 1 - ease(prog(t, b - fout, b)));
+let seed = 11;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const world = $("world");
+const place = (el, x, y, z, rx = 0, ry = 0, rz = 0, s = 1) => {
+  el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) rotateZ(${rz.toFixed(2)}deg) scale(${s.toFixed(4)}) translate(-50%, -50%)`;
+};
+const make = (cls, html = "") => { const e = document.createElement("div"); e.className = "obj " + cls; e.innerHTML = html; world.appendChild(e); return e; };
+
+// ------------------------------------------------------------- the camera
+// Drifts forward through the paper storm, settles before the grid, flies past
+// the three service screens, then pulls back to see the studio wall.
+const GRID_Z = -2900;
+const ST = [
+  { x: -300, y: -20, z: -3800, side: 1 },  // websites: screen left, card right
+  { x: 320, y: 30, z: -4700, side: -1 },   // dashboards: screen right, card left
+  { x: -300, y: -10, z: -5600, side: 1 },  // custom apps
+];
+function camera(t) {
+  if (t < T.snap) { const k = t / T.snap; return { x: Math.sin(t * .35) * 120, y: Math.cos(t * .3) * 60, z: lerp(600, -2160, k), ry: Math.sin(t * .25) * 4 }; }
+  const keys = [
+    [T.snap, 0, 0, -2160], [T.snap + 2.2, 0, 0, -2440], [T.web - .8, 0, 0, -2510],
+    [T.web + .6, ST[0].x + 260, ST[0].y, ST[0].z + 420], [T.dash - .5, ST[0].x + 260, ST[0].y, ST[0].z + 350],
+    [T.dash + .8, ST[1].x - 260, ST[1].y, ST[1].z + 420], [T.app - .5, ST[1].x - 260, ST[1].y, ST[1].z + 350],
+    [T.app + .8, ST[2].x + 260, ST[2].y, ST[2].z + 420], [T.wall - .2, ST[2].x + 260, ST[2].y, ST[2].z + 380],
+    [T.wall + 2.2, 0, 40, -2700], [T.end, 0, 40, -2500], [DURATION, 0, 40, -1700],
+  ];
+  let i = 0;
+  while (i < keys.length - 2 && t > keys[i + 1][0]) i++;
+  const [ta, xa, ya, za] = keys[i], [tb, xb, yb, zb] = keys[i + 1];
+  const k = ease(prog(t, ta, tb));
+  return { x: lerp(xa, xb, k), y: lerp(ya, yb, k), z: lerp(za, zb, k), ry: 0 };
+}
+
+// ------------------------------------------------------------- paperwork
+const KINDS = ["note", "note", "note", "receipt", "kraft", "sticky yellow", "sticky pink", "sticky green", "sticky orange"];
+const COLS = 16, ROWS = 8, CELL_W = 100, CELL_H = 95;
+const papers = Array.from({ length: COLS * ROWS }, (_, i) => {
+  const kind = KINDS[Math.floor(rnd() * KINDS.length)];
+  const el = make("paper " + kind, Array.from({ length: 3 }, (_, j) => `<i class="scrawl" style="top:${26 + j * 22 + rnd() * 8}px;width:${40 + rnd() * 45}%"></i>`).join(""));
+  const c = i % COLS, r = Math.floor(i / COLS);
+  return {
+    el,
+    x: (rnd() - .5) * 2800, y: (rnd() - .5) * 1500, z: -2700 + rnd() * 3200,
+    rx: rnd() * 360, ry: rnd() * 360, rz: rnd() * 360, spin: (rnd() - .5) * 40, bob: rnd() * 6.28,
+    gx: (c - (COLS - 1) / 2) * CELL_W, gy: (r - (ROWS - 1) / 2) * CELL_H, delay: rnd() * .5,
+  };
+});
+
+// ------------------------------------------------------------- floating words
+const WORDS = [["Orders in a notebook.", 5.75], ["Payments in chat.", 7.7], ["A spreadsheet per branch.", 9.95]];
+const words = WORDS.map(([w, at], i) => {
+  const el = make("word", `<div class="mono">0${i + 1} / Where it starts</div><b>${w}</b>`);
+  return { el, at, x: [-260, 140, -200][i], y: [-120, 90, -60][i] };
+});
+
+// ------------------------------------------------------------- windows
+const winHTML = (host, path, src) => `<header><i></i><i></i><i></i><span><b>${host}</b>/${path}</span></header><img src="../../public/images/${src}" alt="">`;
+const home = make("win", winHTML("kdvwebsiteservices.com", "", "kdv-desktop-home.webp"));
+const SERV = [
+  ["kdvwebsiteservices.com", "services/websites", "kdv-desktop-websites.webp", "01 / Website creation", "The front door.", "Customers find you, trust you, and send the inquiry.", "From ₱25,000 · 2–3 weeks"],
+  ["371admin.internal", "dashboard", "371admin-maindashboard.webp", "02 / Business dashboards", "The control room.", "Sales, orders, devices and branches at a glance, always current.", "From ₱85,000 · 3–6 weeks"],
+  ["newzion.pos", "new-order", "new-zion-pos-order.webp", "03 / Custom web apps", "The engine room.", "Point of sale, inventory and reports, built around how you work.", "Scoped with you"],
+];
+const services = SERV.map(([host, path, src, kick, title, body, price], i) => {
+  const w = make("win", winHTML(host, path, src));
+  const c = make("card", `<div class="mono">${kick}</div><h2>${title}</h2><p>${body}</p><span class="price">${price}</span>`);
+  return { w, c };
+});
+const extras = ["new-zion-dashboard.webp", "kdv-desktop-problem.webp"].map((src, i) => {
+  const w = make("win", winHTML(i ? "kdvwebsiteservices.com" : "newzion.pos", i ? "where-it-starts" : "admin", src));
+  return w;
+});
+// The studio wall: three columns on an arc, two rows.
+const WALL_Z = -5200;
+const wallPos = (col, row) => ({ x: col * 1720, y: (row - .5) * 960, z: WALL_Z + Math.abs(col) * 420, ry: -col * 24 });
+
+function render(t) {
+  const cam = camera(t);
+  world.style.transform = `rotateY(${cam.ry.toFixed(2)}deg) translate3d(${(-cam.x).toFixed(1)}px, ${(-cam.y).toFixed(1)}px, ${(-cam.z).toFixed(1)}px)`;
+  const depthFade = (z) => { const d = z - cam.z; return clamp((-d - 80) / 260) * clamp((d + 3400) / 900); };
+
+  // Glows: amber chaos gives way to indigo order at the snap.
+  const sys = ease(prog(t, T.snap - .3, T.snap + 1.4));
+  $("amber").style.opacity = (1 - sys) * (.75 + .25 * Math.sin(t * 1.3));
+  $("indigo").style.opacity = sys * (t > T.end ? .7 : 1);
+
+  // Papers: tumble in the storm, then snap into the grid and dissolve into the homepage.
+  papers.forEach((p) => {
+    const k = expo(prog(t, T.snap - .35 + p.delay * .5, T.snap + .55 + p.delay * .5));
+    const drift = t * p.spin;
+    const x = lerp(p.x + Math.sin(t * .6 + p.bob) * 60, p.gx, k);
+    const y = lerp(p.y + Math.cos(t * .5 + p.bob) * 50, p.gy, k);
+    const z = lerp(p.z, GRID_Z + 4, k);
+    place(p.el, x, y, z, lerp(p.rx + drift, 0, k), lerp(p.ry + drift * .7, 0, k), lerp(p.rz + drift * .4, 0, k), lerp(1, .8, k));
+    const gone = 1 - prog(t, T.snap + 1.0 + p.delay, T.snap + 1.6 + p.delay);
+    p.el.style.opacity = (k > .02 ? 1 : depthFade(z)) * gone;
+    p.el.style.display = gone <= 0 ? "none" : "";
+  });
+
+  // Words pass the camera on the voice's beats.
+  words.forEach((w, i) => {
+    const z = camera(w.at).z - 420;
+    place(w.el, w.x, w.y, z);
+    w.el.style.opacity = depthFade(z) * win(t, w.at - 1.6, w.at + 1.9, .6, .7);
+  });
+
+  // The homepage forms where the grid was, then swings away for the services.
+  const hIn = ease(prog(t, T.snap + .6, T.snap + 1.6));
+  const hOut = ease(prog(t, T.web - 1.1, T.web + .2));
+  const hWall = ease(prog(t, T.wall, T.wall + 2.2));
+  let hp = { x: lerp(0, -1500, hOut), y: lerp(0, -200, hOut), z: lerp(GRID_Z, GRID_Z - 600, hOut), ry: lerp(0, 55, hOut) };
+  if (t > T.wall) { const w = wallPos(-1, 0); hp = { x: lerp(hp.x, w.x, hWall), y: lerp(hp.y, w.y, hWall), z: lerp(hp.z, w.z, hWall), ry: lerp(hp.ry, w.ry, hWall) }; }
+  place(home, hp.x, hp.y, hp.z, 0, hp.ry, 0, lerp(.94, 1.07, hIn) * (t > T.wall ? lerp(1, .92, hWall) : 1));
+  home.style.opacity = hIn * (t > T.wall ? 1 : 1 - hOut * .85);
+  home.style.display = t < T.snap + .5 ? "none" : "";
+
+  // Services: each screen turns to face the camera as it arrives; its card slides out.
+  const at = [T.web, T.dash, T.app];
+  services.forEach(({ w, c }, i) => {
+    const s = ST[i];
+    const active = ease(prog(t, at[i] - .6, at[i] + .7)) * (1 - ease(prog(t, (at[i + 1] ?? T.wall) - .5, (at[i + 1] ?? T.wall) + .6)));
+    const turn = (1 - active) * 22 * s.side;
+    let p = { x: s.x, y: s.y, z: s.z, ry: turn };
+    const kw = ease(prog(t, T.wall + i * .12, T.wall + 2.2 + i * .12));
+    const wp = wallPos([0, 1, -1][i], [0, 0, 1][i]);
+    if (t > T.wall) p = { x: lerp(p.x, wp.x, kw), y: lerp(p.y, wp.y, kw), z: lerp(p.z, wp.z, kw), ry: lerp(p.ry, wp.ry, kw) };
+    place(w, p.x, p.y, p.z, 0, p.ry, 0, t > T.wall ? lerp(1, .92, kw) : 1);
+    w.style.opacity = clamp(prog(t, T.web - 2.4, T.web - 1) * .9 + active * .1) * (t < T.wall ? lerp(.45, 1, active) : 1) * depthFade(p.z) || 0;
+    const cardK = expo(prog(t, at[i] + .25, at[i] + 1.0)) * (1 - ease(prog(t, (at[i + 1] ?? T.wall) - .6, (at[i + 1] ?? T.wall) + .1)));
+    place(c, s.x + s.side * (1120 + (1 - cardK) * 160), s.y + 10, s.z + 140, 0, -s.side * 8, 0);
+    c.style.opacity = cardK;
+  });
+  extras.forEach((w, i) => {
+    const wp = wallPos([0, 1][i], 1);
+    const k = ease(prog(t, T.wall + .5 + i * .15, T.wall + 2.6 + i * .15));
+    place(w, wp.x, lerp(wp.y + 900, wp.y, k), wp.z, 0, wp.ry, 0, .92);
+    w.style.opacity = k;
+    w.style.display = k <= 0 ? "none" : "";
+  });
+  // At the end the wall sinks back behind the closing card.
+  world.style.opacity = 1 - .75 * ease(prog(t, T.end - .2, T.end + 1.2));
+  world.style.filter = t > T.end ? `blur(${(6 * ease(prog(t, T.end, T.end + 1.4))).toFixed(2)}px)` : "none";
+
+  // Screen-space type.
+  $("open").style.opacity = win(t, .3, 4.9, .4, .7);
+  $("open").querySelectorAll(".line > span").forEach((s, i) => { s.style.transform = `translateY(${(1 - expo(prog(t, .4 + i * .25, 1.2 + i * .25))) * 110}%)`; });
+  $("system").style.opacity = win(t, T.snap + 2.0, T.web - 1.0, .6, .5);
+  $("system").style.transform = `translateY(${(1 - out(prog(t, T.snap + 2.0, T.snap + 2.8))) * 30}px)`;
+  $("keith").style.opacity = win(t, T.wall + 1.2, T.end - .1, .6, .5);
+  $("keith").style.transform = `translateY(${(1 - out(prog(t, T.wall + 1.2, T.wall + 2))) * 30}px)`;
+  const e = prog(t, T.end + .3, T.end + 1.3);
+  $("end").style.opacity = out(e);
+  $("end").style.transform = `scale(${lerp(.96, 1, out(e))})`;
+  ["brand", "chapters", "progress"].forEach((id) => { $(id).style.opacity = clamp(prog(t, .8, 1.6)) * (1 - prog(t, T.end, T.end + .8)); });
+  const chap = t < T.snap ? 0 : t < T.web ? 1 : t < T.dash ? 2 : t < T.app ? 3 : t < T.wall ? 4 : 5;
+  $("chapters").querySelectorAll("span").forEach((s, i) => s.classList.toggle("on", i === chap));
+  $("progress").firstChild.style.width = `${(t / DURATION) * 100}%`;
+  $("grain").style.transform = `translate(${(Math.sin(t * 91) * 40).toFixed(0)}px, ${(Math.cos(t * 77) * 40).toFixed(0)}px)`;
+  $("fade").style.opacity = Math.max(1 - prog(t, 0, .4), prog(t, DURATION - .9, DURATION));
+}
+
+window.DURATION = DURATION;
+window.POSTER_AT = T.dash + 1.6; // the dashboards station
+window.render = render;
+render(0);
+if (location.search.includes("play")) {
+  const start = performance.now();
+  const loop = () => { render(((performance.now() - start) / 1000) % DURATION); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>
