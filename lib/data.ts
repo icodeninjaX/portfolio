@@ -261,7 +261,11 @@ export const resumeData = {
         { src: "/images/kdv-mobile-dashboards.webp", width: 780, height: 1568, label: "Business dashboards · phone", alt: "The 371admin operations dashboard shown under the service heading The control room, with a starting price of 85,000 pesos and a 3 to 6 week timeline.", caption: "Business dashboards, The control room. Sales, orders and devices at a glance, shown with the 371admin operations dashboard, blurred, from X-META." },
       ],
       images: [
-        { src: "/images/kdv-website-services-home.webp", width: 1440, height: 820, label: "Public homepage", caption: "The live KDV Website Services homepage, captured with reduced motion enabled on 2026-10-01." },
+        { src: "/images/kdv-desktop-home.webp", width: 1440, height: 684, label: "Homepage", caption: "The hero on a desktop: a 3D storm of loose paperwork beside the promise, Turn business chaos into a system that works, with Start a project as the one clear action." },
+        { src: "/images/kdv-desktop-problem.webp", width: 1440, height: 684, label: "Where it starts", caption: "As you scroll, the flying papers settle into an orderly grid while the copy names the problem: orders in a notebook, payments in chat, a spreadsheet per branch." },
+        { src: "/images/kdv-desktop-new-zion.webp", width: 1440, height: 684, label: "Paper to system", caption: "Real client work as proof: New Zion's branches moved from paper logs to one shared order queue. Customer names on the dashboard are blurred." },
+        { src: "/images/kdv-desktop-websites.webp", width: 1440, height: 684, label: "Website creation", caption: "Each service is shown with a real build, a starting price and a timeline. Website creation, The front door, is shown with the iPay International marketing site." },
+        { src: "/images/kdv-desktop-dashboards.webp", width: 1440, height: 684, label: "Business dashboards", caption: "Business dashboards, The control room, shown with the 371admin operations dashboard built at X-META. Campaign details are blurred." },
       ],
     },
     {
@@ -316,8 +320,16 @@ export const resumeData = {
       status: "internship" as const,
       link: "",
       images: [
-        { src: "/images/new-zion-add-customer.webp", width: 1909, height: 921, label: "Customer registration", caption: "Existing New Zion POS screenshot from the KDV case study, showing the empty customer form and location fields." },
-        { src: "/images/new-zion-search-customers.webp", width: 1901, height: 921, label: "Customer search", caption: "Existing New Zion POS screenshot from the KDV case study, showing the search interface before any customer records are displayed." },
+        { src: "/images/new-zion-dashboard.webp", width: 1440, height: 682, label: "Business overview", caption: "The admin dashboard: orders, customers, branches and products at a glance, today's new orders and customers, the top-selling cylinder, and the latest orders and registrations. Shown with demo data." },
+        { src: "/images/new-zion-orders.webp", width: 1440, height: 682, label: "Order management", caption: "Every order from every branch in one directory, with pending, delivered and cancelled counts, search by customer, code, phone or product, and the branch and cashier behind each sale." },
+        { src: "/images/new-zion-customers.webp", width: 1440, height: 682, label: "Customers", caption: "The customer directory keeps contact numbers, delivery addresses with landmarks and each household's tank size together, so phone-in orders can be dispatched without asking twice. Demo customers shown." },
+        { src: "/images/new-zion-products.webp", width: 1440, height: 682, label: "Products", caption: "The catalog of cylinders, refills and accessories, with pricing, categories, linked LPG cylinder types and stock across branches." },
+        { src: "/images/new-zion-inventory.webp", width: 1440, height: 682, label: "Inventory", caption: "Stock by product and branch: filled and empty cylinders, damaged and lost counts, and transfers between branches." },
+        { src: "/images/new-zion-branches.webp", width: 1440, height: 682, label: "Branches", caption: "The branch network: each location with its address, contact number and operational records, so staff know where every order and cylinder sits. A customer's street address is blurred." },
+        { src: "/images/new-zion-sales-report.webp", width: 1440, height: 682, label: "Sales report", caption: "The owner's report for any date range, branch, cashier or product: completed sales from delivered orders only, with every supporting transaction listed and export to CSV or PDF." },
+        { src: "/images/new-zion-pos-dashboard.webp", width: 1440, height: 682, label: "Point of sale", caption: "The cashier's side is its own focused app: today's customers and orders at a glance, quick actions to add or find a customer and start an order, and recent customers." },
+        { src: "/images/new-zion-pos-customers.webp", width: 1440, height: 682, label: "POS · customers", caption: "Cashiers find a customer by name, mobile number or code and start a new order in one tap. One real customer's details are blurred; the rest are demo records." },
+        { src: "/images/new-zion-pos-order.webp", width: 1440, height: 682, label: "POS · new order", caption: "Building an order: pick the branch to see only its stock, browse by category, add products and place the order with the cashier recorded." },
       ],
     },
     {

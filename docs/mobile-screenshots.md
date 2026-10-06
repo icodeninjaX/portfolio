@@ -99,3 +99,13 @@ Added the same day: Library (signed in), Activity and Gardens as `plantpal-deskt
 ## KDV Website Services phone screenshots (2026-10-06)
 
 Supplied by the owner from an Android phone on the live site: the hero, "Where it starts", "Paper to system" (New Zion), "The front door" (website creation, iPay International) and "The control room" (business dashboards, 371admin). Cropped to remove the phone's status bar (top 116 px) and gesture bar, then resized from 1080 px to 780 × 1568 WebP (quality 86) as `kdv-mobile-{home,problem,new-zion,websites,dashboards}.webp`; `kdv-mobile-home.webp` replaces the earlier local render. The earlier `kdv-mobile-menu.webp` is kept. No extra redaction: client dashboards are already blurred on the site itself. The site's chat button is visible in the corner.
+
+## KDV Website Services desktop screenshots (2026-10-06)
+
+Supplied by the owner from the live site on a desktop browser: the hero, "Where it starts", "Paper to system", "The front door" and "The control room". Cropped to a common 1894 × 900 frame and resized to 1440 × 684 WebP (quality 86) as `kdv-desktop-{home,problem,new-zion,websites,dashboards}.webp`; they replace the earlier `kdv-website-services-home.webp`. **Redaction:** on Paper to system, the customer names in Latest Orders and New Customers on the New Zion dashboard are blurred; on The control room, the campaign details in the 371admin notifications panel are blurred. The site's chat button is visible in the corner.
+
+## New Z1on LPG POS + CMS desktop screenshots (2026-10-06)
+
+Supplied by the owner from the admin workspace, populated with demo data (Demo Customer One to Four, `DUMMY-CUS` codes, `09170000xxx` numbers, Example Lane addresses) plus two orders under the owner's own name: Business overview, Order management, Customers, Products and Inventory. Cropped to a common 1899 × 900 frame and resized to 1440 × 682 WebP (quality 86) as `new-zion-{dashboard,orders,customers,products,inventory}.webp`. They replace the earlier empty-state captures `new-zion-add-customer.webp` and `new-zion-search-customers.webp`. No redaction needed.
+
+Added the same day: Branches, Sales report and three point-of-sale views (dashboard, customers, new order) as `new-zion-{branches,sales-report,pos-dashboard,pos-customers,pos-order}.webp`, cropped to 1895 × 898 and resized to 1440 × 682. **Redaction:** one real customer's name, code, phone number and street address are blurred on the POS customers list, and the same street address is blurred on Branches.
