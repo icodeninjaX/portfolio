@@ -379,7 +379,8 @@
   .rs-phones-index { display: flex; gap: 8px; margin: 0 -20px; padding: 0 20px 4px; overflow-x: auto; scrollbar-width: none; }
   .rs-phones-index::-webkit-scrollbar { display: none; }
   .rs-phones-index li { flex: none; }
-  .rs .rs-phones-index button { min-height: 36px; padding: 0 14px; border: 1px solid var(--rs-rule); border-radius: 999px; white-space: nowrap; }
+  .rs .rs-phones-index button { align-items: center; gap: 7px; min-height: 38px; padding: 0 16px 0 14px; border: 1px solid var(--rs-rule); border-radius: 999px; line-height: 1; white-space: nowrap; }
+  .rs .rs-phones-index button em { line-height: 1; }
   .rs .rs-phones-index button[aria-current] { border-color: var(--rs-accent); }
   .rs-showcase { margin: 0 -20px; padding: 40px 14px 20px; border-radius: 0; border-left: 0; border-right: 0; }
   .rs-window, .rs-window-stacked::before, .rs-window-stacked::after { border-radius: 9px; }
