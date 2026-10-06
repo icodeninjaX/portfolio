@@ -222,6 +222,11 @@ export const resumeData = {
       ],
       images: [
         { src: "/images/atlas-landing-page.webp", width: 1440, height: 900, label: "Public landing page", caption: "ATLAS's public landing page at atlas.kdvwebsiteservices.com, featuring the System Core and introduction to the personal operating system." },
+        { src: "/images/atlas-desktop-today.webp", width: 1440, height: 754, label: "Today", caption: "Today maps the day into a route: one task to do now, what comes next and later, and how much of the day is already planned." },
+        { src: "/images/atlas-desktop-capture.webp", width: 1440, height: 754, label: "Capture", caption: "Universal Capture turns a plain-language note, photo, document or voice memo into separate cards to review. Nothing is saved until each card is confirmed." },
+        { src: "/images/atlas-desktop-analyst.webp", width: 1440, height: 754, label: "Analyst", caption: "ATLAS Analyst answers questions about your own records, with every figure in an answer checked against its sources." },
+        { src: "/images/atlas-desktop-tasks.webp", width: 1440, height: 754, label: "Tasks", caption: "Tasks keeps today small enough to finish, with time left, next up and overdue at a glance and tabs for upcoming, inbox and completed work." },
+        { src: "/images/atlas-desktop-accounts.webp", width: 1440, height: 754, label: "Money · Accounts", caption: "Accounts shows where the money lives. Every total is an opening balance plus recorded movements, so it can always be explained." },
       ],
     },
     {
