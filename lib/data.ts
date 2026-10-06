@@ -362,8 +362,8 @@ export const resumeData = {
         mp4: "/videos/coop-demo.mp4",
         webm: "/videos/coop-demo.webm",
         poster: "/videos/coop-demo-poster.webp",
-        label: "CoopTracker product demo: live balance and member totals counting up, six app screens on a phone, and the dividend calculation of 53,640 pesos divided by 52 shares.",
-        caption: "A 35-second walkthrough of CoopTracker: live totals, six views on a phone and the dividend math. Other members' names are blurred.",
+        label: "CoopTracker product demo in bold type and colour blocks: five scattered spreadsheets snap into a grid of live totals, six app screens cycle through a bento board, and the dividend of 53,640 pesos divided by 52 shares is set as headline type.",
+        caption: "A 35-second walkthrough of CoopTracker: from five spreadsheets to one source of truth, six views of the app and the dividend math. Other members' names are blurred.",
       },
       mobileNote: "Captured on an Android phone from the live app, signed in as the cooperative's administrator. Other members' names are blurred.",
       mobileImages: [

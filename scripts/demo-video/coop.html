@@ -3,6 +3,11 @@
   Coop-Tracker motion-graphics demo (case study video). Same contract as
   atlas.html: `render(t)` draws the frame at t seconds; `render.mjs coop`
   captures every frame. Add `?play` to the URL to preview in real time.
+
+  Style: Swiss editorial / kinetic type. Flat colour blocks on paper, hard
+  cuts locked to a 112 bpm grid (every scene and chapter starts on a bar, see
+  BAR), so the score in music.py lands on the same beats. No carousel, no
+  glass, no camera move: those belong to the ATLAS and PlantPal videos.
   Member names in the phone screenshots are already blurred.
 -->
 <html lang="en">
@@ -12,274 +17,376 @@
 <style>
   @font-face { font-family: "Space Grotesk"; src: url("../../app/fonts/space-grotesk-var.woff2") format("woff2"); font-weight: 300 700; }
   @font-face { font-family: "Inter"; src: url("../../app/fonts/inter-var.woff2") format("woff2"); font-weight: 100 900; }
-  @font-face { font-family: "Instrument Serif"; src: url("../../app/fonts/instrument-serif-italic.woff2") format("woff2"); font-style: italic; }
   @font-face { font-family: "JetBrains Mono"; src: url("../../app/fonts/jetbrains-mono-var.woff2") format("woff2"); font-weight: 100 800; }
 
+  :root { --paper: #f2efe6; --ink: #131218; --indigo: #4f46e5; --lime: #d4f25a; --coral: #ff6a3d; --rule: #13121814; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #f5f3ff; }
-  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: #1d1b3a; font-family: "Inter", sans-serif; background: linear-gradient(160deg, #f8f7ff 0%, #f1edff 55%, #fdf2f8 100%); }
-  .layer { position: absolute; inset: 0; }
-  .mono { font-family: "JetBrains Mono", monospace; letter-spacing: .2em; text-transform: uppercase; }
-  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; }
-  #b1 { width: 620px; height: 620px; background: #8b5cf6; }
-  #b2 { width: 520px; height: 520px; background: #ec4899; }
-  #b3 { width: 560px; height: 560px; background: #6366f1; }
-  #b4 { width: 300px; height: 300px; background: #10b981; opacity: .25; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--paper); }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: var(--ink); font-family: "Inter", sans-serif; background: var(--paper); }
+  .layer { position: absolute; inset: 0; overflow: hidden; }
+  .mono { font: 600 17px "JetBrains Mono", monospace; letter-spacing: .16em; text-transform: uppercase; }
+  .big { font-family: "Space Grotesk", sans-serif; font-weight: 700; letter-spacing: -.05em; line-height: .9; }
+  .mask { display: block; overflow: hidden; }
+  .mask > span { display: inline-block; }
+  #grid { position: absolute; inset: 0; background-image: linear-gradient(90deg, var(--rule) 1px, transparent 1px); background-size: 160px 100%; background-position: 0 0; }
 
-  /* Logo tile */
-  .tile { position: absolute; border-radius: 28%; background: #eef2fe url("assets/coop-logo.png") center / 86% no-repeat; box-shadow: 0 30px 60px -24px #4c1d9580, 0 0 0 1px #6366f11a; }
-  #s1 .tile { left: 50%; top: 300px; width: 190px; height: 190px; margin-left: -95px; }
-  #s1 h1 { position: absolute; left: 0; right: 0; top: 540px; text-align: center; font: 700 116px/1 "Space Grotesk", sans-serif; letter-spacing: -.04em; }
-  #s1 p { position: absolute; left: 0; right: 0; top: 690px; text-align: center; font-size: 19px; color: #6d5bd0; }
+  /* 1. Kinetic opener */
+  .word { position: absolute; inset: 0; }
+  .word .mono { position: absolute; left: 96px; top: 84px; }
+  .word .big { position: absolute; left: 88px; bottom: 150px; font-size: 270px; white-space: nowrap; }
+  #mark { position: absolute; inset: 0; }
+  #mark .tile { position: absolute; left: 96px; top: 250px; width: 170px; height: 170px; border-radius: 26%; background: #eef2fe url("assets/coop-logo.png") center / 86% no-repeat; }
+  #mark .big { position: absolute; left: 82px; top: 470px; font-size: 220px; white-space: nowrap; }
+  #mark .big span { display: inline-block; }
+  #mark .tagline { position: absolute; left: 96px; top: 760px; font-size: 22px; }
+  #mark .bar { position: absolute; left: 96px; top: 730px; height: 6px; width: 1728px; background: var(--ink); transform-origin: 0 50%; }
+  #mark .tag { position: absolute; right: 96px; top: 280px; padding: 14px 20px; background: var(--lime); }
 
-  /* Spreadsheets → one source of truth */
-  #sheet { position: absolute; left: 860px; top: 120px; width: 960px; height: 840px; background-image: linear-gradient(#6366f126 1px, transparent 1px), linear-gradient(90deg, #6366f126 1px, transparent 1px); background-size: 120px 42px; border: 1px solid #6366f133; }
-  #sheet span { position: absolute; font: 14px "JetBrains Mono", monospace; color: #6d6a9a; }
-  #s2-text { position: absolute; left: 150px; top: 250px; width: 680px; }
-  #s2-text .a { position: relative; display: inline-block; font: 700 92px/1.05 "Space Grotesk", sans-serif; letter-spacing: -.04em; color: #8b88b5; }
-  #strike { position: absolute; left: -6px; top: 52%; height: 8px; border-radius: 4px; background: #ec4899; transform-origin: 0 50%; }
-  #s2-text .b { margin-top: 10px; font: italic 400 100px/1.02 "Instrument Serif", serif; color: #4f46e5; }
-  #s2-text .c { margin-top: 30px; font-size: 26px; line-height: 1.55; color: #5b5880; max-width: 560px; }
-  .card { position: absolute; padding: 26px 30px; border-radius: 22px; background: #ffffffe6; box-shadow: 0 0 0 1px #6366f11f, 0 30px 60px -30px #4c1d9566; }
-  .card small { display: block; font: 600 14px "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: #6d6a9a; }
-  .card b { display: block; margin-top: 12px; font: 700 60px/1 "Space Grotesk", sans-serif; letter-spacing: -.03em; }
-  .card em { display: inline-block; margin-top: 12px; padding: 5px 12px; border-radius: 999px; font: 600 16px "Inter", sans-serif; font-style: normal; }
-  #c-bal { left: 900px; top: 170px; width: 860px; height: 420px; }
-  #c-bal svg { position: absolute; left: 30px; right: 30px; bottom: 30px; width: 800px; height: 210px; overflow: visible; }
-  #c-mem { left: 900px; top: 620px; width: 270px; }
-  #c-col { left: 1195px; top: 620px; width: 270px; }
-  #c-pool { left: 1490px; top: 620px; width: 270px; }
-  .green { background: #d1fae5; color: #047857; }
-  .violet { background: #ede9fe; color: #5b21b6; }
+  /* 2. Spreadsheets → bento */
+  #s2 .fig { position: absolute; left: 96px; top: 96px; }
+  #s2 .head { position: absolute; left: 96px; top: 190px; width: 760px; font-size: 128px; }
+  #s2 .head .hl { background: var(--indigo); color: #fff; padding: 0 18px; margin-left: -18px; }
+  #s2 .sub { position: absolute; left: 96px; top: 760px; width: 620px; font-size: 28px; line-height: 1.5; }
+  .card { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 50% 50%; }
+  .sheet-face { position: absolute; inset: 0; background: #fff; border: 2px solid var(--ink); }
+  .sheet-face header { height: 40px; padding: 0 14px; display: flex; align-items: center; gap: 10px; background: #e8e5da; border-bottom: 2px solid var(--ink); font: 600 15px "JetBrains Mono", monospace; }
+  .sheet-face header i { width: 12px; height: 12px; background: #1d7a45; }
+  .sheet-face .cells { position: absolute; left: 0; right: 0; top: 40px; bottom: 0; background-image: linear-gradient(#1312181f 1px, transparent 1px), linear-gradient(90deg, #1312181f 1px, transparent 1px); background-size: 96px 34px; }
+  .sheet-face .cells span { position: absolute; font: 14px "JetBrains Mono", monospace; color: #55535f; }
+  .sheet-face .cells .err { color: #fff; background: var(--coral); padding: 1px 6px; }
+  .tile-face { position: absolute; inset: 0; padding: 30px 32px; }
+  .tile-face .mono { font-size: 15px; }
+  .tile-face b { position: absolute; left: 30px; bottom: 26px; font: 700 64px/1 "Space Grotesk", sans-serif; letter-spacing: -.05em; }
+  #t1 .tile-face b { font-size: 120px; }
+  #t0 .tile-face b { font-size: 112px; top: 80px; bottom: auto; }
+  #bars { position: absolute; left: 32px; right: 32px; bottom: 30px; height: 150px; display: flex; align-items: flex-end; gap: 12px; }
+  #bars i { flex: 1; height: 100%; background: #ffffffd9; transform-origin: 50% 100%; }
+  #paidbar { position: absolute; left: 32px; right: 32px; top: 84px; height: 14px; background: #1312181f; }
+  #paidbar i { display: block; height: 100%; background: var(--ink); transform-origin: 0 50%; }
 
-  /* Phone carousel */
-  #s3-label { position: absolute; left: 150px; top: 150px; font-size: 16px; color: #7c79a8; }
-  #feat-text { position: absolute; left: 150px; top: 300px; width: 520px; }
-  #feat-kicker { font-size: 18px; color: #6d5bd0; }
-  #feat-title { margin-top: 26px; font: 700 88px/1 "Space Grotesk", sans-serif; letter-spacing: -.04em; }
-  #feat-head { margin-top: 24px; font: italic 400 50px/1.1 "Instrument Serif", serif; color: #4f46e5; }
-  #feat-body { margin-top: 22px; font-size: 26px; line-height: 1.55; color: #5b5880; max-width: 500px; }
-  #dots { position: absolute; left: 150px; top: 860px; display: flex; gap: 12px; }
-  #dots i { display: block; height: 4px; width: 40px; border-radius: 2px; background: #6366f12b; overflow: hidden; }
-  #dots i b { display: block; height: 100%; width: 0; background: #6366f1; }
-  .phone { position: absolute; top: 120px; left: 0; width: 400px; padding: 30px 12px; border-radius: 56px; background: linear-gradient(160deg, #2e2b45, #121022 45%); box-shadow: inset 0 0 0 1.5px #ffffff26, 0 50px 90px -34px #3b0764a6; transform-origin: 50% 50%; }
-  .phone::before { content: ""; position: absolute; top: 12px; left: 50%; width: 60px; height: 6px; border-radius: 3px; background: #000; transform: translateX(-50%); }
-  .phone::after { content: ""; position: absolute; bottom: 11px; left: 50%; width: 92px; height: 5px; border-radius: 3px; background: #ffffff40; transform: translateX(-50%); }
-  .phone img { display: block; width: 100%; border-radius: 8px; }
+  /* 3. Bento board */
+  .tile { position: absolute; overflow: hidden; }
+  #A { left: 64px; top: 64px; width: 600px; height: 952px; }
+  #B { left: 688px; top: 64px; width: 456px; height: 952px; background: #fff; }
+  #D { left: 1168px; top: 64px; width: 688px; height: 560px; background: #fff; }
+  #E { left: 1168px; top: 648px; width: 452px; height: 368px; background: var(--paper); border: 2px solid var(--ink); }
+  #F { left: 1644px; top: 648px; width: 212px; height: 368px; background: var(--ink); color: var(--paper); }
+  .pane { position: absolute; inset: 0; }
+  #A .pane { padding: 44px 46px; }
+  #A .mono { font-size: 16px; }
+  #A .num { position: absolute; left: 34px; top: 120px; font: 700 330px/1 "Space Grotesk", sans-serif; letter-spacing: -.06em; -webkit-text-fill-color: transparent; -webkit-text-stroke: 3px currentColor; }
+  #A h3 { position: absolute; left: 46px; right: 40px; top: 560px; font: 700 96px/.95 "Space Grotesk", sans-serif; letter-spacing: -.05em; }
+  #A p { position: absolute; left: 46px; right: 50px; top: 790px; font-size: 32px; line-height: 1.3; }
+  #B img { position: absolute; left: 0; top: 0; width: 456px; }
+  #D .pane { background-repeat: no-repeat; }
+  #D .cap { position: absolute; left: 0; bottom: 0; padding: 12px 18px; background: var(--ink); color: var(--paper); font-size: 14px; }
+  #E .mono { position: absolute; left: 30px; top: 30px; font-size: 15px; }
+  #E b { position: absolute; left: 26px; bottom: 30px; font: 700 84px/1 "Space Grotesk", sans-serif; letter-spacing: -.05em; white-space: nowrap; }
+  #F .mono { position: absolute; left: 26px; top: 30px; font-size: 15px; color: #f2efe699; }
+  #F b { position: absolute; left: 22px; top: 90px; font: 700 120px/1 "Space Grotesk", sans-serif; letter-spacing: -.05em; }
+  #F .segs { position: absolute; left: 26px; right: 26px; bottom: 30px; display: flex; flex-direction: column; gap: 8px; }
+  #F .segs i { display: block; height: 10px; background: #f2efe633; }
+  #F .segs i.on { background: var(--lime); }
 
-  /* Dividend formula */
-  #s4 .kick { position: absolute; left: 0; right: 0; top: 250px; text-align: center; font-size: 18px; color: #7c79a8; }
-  #s4 h2 { position: absolute; left: 0; right: 0; top: 300px; text-align: center; font: italic 400 76px/1.1 "Instrument Serif", serif; color: #4f46e5; }
-  #eq { position: absolute; left: 0; right: 0; top: 470px; display: flex; justify-content: center; align-items: center; gap: 34px; }
-  #eq > span { display: inline-block; padding: 26px 38px; border-radius: 24px; background: #fff; box-shadow: 0 0 0 1px #6366f126, 0 30px 60px -30px #4c1d9566; font: 700 64px/1 "Space Grotesk", sans-serif; letter-spacing: -.03em; }
-  #eq > span small { display: block; margin-top: 10px; font: 600 15px "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: #7c79a8; }
-  #eq .op { padding: 0; background: none; box-shadow: none; color: #a5a3c9; font-weight: 400; }
-  #eq .res { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
-  #eq .res small { color: #e0dcff; }
-  #s4 .note { position: absolute; left: 0; right: 0; top: 720px; text-align: center; font-size: 24px; color: #5b5880; }
+  /* 4. Dividend as headline type */
+  #s4 .row { position: absolute; left: 112px; }
+  #s4 .row .mono { margin-bottom: 14px; }
+  #s4 .row .big { font-size: 200px; white-space: nowrap; }
+  #r1 { top: 70px; }
+  #r2 { top: 360px; }
+  #r2 .big { color: var(--indigo); }
+  #band { position: absolute; left: 0; top: 650px; width: 1920px; height: 330px; background: var(--lime); transform-origin: 0 50%; }
+  #r3 { top: 680px; }
+  #proof { position: absolute; left: 1210px; top: 0; width: 710px; height: 1080px; background: var(--ink); color: var(--paper); padding: 110px 70px; }
+  #proof h3 { font: 700 100px/.95 "Space Grotesk", sans-serif; letter-spacing: -.05em; }
+  #proof .mono { margin-top: 40px; color: #f2efe6a6; line-height: 1.7; }
+  #proof ul { list-style: none; margin-top: 70px; }
+  #proof li { display: flex; align-items: center; gap: 22px; padding: 22px 0; border-top: 2px solid #f2efe633; font: 600 34px "Space Grotesk", sans-serif; }
+  #proof li i { width: 40px; height: 40px; display: grid; place-items: center; background: var(--lime); color: var(--ink); font-style: normal; font-size: 26px; }
 
-  /* End card */
-  #end .tile { left: 50%; top: 190px; width: 160px; height: 160px; margin-left: -80px; }
-  #end h2 { position: absolute; left: 0; right: 0; top: 400px; text-align: center; font: 700 100px/1 "Space Grotesk", sans-serif; letter-spacing: -.04em; }
-  #end .line { position: absolute; left: 0; right: 0; top: 530px; text-align: center; font: italic 400 50px/1.2 "Instrument Serif", serif; color: #4f46e5; }
-  #end .stack { position: absolute; left: 0; right: 0; top: 640px; text-align: center; font-size: 17px; color: #7c79a8; }
-  #end .by { position: absolute; left: 0; right: 0; top: 730px; text-align: center; font-size: 25px; }
-  #end .url { position: absolute; left: 0; right: 0; top: 778px; text-align: center; font: 19px "JetBrains Mono", monospace; color: #6d5bd0; }
-  #fade { position: absolute; inset: 0; background: #f5f3ff; pointer-events: none; }
+  /* 5. End card */
+  .stripe { position: absolute; top: 0; width: 641px; height: 1080px; }
+  #end .tile2 { position: absolute; left: 96px; top: 150px; width: 150px; height: 150px; border-radius: 26%; background: #eef2fe url("assets/coop-logo.png") center / 86% no-repeat; }
+  #end .big { position: absolute; left: 84px; top: 350px; font-size: 200px; }
+  #end .line { position: absolute; left: 96px; top: 590px; font: 600 44px/1.2 "Space Grotesk", sans-serif; letter-spacing: -.02em; max-width: 1300px; }
+  #end .rule { position: absolute; left: 96px; top: 720px; width: 1728px; height: 4px; background: var(--ink); transform-origin: 0 50%; }
+  #end .stack { position: absolute; left: 96px; top: 760px; }
+  #end .by { position: absolute; left: 96px; top: 860px; font-size: 30px; }
+  #end .url { position: absolute; right: 96px; top: 860px; padding: 10px 18px; background: var(--indigo); color: #fff; font-size: 22px; }
+  #fade { position: absolute; inset: 0; background: var(--paper); pointer-events: none; }
 </style>
 </head>
 <body>
 <div id="stage">
-  <div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div><div class="blob" id="b4"></div>
+  <div id="grid"></div>
 
-  <div class="layer" id="s1">
-    <div class="tile"></div>
-    <h1>CoopTracker</h1>
-    <p class="mono">Cooperative finance, without the spreadsheets</p>
-  </div>
+  <div class="layer" id="s1"></div>
 
   <div class="layer" id="s2">
-    <div id="sheet"></div>
-    <div id="s2-text">
-      <div class="a">Spreadsheets<i id="strike"></i></div>
-      <div class="b">one source<br>of truth.</div>
-      <div class="c">Members, collections, loans and dividends in one place, always reconciled.</div>
-    </div>
-    <div class="card" id="c-bal">
-      <small>Total balance · cycle 2026</small>
-      <b id="n-bal">₱0</b>
-      <em class="green">↗ 4.5% vs last period</em>
-      <svg viewBox="0 0 800 210"><defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#8b5cf6" stop-opacity=".28"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient></defs><path id="area" fill="url(#fill)"/><path id="line" fill="none" stroke="#8b5cf6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle id="dot" r="9" fill="#fff" stroke="#8b5cf6" stroke-width="5"/></svg>
-    </div>
-    <div class="card" id="c-mem"><small>Members</small><b id="n-mem">0</b><em class="violet">52 shares</em></div>
-    <div class="card" id="c-col"><small>This period</small><b id="n-col">0/15</b><em class="green">₱26,000 in</em></div>
-    <div class="card" id="c-pool"><small>Interest pool</small><b id="n-pool">₱0</b><em class="violet">to share out</em></div>
+    <div class="fig mono" id="fig2">Fig. 01 — Before</div>
+    <div class="head big" id="before"><span class="mask"><span>Five</span></span><span class="mask"><span>spread-</span></span><span class="mask"><span>sheets.</span></span></div>
+    <div class="head big" id="after"><span class="mask"><span class="hl">One</span></span><span class="mask"><span>source</span></span><span class="mask"><span>of truth.</span></span></div>
+    <div class="sub" id="sub2">Members, collections, loans and dividends in one place, always reconciled.</div>
+    <div id="cards"></div>
   </div>
 
   <div class="layer" id="s3">
-    <div id="s3-label" class="mono">One app · six views</div>
-    <div id="phones"></div>
-    <div id="feat-text"><div id="feat-kicker" class="mono"></div><div id="feat-title"></div><div id="feat-head"></div><div id="feat-body"></div></div>
-    <div id="dots"></div>
+    <div class="tile" id="A"></div>
+    <div class="tile" id="B"></div>
+    <div class="tile" id="D"></div>
+    <div class="tile" id="E"><div class="mono" id="e-label"></div><b id="e-num"></b></div>
+    <div class="tile" id="F"><div class="mono">View</div><b id="f-num">01</b><div class="segs" id="segs"></div></div>
   </div>
 
   <div class="layer" id="s4">
-    <div class="kick mono">Dividends</div>
-    <h2>Computed, not guessed.</h2>
-    <div id="eq">
-      <span id="e1">₱53,640<small>interest pool</small></span>
-      <span class="op" id="o1">÷</span>
-      <span id="e2">52<small>eligible shares</small></span>
-      <span class="op" id="o2">=</span>
-      <span class="res" id="e3"><b id="n-div">₱0.00</b><small>per share</small></span>
+    <div id="band"></div>
+    <div class="row" id="r1"><div class="mono">Interest pool</div><span class="mask"><span class="big">₱53,640</span></span></div>
+    <div class="row" id="r2"><div class="mono">Eligible shares</div><span class="mask"><span class="big">÷ 52</span></span></div>
+    <div class="row" id="r3"><div class="mono">Dividend per share</div><span class="mask"><span class="big" id="n-div">= ₱0.00</span></span></div>
+    <div id="proof">
+      <h3>Computed,<br>not guessed.</h3>
+      <div class="mono">Pure TypeScript functions,<br>unit-tested before every write.</div>
+      <ul><li><i>✓</i>Loan amortization</li><li><i>✓</i>Penalties</li><li><i>✓</i>Dividends</li></ul>
     </div>
-    <div class="note" id="note">Every amortization, penalty and dividend runs through pure, unit-tested TypeScript before it's saved.</div>
   </div>
 
   <div class="layer" id="end">
-    <div class="tile"></div>
-    <h2>CoopTracker</h2>
+    <div class="tile2"></div>
+    <div class="big"><span class="mask"><span>CoopTracker</span></span></div>
     <div class="line">Members, loans, shares and dividends, always reconciled.</div>
+    <div class="rule"></div>
     <div class="stack mono">Next.js · TypeScript · Supabase · PostgreSQL · Zod · Jest</div>
     <div class="by">Designed &amp; built by Keith Vergara</div>
-    <div class="url">coop-tracker.vercel.app</div>
+    <div class="url mono">coop-tracker.vercel.app</div>
   </div>
 
+  <div class="layer" id="wipe"></div>
   <div id="fade"></div>
 </div>
 
 <script>
-const FEATURES = [
-  ["dashboard", "Dashboard", "The whole co-op at a glance.", "Balance and its trend through the cycle, with collections, disbursements and repayments."],
-  ["period", "This period", "Who has paid, instantly.", "Collection progress for the current period, with members, loans and the interest pool."],
-  ["members", "Collections", "Paid against expected.", "Pick a period, then mark members paid, unpaid or forfeited."],
-  ["member-list", "Members", "Shares and capital, per member.", "Each member's stake and this period's status, with one-tap undo."],
-  ["loans", "Loans", "Every loan, to the last peso.", "Amount, monthly rate, term and repayment progress, plus interest earned."],
-  ["shares", "Shares", "Dividends, divided fairly.", "The interest pool split across eligible shares, and the equity it builds."],
-];
+// Everything is timed in bars of 4 beats at 112 bpm (music.py uses the same grid).
+const BEAT = 60 / 112, BAR = 4 * BEAT;
+const at = (bars, beats = 0) => bars * BAR + beats * BEAT;
+const S1 = [0, at(2)], S2 = [at(2), at(5)], S3 = [at(5), at(11)], S4 = [at(11), at(14)], S5 = [at(14), 35];
+const DURATION = 35;
 
-const S1 = [0, 4.4], S2 = [4.45, 10.4], S3 = [10.3, 26.2], S4 = [26.1, 30.6], S5 = [30.5, 35];
-const PER = 2.5, MOVE = 0.7, DURATION = 35;
-
+const C = { paper: "#f2efe6", ink: "#131218", indigo: "#4f46e5", lime: "#d4f25a", coral: "#ff6a3d" };
 const $ = (id) => document.getElementById(id);
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const prog = (t, a, b) => clamp((t - a) / (b - a));
 const ease = (x) => (x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
-const out = (x) => 1 - Math.pow(1 - x, 3);
-const back = (x) => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
-const fadeWin = (t, [a, b], fin = .6, fout = .6) => Math.min(out(prog(t, a, a + fin)), 1 - ease(prog(t, b - fout, b)));
+const expo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+const back = (x) => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const on = (t, [a, b]) => t >= a && t < b;
 const peso = (n, d = 0) => "₱" + n.toLocaleString("en-PH", { minimumFractionDigits: d, maximumFractionDigits: d });
-const rise = (el, v, dist = 30) => { el.style.opacity = v; el.style.transform = `translateY(${(1 - v) * dist}px)`; };
+const el = (tag, cls, html = "") => { const e = document.createElement(tag); if (cls) e.className = cls; e.innerHTML = html; return e; };
+// Slide a masked line up into view (Swiss "type slam").
+const slam = (node, k) => { node.style.transform = `translateY(${(1 - k) * 105}%)`; };
 
-// Spreadsheet cells (fake column of figures that fades away).
-for (let i = 0; i < 70; i++) {
-  const s = document.createElement("span");
-  s.style.left = `${(i % 7) * 120 + 14}px`; s.style.top = `${Math.floor(i / 7) * 42 + 13}px`;
-  s.textContent = i < 7 ? ["Member", "Shares", "Paid", "Loan", "Rate", "Due", "Int."][i] : ((i * 7919) % 9000 + 500).toLocaleString();
-  $("sheet").appendChild(s);
-}
-
-// Balance chart: an opening dip, a slow climb, a step up, then a gentle rise.
-const pts = [];
-for (let i = 0; i <= 60; i++) {
-  const x = i / 60;
-  let y = .82 - .1 * Math.sin(x * 3.2) * (x < .1 ? 1 : 0) - .25 * x - (x > .5 ? .22 : .22 * out(clamp((x - .45) / .05))) - .06 * Math.sin(x * 9) * .3;
-  if (x < .05) y = .7 + x * 2.4;
-  pts.push([x * 800, clamp(y, .04, .96) * 210]);
-}
-const pathOf = (n) => "M" + pts.slice(0, n).map((p) => p.map((v) => v.toFixed(1)).join(",")).join(" L");
-$("line").setAttribute("d", pathOf(pts.length));
-const LEN = $("line").getTotalLength();
-$("line").style.strokeDasharray = LEN;
-
-const phones = FEATURES.map(([slug]) => {
-  const el = document.createElement("div");
-  el.className = "phone";
-  el.innerHTML = `<img src="../../public/images/coop-mobile-app-${slug}.webp" alt="">`;
-  $("phones").appendChild(el);
-  return el;
+// ---------------------------------------------------------------- 1. opener
+const WORDS = [["Members.", C.indigo, "#fff"], ["Loans.", C.lime, C.ink], ["Shares.", C.coral, C.ink], ["Dividends.", C.ink, C.paper]];
+const words = WORDS.map(([w, bg, fg], i) => {
+  const n = el("div", "word", `<div class="mono">0${i + 1} / 04</div><span class="big"><span class="mask"><span>${w}</span></span></span>`);
+  n.style.background = bg; n.style.color = fg;
+  $("s1").appendChild(n);
+  return n;
 });
-const dots = FEATURES.map(() => { const i = document.createElement("i"); i.appendChild(document.createElement("b")); $("dots").appendChild(i); return i.firstChild; });
+const mark = el("div", "", `<div class="tile"></div><div class="tag mono">Cooperative finance</div><div class="big">${[..."CoopTracker"].map((c) => `<span>${c}</span>`).join("")}</div><div class="bar"></div><div class="tagline mono">Without the spreadsheets</div>`);
+mark.id = "mark";
+$("s1").appendChild(mark);
+
+// ----------------------------------------------------- 2. sheets → bento tiles
+const SHEETS = ["members.xlsx", "collections_2026.xlsx", "loans_FINAL_v3.xlsx", "shares (1).xlsx", "interest-pool.xlsx"];
+const SCATTER = [[900, 150, 420, 280, -7], [1330, 110, 400, 270, 5], [1010, 450, 440, 290, 4], [1430, 420, 380, 260, -5], [1180, 730, 420, 270, -3]];
+const BENTO = [[900, 120, 620, 400], [1544, 120, 312, 400], [900, 544, 300, 400], [1224, 544, 300, 400], [1548, 544, 308, 400]];
+const TILES = [
+  [C.indigo, "#fff", "Total balance · cycle 2026", "t-bal"],
+  [C.lime, C.ink, "Members", "t-mem"],
+  ["#fff", C.ink, "Paid this period", "t-paid"],
+  [C.ink, C.paper, "Collected", "t-col"],
+  [C.coral, C.ink, "Interest pool", "t-pool"],
+];
+const cards = SHEETS.map((name, i) => {
+  const card = el("div", "card");
+  card.id = `t${i}`;
+  const cells = Array.from({ length: 30 }, (_, k) => {
+    const x = (k % 5) * 96 + 10, y = Math.floor(k / 5) * 34 + 8;
+    const bad = (k * 7 + i * 3) % 11 === 0;
+    const txt = bad ? ["#REF!", "#N/A", "#DIV/0!"][(k + i) % 3] : ((k * 7919 + i * 131) % 9000 + 500).toLocaleString();
+    return `<span class="${bad ? "err" : ""}" style="left:${x}px;top:${y}px">${txt}</span>`;
+  }).join("");
+  const [bg, fg, label, id] = TILES[i];
+  const extra = i === 0 ? `<div id="bars">${Array.from({ length: 12 }, () => "<i></i>").join("")}</div>` : i === 2 ? `<div id="paidbar"><i></i></div>` : "";
+  card.innerHTML = `<div class="sheet-face"><header><i></i>${name}</header><div class="cells">${cells}</div></div><div class="tile-face" style="background:${bg};color:${fg}"><div class="mono">${label}</div>${extra}<b id="${id}"></b></div>`;
+  $("cards").appendChild(card);
+  return card;
+});
+const BARS = [.42, .46, .44, .5, .55, .53, .6, .68, .74, .8, .9, 1];
+
+// ------------------------------------------------------------ 3. bento board
+const CH = [
+  ["dashboard", "Dashboard", "The whole co-op at a glance.", C.indigo, "#fff", [30, 340, 720], "Total balance", 599140, (n) => peso(n)],
+  ["period", "This period", "Who has paid, instantly.", C.lime, C.ink, [30, 80, 720], "Paid", 15, (n) => `${n}/15`],
+  ["members", "Collections", "Paid against expected.", C.coral, C.ink, [30, 230, 720], "Collected", 26000, (n) => peso(n)],
+  ["member-list", "Members", "Shares and capital, per member.", C.ink, C.paper, [30, 120, 720], "Shares held", 52, (n) => String(n)],
+  ["loans", "Loans", "Every loan, to the last peso.", C.indigo, "#fff", [20, 170, 740], "Interest earned", 53640, (n) => peso(n)],
+  ["shares", "Shares", "Dividends, divided fairly.", C.lime, C.ink, [30, 340, 720], "Per share", 1031.54, (n) => peso(n, 2)],
+];
+const chStart = (k) => S3[0] + k * BAR;
+const paneA = CH.map(([, title, line, bg, fg], k) => {
+  const p = el("div", "pane", `<div class="mono">Fig. ${String(k + 2).padStart(2, "0")} — ${title}</div><div class="num">0${k + 1}</div><h3>${title}</h3><p>${line}</p>`);
+  p.style.background = bg; p.style.color = fg;
+  $("A").appendChild(p);
+  return p;
+});
+const paneB = CH.map(([slug]) => {
+  const p = el("div", "pane", `<img src="../../public/images/coop-mobile-app-${slug}.webp" alt="">`);
+  $("B").appendChild(p);
+  return p;
+});
+const paneD = CH.map(([slug, title, , , , [x, y, w]], k) => {
+  const s = 688 / w;
+  const p = el("div", "pane", `<div class="cap mono">Detail · ${title}</div>`);
+  p.style.backgroundImage = `url("../../public/images/coop-mobile-app-${slug}.webp")`;
+  p.style.backgroundSize = `${780 * s}px auto`;
+  p.style.backgroundPosition = `${-x * s}px ${-y * s}px`;
+  $("D").appendChild(p);
+  return p;
+});
+const segs = CH.map(() => { const i = document.createElement("i"); $("segs").appendChild(i); return i; });
+
+// -------------------------------------------------------------- 5. end stripes
+const stripes = [C.indigo, C.lime, C.coral].map((bg, i) => {
+  const s = el("div", "stripe");
+  s.style.left = `${i * 640}px`; s.style.background = bg;
+  $("wipe").appendChild(s);
+  return s;
+});
 
 function render(t) {
-  // Background blobs drift on slow loops.
-  [["b1", 300, 120, .12], ["b2", 1500, 700, .09], ["b3", 1350, 80, .07], ["b4", 200, 820, .1]].forEach(([id, x, y, s], k) => {
-    $(id).style.transform = `translate(${x - 300 + Math.sin(t * s * 6 + k) * 90}px, ${y - 300 + Math.cos(t * s * 5 + k * 2) * 70}px)`;
+  // 1. Four words, one per beat, each a hard cut to a new colour; then the wordmark.
+  $("s1").style.display = on(t, S1) ? "" : "none";
+  words.forEach((w, i) => {
+    const a = i * BEAT;
+    w.style.display = t >= a && t < a + BEAT ? "" : "none";
+    slam(w.querySelector(".mask > span"), expo(prog(t, a, a + .22)));
+  });
+  const m0 = at(1);
+  mark.style.display = t >= m0 ? "" : "none";
+  const tp = back(prog(t, m0, m0 + .4));
+  mark.querySelector(".tile").style.transform = `scale(${lerp(.4, 1, tp)})`;
+  mark.querySelectorAll(".big span").forEach((s, i) => {
+    const k = expo(prog(t, m0 + .08 + i * .035, m0 + .4 + i * .035));
+    s.style.transform = `translateY(${(1 - k) * 60}px)`; s.style.opacity = k;
+  });
+  mark.querySelector(".bar").style.transform = `scaleX(${expo(prog(t, m0 + BEAT, m0 + BEAT + .5))})`;
+  mark.querySelector(".tagline").style.opacity = prog(t, m0 + BEAT * 1.5, m0 + BEAT * 2);
+  const tag = mark.querySelector(".tag");
+  tag.style.transform = `translateX(${(1 - expo(prog(t, m0 + BEAT * 2, m0 + BEAT * 2 + .35))) * 120}%)`;
+
+  // 2. Five scattered spreadsheets slam in; on the next bar they snap into a bento of live tiles.
+  $("s2").style.display = on(t, S2) ? "" : "none";
+  const snap = S2[0] + BAR;
+  const k2 = expo(prog(t, snap, snap + .55));
+  $("fig2").textContent = t < snap ? "Fig. 01 — Before" : "Fig. 01 — After";
+  $("before").style.display = t < snap ? "" : "none";
+  $("after").style.display = t < snap ? "none" : "";
+  $("before").querySelectorAll(".mask > span").forEach((s, i) => slam(s, expo(prog(t, S2[0] + i * .12, S2[0] + .4 + i * .12))));
+  $("after").querySelectorAll(".mask > span").forEach((s, i) => slam(s, expo(prog(t, snap + i * .12, snap + .4 + i * .12))));
+  const sub = expo(prog(t, snap + BEAT * 2, snap + BEAT * 2 + .5));
+  $("sub2").style.opacity = sub; $("sub2").style.transform = `translateY(${(1 - sub) * 30}px)`;
+  cards.forEach((card, i) => {
+    const [sx, sy, sw, sh, sr] = SCATTER[i], [bx, by, bw, bh] = BENTO[i];
+    const enter = expo(prog(t, S2[0] + i * BEAT / 2, S2[0] + i * BEAT / 2 + .3));
+    const x = lerp(sx, bx, k2), y = lerp(sy, by, k2), w = lerp(sw, bw, k2), h = lerp(sh, bh, k2);
+    card.style.width = `${w}px`; card.style.height = `${h}px`;
+    card.style.transform = `translate(${x}px, ${y}px) rotate(${lerp(sr, 0, k2)}deg) scale(${lerp(1.25, 1, enter)})`;
+    card.style.opacity = enter;
+    card.querySelector(".tile-face").style.clipPath = `inset(${(1 - expo(prog(t, snap + .2 + i * .06, snap + .6 + i * .06))) * 100}% 0 0 0)`;
+  });
+  const cnt = (a, b) => ease(prog(t, snap + a, snap + b));
+  $("t-bal").textContent = peso(Math.round(599140 * cnt(.5, 1.9)));
+  $("t-mem").textContent = Math.round(15 * cnt(.6, 1.6));
+  $("t-paid").textContent = `${Math.round(15 * cnt(.7, 1.8))}/15`;
+  $("t-col").textContent = peso(Math.round(26000 * cnt(.8, 1.9)));
+  $("t-pool").textContent = peso(Math.round(53640 * cnt(.9, 2.0)));
+  document.querySelectorAll("#bars i").forEach((b, i) => { b.style.transform = `scaleY(${BARS[i] * expo(prog(t, snap + .5 + i * .05, snap + 1 + i * .05))})`; });
+  document.querySelector("#paidbar i").style.transform = `scaleX(${cnt(.7, 1.8)})`;
+
+  // 3. Bento board: every bar a new view; each tile re-cuts with its own wipe.
+  $("s3").style.display = on(t, S3) ? "" : "none";
+  const idx = clamp(Math.floor((t - S3[0]) / BAR), 0, CH.length - 1);
+  const within = t - chStart(idx);
+  CH.forEach((_, k) => {
+    const c = chStart(k);
+    const pa = expo(prog(t, c, c + .4)), pb = expo(prog(t, c + .06, c + .5)), pd = expo(prog(t, c + .12, c + .55));
+    const vis = k <= idx + 1 && t >= c;
+    [paneA[k], paneB[k], paneD[k]].forEach((p) => { p.style.display = vis ? "" : "none"; p.style.zIndex = k; });
+    paneA[k].style.clipPath = `inset(${(1 - pa) * 100}% 0 0 0)`;
+    paneA[k].querySelector(".num").style.transform = `translateY(${(1 - pa) * 80}px)`;
+    // Screen pushes up from below; the old one is driven up and out behind it.
+    const next = k + 1 < CH.length ? expo(prog(t, chStart(k + 1) + .06, chStart(k + 1) + .5)) : 0;
+    const drift = -Math.min(t - c, BAR) * 10;
+    paneB[k].style.transform = `translateY(${(1 - pb) * 100 - next * 30}%)`;
+    paneB[k].querySelector("img").style.transform = `translateY(${drift}px)`;
+    paneD[k].style.clipPath = `inset(0 ${(1 - pd) * 100}% 0 0)`;
+    paneD[k].style.transform = `scale(${lerp(1.12, 1, pd)})`;
+  });
+  const first = S3[0];
+  $("E").style.clipPath = `inset(0 0 ${(1 - expo(prog(t, first + .18, first + .6))) * 100}% 0)`;
+  $("F").style.clipPath = `inset(${(1 - expo(prog(t, first + .24, first + .66))) * 100}% 0 0 0)`;
+  const [, , , , , , label, value, fmt] = CH[idx];
+  const roll = expo(prog(within, .1, .5));
+  $("e-label").textContent = label;
+  const count = ease(prog(within, .15, 1.1));
+  $("e-num").textContent = fmt(Number.isInteger(value) ? Math.round(value * count) : value * count);
+  $("e-num").style.transform = `translateY(${(1 - roll) * 40}px)`; $("e-num").style.opacity = roll;
+  $("f-num").textContent = `0${idx + 1}`;
+  $("f-num").style.transform = `translateY(${(1 - roll) * -50}px)`;
+  segs.forEach((s, i) => s.classList.toggle("on", i <= idx));
+
+  // 4. The dividend as three lines of headline type, then the proof panel.
+  $("s4").style.display = on(t, S4) ? "" : "none";
+  const d0 = S4[0];
+  slam($("r1").querySelector(".mask > span"), expo(prog(t, d0, d0 + .4)));
+  slam($("r2").querySelector(".mask > span"), expo(prog(t, d0 + BAR / 2, d0 + BAR / 2 + .4)));
+  slam($("r3").querySelector(".mask > span"), expo(prog(t, d0 + BAR, d0 + BAR + .4)));
+  ["r1", "r2", "r3"].forEach((id, i) => { $(id).querySelector(".mono").style.opacity = prog(t, d0 + i * BAR / 2 + .1, d0 + i * BAR / 2 + .4); });
+  $("band").style.transform = `scaleX(${expo(prog(t, d0 + BAR - .05, d0 + BAR + .4))})`;
+  $("n-div").textContent = "= " + peso(1031.54 * ease(prog(t, d0 + BAR + .2, d0 + BAR + 1.2)), 2);
+  const pr = d0 + BAR * 1.5;
+  $("proof").style.transform = `translateX(${(1 - expo(prog(t, pr, pr + .5))) * 100}%)`;
+  $("proof").querySelectorAll("li").forEach((li, i) => {
+    const k = expo(prog(t, pr + .6 + i * BEAT, pr + .9 + i * BEAT));
+    li.style.opacity = k; li.style.transform = `translateX(${(1 - k) * 40}px)`;
   });
 
-  // 1. Logo pops, wordmark and kicker rise.
-  $("s1").style.opacity = fadeWin(t, S1, .4, .7);
-  const lp = clamp(back(prog(t, .5, 1.5)), 0, 1.2);
-  $("s1").querySelector(".tile").style.transform = `scale(${.5 + .5 * lp}) rotate(${(1 - clamp(lp)) * -12}deg)`;
-  $("s1").querySelector(".tile").style.opacity = out(prog(t, .5, .9));
-  rise($("s1").querySelector("h1"), out(prog(t, 1.2, 2.2)), 40);
-  rise($("s1").querySelector("p"), out(prog(t, 1.6, 2.6)), 20);
-
-  // 2. Strike through "Spreadsheets", sheet fades, live cards count up.
-  $("s2").style.opacity = fadeWin(t, S2, .5, .6);
-  rise($("s2-text").querySelector(".a"), out(prog(t, 4.55, 5.2)));
-  $("strike").style.width = "102%";
-  $("strike").style.transform = `scaleX(${ease(prog(t, 5.2, 5.8))})`;
-  rise($("s2-text").querySelector(".b"), out(prog(t, 5.8, 6.6)), 40);
-  rise($("s2-text").querySelector(".c"), out(prog(t, 6.3, 7.1)), 20);
-  $("sheet").style.opacity = .9 * out(prog(t, 4.45, 5.0)) * (1 - ease(prog(t, 5.6, 6.6)));
-  [["c-bal", 6.0], ["c-mem", 6.5], ["c-col", 6.7], ["c-pool", 6.9]].forEach(([id, at]) => rise($(id), out(prog(t, at, at + .7)), 40));
-  const cnt = ease(prog(t, 6.2, 8.4));
-  $("n-bal").textContent = peso(Math.round(599140 * cnt));
-  $("n-mem").textContent = Math.round(15 * ease(prog(t, 6.7, 8.0)));
-  $("n-col").textContent = `${Math.round(15 * ease(prog(t, 6.9, 8.4)))}/15`;
-  $("n-pool").textContent = peso(Math.round(53640 * ease(prog(t, 7.1, 8.6))));
-  const draw = ease(prog(t, 6.4, 8.8));
-  $("line").style.strokeDashoffset = LEN * (1 - draw);
-  const n = Math.max(2, Math.round(draw * (pts.length - 1)) + 1);
-  $("area").setAttribute("d", pathOf(n) + ` L${pts[n - 1][0]},210 L0,210 Z`);
-  const tip = $("line").getPointAtLength(LEN * draw);
-  $("dot").setAttribute("cx", tip.x); $("dot").setAttribute("cy", tip.y);
-  $("dot").style.opacity = draw > .02 ? 1 : 0;
-
-  // 3. Phone carousel.
-  $("s3").style.opacity = fadeWin(t, S3, .6, .6);
-  const local = Math.max(0, t - (S3[0] + .4));
-  const idx = Math.min(FEATURES.length - 1, Math.floor(local / PER));
-  const within = local - idx * PER;
-  const pos = idx === 0 ? 0 : (idx - 1) + ease(clamp(within / MOVE));
-  phones.forEach((el, i) => {
-    const d = i - pos;
-    el.style.opacity = Math.abs(d) > 2.2 ? 0 : 1 - Math.min(Math.abs(d), 1.6) * .5;
-    el.style.zIndex = String(100 - Math.round(Math.abs(d) * 10));
-    el.style.transform = `translateX(${1360 + d * 480 - 200}px) scale(${1 - Math.min(Math.abs(d), 1.4) * .2}) rotateY(${clamp(-d, -1, 1) * 8}deg)`;
-    el.style.filter = `saturate(${1 - Math.min(Math.abs(d), 1) * .5}) brightness(${1 - Math.min(Math.abs(d), 1) * .08})`;
+  // 5. Three stripes sweep down over the last scene and lift off the end card.
+  const w0 = S5[0];
+  stripes.forEach((s, i) => {
+    const down = expo(prog(t, w0 - .45 + i * .07, w0 - .05 + i * .07));
+    const off = expo(prog(t, w0 + BEAT + i * .07, w0 + BEAT + .45 + i * .07));
+    s.style.transform = `translateY(${(down - 1) * 100 + off * 100}%)`;
   });
-  const [, title, head, body] = FEATURES[idx];
-  const tIn = idx === 0 ? out(prog(local, .3, 1.0)) : out(prog(within, .25, .85));
-  const tOut = idx === FEATURES.length - 1 ? 1 : 1 - ease(prog(within, PER - .35, PER));
-  $("feat-kicker").textContent = `${String(idx + 1).padStart(2, "0")} / ${String(FEATURES.length).padStart(2, "0")}`;
-  $("feat-title").textContent = title; $("feat-head").textContent = head; $("feat-body").textContent = body;
-  rise($("feat-text"), Math.min(tIn, tOut), 24);
-  dots.forEach((b, i) => { b.style.width = `${i < idx ? 100 : i > idx ? 0 : clamp(within / PER) * 100}%`; });
-
-  // 4. Dividend formula assembles, result counts up.
-  $("s4").style.opacity = fadeWin(t, S4, .5, .6);
-  rise($("s4").querySelector(".kick"), out(prog(t, 26.2, 26.8)), 16);
-  rise($("s4").querySelector("h2"), out(prog(t, 26.4, 27.1)), 24);
-  [["e1", 26.9], ["o1", 27.2], ["e2", 27.4], ["o2", 27.7], ["e3", 27.9]].forEach(([id, at]) => {
-    const v = out(prog(t, at, at + .5));
-    $(id).style.opacity = v; $(id).style.transform = `translateY(${(1 - v) * 30}px) scale(${.92 + .08 * v})`;
+  $("end").style.display = t >= w0 ? "" : "none";
+  const e0 = w0 + BEAT;
+  $("end").querySelector(".tile2").style.transform = `scale(${lerp(.3, 1, back(prog(t, e0 + .1, e0 + .5)))})`;
+  slam($("end").querySelector(".mask > span"), expo(prog(t, e0 + .2, e0 + .6)));
+  $("end").querySelector(".rule").style.transform = `scaleX(${expo(prog(t, e0 + .5, e0 + 1.1))})`;
+  ["line", "stack", "by", "url"].forEach((c, i) => {
+    const k = expo(prog(t, e0 + .5 + i * .15, e0 + .9 + i * .15));
+    const n = $("end").querySelector(`.${c}`);
+    n.style.opacity = k; n.style.transform = `translateY(${(1 - k) * 24}px)`;
   });
-  $("n-div").textContent = peso(1031.54 * ease(prog(t, 28.0, 29.0)), 2);
-  rise($("note"), out(prog(t, 28.6, 29.3)), 16);
 
-  // 5. End card.
-  $("end").style.opacity = fadeWin(t, S5, .7, .01);
-  const e = clamp(back(prog(t, 30.6, 31.6)), 0, 1.2);
-  $("end").querySelector(".tile").style.transform = `scale(${.6 + .4 * e})`;
-  $("end").querySelectorAll("h2,.line,.stack,.by,.url").forEach((el, i) => rise(el, out(prog(t, 30.9 + i * .18, 31.8 + i * .18)), 26));
-
-  $("fade").style.opacity = Math.max(1 - prog(t, 0, .6), prog(t, DURATION - .8, DURATION));
+  $("grid").style.opacity = on(t, S2) || on(t, S4) || t >= S5[0] ? 1 : 0;
+  $("fade").style.opacity = Math.max(1 - prog(t, 0, .15), prog(t, DURATION - .8, DURATION));
 }
 
 window.DURATION = DURATION;
-window.POSTER_AT = 12.4; // the Dashboard view in the phone carousel
+window.POSTER_AT = at(5) + 1.4; // the bento board on its first view (Dashboard)
 window.render = render;
 render(0);
 if (location.search.includes("play")) {

@@ -6,8 +6,8 @@ nothing to license. Each score is timed to its video's scenes.
 
   atlas     dark, cinematic synth: A minor pads, sub bass, a filtered pulse
             arpeggio and soft ticks; chords change with each carousel view.
-  coop      bright, optimistic: C major marimba patterns, light kick and
-            shaker, a rising arpeggio under the dividend formula.
+  coop      bright, punchy, bar-locked to the video's hard cuts: C major
+            marimba groove, kick, clap and shaker, a hit on every cut.
   plantpal  warm and organic: D major pentatonic kalimba in 3/4, a soft pad
             and wind, a chime as each specimen is pressed, a harp gliss as
             the flower blooms.
@@ -206,43 +206,85 @@ def atlas(T):
     return reverb(tr.buf, 2.8, 0.35)
 
 
+def clap(dur=0.18):
+    """Three quick noise taps then a short tail, band-limited around 1-3 kHz."""
+    t = t_axis(dur)
+    n = rng.standard_normal(len(t))
+    e = np.exp(-28 * t)
+    for k in (0.0, 0.011, 0.022):
+        e += np.where((t >= k) & (t < k + 0.008), 1.0, 0.0)
+    body = lowpass_fast(n, 3200)
+    return (body - lowpass_fast(body, 900)) * e
+
+
 def coop(T):
+    """Bar-locked to coop.html (112 bpm): every cut in the video lands on a hit."""
     tr = Track(T)
     beat = 60 / 112
-    # Intro: bright bells on the logo pop.
-    for i, m in enumerate([72, 76, 79, 84]):
-        tr.add(bell(m, 2.5), 0.5 + i * 0.12, 0.16, pan=-0.3 + 0.2 * i)
-    tr.add(pad([60, 64, 67], 4.5, shape="tri", cutoff=2500), 0.4, 0.3)
-    # Groove from the spreadsheet scene: C – G – Am – F (2 beats... one chord per bar).
-    prog = [[60, 64, 67], [55, 59, 62], [57, 60, 64], [53, 57, 60]]
+    bar = 4 * beat
+    prog = [[60, 64, 67], [55, 59, 62], [57, 60, 64], [53, 57, 60]]  # C G Am F
     roots = [36, 31, 33, 29]
-    start, bar = 4.45, beat * 4
-    pattern = [0, 2, 1, 2, 0, 1, 2, 1]  # chord-tone index per 8th note
-    t = start
-    k = 0
-    while t < 30.4:
-        c = prog[k % 4]
-        tr.add(pad([n + 12 for n in c], bar + 0.2, shape="tri", cutoff=1800), t, 0.16)
-        tr.add(sub(roots[k % 4] + 12, bar), t, 0.3)
-        for j in range(8):
-            at = t + j * beat / 2
-            if j in (0, 3, 6):
-                tr.add(marimba(c[pattern[j]] + 12, 0.45), at, 0.32, pan=-0.25)
-            if j in (2, 5, 7):
-                tr.add(marimba(c[pattern[j]] + 24, 0.35), at, 0.18, pan=0.3)
-            tr.add(noise_hit(0.05, 8000, 80), at, 0.035 if j % 2 else 0.02, pan=0.5)
-            if j in (0, 4) and t > 6:
-                tr.add(kick(), at, 0.35)
-        t += bar
-        k += 1
-    # Dividend formula: rising arpeggio build.
+
+    def stab(chord, at, gain=0.3):
+        for j, m in enumerate(chord):
+            tr.add(marimba(m + 12, 0.5), at, gain, pan=-0.3 + 0.3 * j)
+        tr.add(kick(), at, 0.45)
+        tr.add(clap(), at, 0.22, pan=0.1)
+
+    # Bar 0: one hit per word cut (Members. Loans. Shares. Dividends.).
+    for i, c in enumerate([prog[0], prog[3], prog[1], prog[2]]):
+        stab(c, i * beat)
+        tr.add(sub(roots[[0, 3, 1, 2][i]] + 12, beat), i * beat, 0.3)
+    # Bar 1: the wordmark, a bright bell arpeggio over a C pad.
+    tr.add(pad([60, 64, 67, 72], bar + 0.3, shape="tri", cutoff=2600), bar, 0.28)
+    for i, m in enumerate([72, 76, 79, 84, 88]):
+        tr.add(bell(m, 2.2), bar + i * beat / 2, 0.14, pan=-0.4 + 0.2 * i)
+    # Bar 2: "Five spreadsheets": a tense, ticking Am bar with a riser into the snap.
+    tr.add(pad([45, 52, 57, 60], bar, shape="saw", cutoff=700), 2 * bar, 0.3)
+    for j in range(16):
+        tr.add(noise_hit(0.03, 9000, 120), 2 * bar + j * beat / 4, 0.03 if j % 2 else 0.05, pan=0.4)
+        if j % 3 == 2:
+            tr.add(marimba(45 + 12 * (j % 2), 0.3), 2 * bar + j * beat / 4, 0.18, pan=-0.3)
+    riser = rng.standard_normal(int(bar * SR)) * np.linspace(0, 1, int(bar * SR)) ** 2
+    tr.add(riser - lowpass_fast(riser, 2500), 2 * bar, 0.05)
+
+    def groove(start, bars, drums=True):
+        for k in range(bars):
+            t0 = start + k * bar
+            c = prog[k % 4]
+            tr.add(pad([n + 12 for n in c], bar + 0.2, shape="tri", cutoff=1800), t0, 0.14)
+            tr.add(sub(roots[k % 4] + 12, bar), t0, 0.32)
+            for j in range(8):
+                at = t0 + j * beat / 2
+                if j in (0, 3, 6):
+                    tr.add(marimba(c[[0, 2, 1][j // 3]] + 12, 0.45), at, 0.3, pan=-0.25)
+                if j in (2, 5, 7):
+                    tr.add(marimba(c[(j + 1) % 3] + 24, 0.35), at, 0.17, pan=0.3)
+                tr.add(noise_hit(0.05, 8000, 80), at, 0.04 if j % 2 else 0.025, pan=0.5)
+                if drums and j % 2 == 0:
+                    tr.add(kick(), at, 0.4)
+                if drums and j in (2, 6):
+                    tr.add(clap(), at, 0.16, pan=-0.1)
+
+    # Bars 3-10: the groove, from the bento snap through the six app views,
+    # with a splash on every cut.
+    groove(3 * bar, 8)
+    for k in [3] + list(range(5, 11)):
+        tr.add(noise_hit(0.9, 5000, 4.5), k * bar, 0.07, pan=0.2 if k % 2 else -0.2)
+    # Bars 11-13: the dividend. A hit on each line of the formula, a rising
+    # run under the result, then a lighter groove under the proof panel.
+    for i, c in enumerate([prog[2], prog[3], prog[1]]):
+        stab(c, 11 * bar + i * bar / 2, 0.32)
+        tr.add(pad([n + 12 for n in c], bar / 2 + 0.3, shape="tri", cutoff=1500), 11 * bar + i * bar / 2, 0.18)
     for i, m in enumerate([60, 64, 67, 72, 76, 79, 84, 88]):
-        tr.add(marimba(m, 0.5), 27.0 + i * 0.22, 0.22, pan=-0.4 + 0.1 * i)
-    # End card: big C major chord with bells.
-    tr.add(pad([48, 60, 64, 67, 72], 4.6, shape="tri", cutoff=2400), 30.4, 0.38)
-    tr.add(bell(84, 3), 30.6, 0.16)
-    tr.add(bell(88, 3), 30.9, 0.12, pan=0.3)
-    return reverb(tr.buf, 1.8, 0.25)
+        tr.add(marimba(m, 0.5), 12 * bar + i * beat / 4, 0.2, pan=-0.4 + 0.1 * i)
+    groove(12.5 * bar, 3, drums=False)
+    # Bar 14: end card, a big C chord with bells.
+    stab([48, 60, 64, 67], 14 * bar, 0.3)
+    tr.add(pad([48, 60, 64, 67, 72], T - 14 * bar, shape="tri", cutoff=2400), 14 * bar, 0.36)
+    tr.add(bell(84, 3), 14 * bar + beat, 0.15)
+    tr.add(bell(88, 3), 14 * bar + 1.5 * beat, 0.11, pan=0.3)
+    return reverb(tr.buf, 1.6, 0.22)
 
 
 def plantpal(T):
