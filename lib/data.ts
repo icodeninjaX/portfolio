@@ -261,7 +261,11 @@ export const resumeData = {
         { src: "/images/kdv-mobile-dashboards.webp", width: 780, height: 1568, label: "Business dashboards · phone", alt: "The 371admin operations dashboard shown under the service heading The control room, with a starting price of 85,000 pesos and a 3 to 6 week timeline.", caption: "Business dashboards, The control room. Sales, orders and devices at a glance, shown with the 371admin operations dashboard, blurred, from X-META." },
       ],
       images: [
-        { src: "/images/kdv-website-services-home.webp", width: 1440, height: 820, label: "Public homepage", caption: "The live KDV Website Services homepage, captured with reduced motion enabled on 2026-10-01." },
+        { src: "/images/kdv-desktop-home.webp", width: 1440, height: 684, label: "Homepage", caption: "The hero on a desktop: a 3D storm of loose paperwork beside the promise, Turn business chaos into a system that works, with Start a project as the one clear action." },
+        { src: "/images/kdv-desktop-problem.webp", width: 1440, height: 684, label: "Where it starts", caption: "As you scroll, the flying papers settle into an orderly grid while the copy names the problem: orders in a notebook, payments in chat, a spreadsheet per branch." },
+        { src: "/images/kdv-desktop-new-zion.webp", width: 1440, height: 684, label: "Paper to system", caption: "Real client work as proof: New Zion's branches moved from paper logs to one shared order queue. Customer names on the dashboard are blurred." },
+        { src: "/images/kdv-desktop-websites.webp", width: 1440, height: 684, label: "Website creation", caption: "Each service is shown with a real build, a starting price and a timeline. Website creation, The front door, is shown with the iPay International marketing site." },
+        { src: "/images/kdv-desktop-dashboards.webp", width: 1440, height: 684, label: "Business dashboards", caption: "Business dashboards, The control room, shown with the 371admin operations dashboard built at X-META. Campaign details are blurred." },
       ],
     },
     {
