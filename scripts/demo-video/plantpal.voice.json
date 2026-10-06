@@ -4,42 +4,42 @@
     {
       "at": 0.8,
       "text": "A field guide to Garden, the plant care app.",
-      "file": "voice/plantpal/line-0.ogg"
+      "file": "voice/plantpal/line-0.flac"
     },
     {
       "at": 5.3,
       "text": "Sign in, and your garden is ready.",
-      "file": "voice/plantpal/line-1.ogg"
+      "file": "voice/plantpal/line-1.flac"
     },
     {
       "at": 9.0,
       "text": "Today shows what to water, and what to feed.",
-      "file": "voice/plantpal/line-2.ogg"
+      "file": "voice/plantpal/line-2.flac"
     },
     {
       "at": 12.7,
       "text": "Every plant is catalogued, growing or retired.",
-      "file": "voice/plantpal/line-3.ogg"
+      "file": "voice/plantpal/line-3.flac"
     },
     {
-      "at": 16.25,
+      "at": 16.3,
       "text": "The calendar keeps care on schedule.",
-      "file": "voice/plantpal/line-4.ogg"
+      "file": "voice/plantpal/line-4.flac"
     },
     {
       "at": 20.2,
       "text": "Eighty-seven care guides help you choose what thrives.",
-      "file": "voice/plantpal/line-5.ogg"
+      "file": "voice/plantpal/line-5.flac"
     },
     {
-      "at": 24.05,
+      "at": 24.1,
       "text": "And every watering is logged.",
-      "file": "voice/plantpal/line-6.ogg"
+      "file": "voice/plantpal/line-6.flac"
     },
     {
       "at": 30.6,
       "text": "Garden. A little care, every day. Built by Keith Vergara.",
-      "file": "voice/plantpal/line-7.ogg"
+      "file": "voice/plantpal/line-7.flac"
     }
   ]
 }

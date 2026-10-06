@@ -4,42 +4,42 @@
     {
       "at": 2.3,
       "text": "Coop Tracker. Co-op finance, without the spreadsheets.",
-      "file": "voice/coop/line-0.ogg"
+      "file": "voice/coop/line-0.flac"
     },
     {
       "at": 6.5,
       "text": "One place for members, loans and dividends.",
-      "file": "voice/coop/line-1.ogg"
+      "file": "voice/coop/line-1.flac"
     },
     {
       "at": 10.9,
       "text": "The dashboard shows the whole co-op, and who has paid this period.",
-      "file": "voice/coop/line-2.ogg"
+      "file": "voice/coop/line-2.flac"
     },
     {
       "at": 15.2,
       "text": "Mark collections, and see every member's shares.",
-      "file": "voice/coop/line-3.ogg"
+      "file": "voice/coop/line-3.flac"
     },
     {
       "at": 19.4,
       "text": "Follow every loan, then share out the interest.",
-      "file": "voice/coop/line-4.ogg"
+      "file": "voice/coop/line-4.flac"
     },
     {
-      "at": 22.6,
+      "at": 22.5,
       "text": "The interest pool, divided by every eligible share.",
-      "file": "voice/coop/line-5.ogg"
+      "file": "voice/coop/line-5.flac"
     },
     {
-      "at": 26.8,
+      "at": 26.73,
       "text": "Computed, not guessed, and tested first.",
-      "file": "voice/coop/line-6.ogg"
+      "file": "voice/coop/line-6.flac"
     },
     {
-      "at": 31.25,
+      "at": 31.22,
       "text": "Coop Tracker. Designed and built by Keith Vergara.",
-      "file": "voice/coop/line-7.ogg"
+      "file": "voice/coop/line-7.flac"
     }
   ]
 }

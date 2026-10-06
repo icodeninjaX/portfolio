@@ -1,13 +1,13 @@
 {
   "voice": "higgsfield/seed_audio/Grady",
   "lines": [
-    { "at": 0.5, "text": "Every growing business hits the same wall.", "file": "voice/kdv/line-0.ogg" },
-    { "at": 5.0, "text": "Orders in a notebook. Payments in chat. A spreadsheet per branch.", "file": "voice/kdv/line-1.ogg" },
-    { "at": 12.4, "text": "KDV Website Services turns that chaos into a system that works.", "file": "voice/kdv/line-2.ogg" },
-    { "at": 19.6, "text": "Websites that bring the inquiry in.", "file": "voice/kdv/line-3.ogg" },
-    { "at": 24.4, "text": "Dashboards that keep every number current.", "file": "voice/kdv/line-4.ogg" },
-    { "at": 29.2, "text": "And custom apps that run the day, like New Zion's point of sale.", "file": "voice/kdv/line-5.ogg" },
-    { "at": 34.4, "text": "Work directly with Keith, from the first conversation to launch.", "file": "voice/kdv/line-6.ogg" },
-    { "at": 41.4, "text": "KDV Website Services. Start your project today.", "file": "voice/kdv/line-7.ogg" }
+    { "at": 0.5, "text": "Every growing business hits the same wall.", "file": "voice/kdv/line-0.flac" },
+    { "at": 5.0, "text": "Orders in a notebook. Payments in chat. A spreadsheet per branch.", "file": "voice/kdv/line-1.flac" },
+    { "at": 12.4, "text": "KDV Website Services turns that chaos into a system that works.", "file": "voice/kdv/line-2.flac" },
+    { "at": 19.6, "text": "Websites that bring the inquiry in.", "file": "voice/kdv/line-3.flac" },
+    { "at": 24.4, "text": "Dashboards that keep every number current.", "file": "voice/kdv/line-4.flac" },
+    { "at": 29.2, "text": "And custom apps that run the day, like New Zion's point of sale.", "file": "voice/kdv/line-5.flac" },
+    { "at": 34.4, "text": "Work directly with Keith, from the first conversation to launch.", "file": "voice/kdv/line-6.flac" },
+    { "at": 41.4, "text": "KDV Website Services. Start your project today.", "file": "voice/kdv/line-7.flac" }
   ]
 }

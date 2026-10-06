@@ -4,37 +4,37 @@
     {
       "at": 0.7,
       "text": "This is ATLAS, a personal operating system.",
-      "file": "voice/atlas/line-0.ogg"
+      "file": "voice/atlas/line-0.flac"
     },
     {
       "at": 4.4,
       "text": "It puts your whole life on one route.",
-      "file": "voice/atlas/line-1.ogg"
+      "file": "voice/atlas/line-1.flac"
     },
     {
       "at": 8.9,
       "text": "Today picks your next move, and Money keeps every peso in one total.",
-      "file": "voice/atlas/line-2.ogg"
+      "file": "voice/atlas/line-2.flac"
     },
     {
       "at": 13.9,
       "text": "Tasks fit the plan to your day, and goals update as milestones get done.",
-      "file": "voice/atlas/line-3.ogg"
+      "file": "voice/atlas/line-3.flac"
     },
     {
       "at": 18.9,
       "text": "Ask the Analyst, or capture a whole day in one message.",
-      "file": "voice/atlas/line-4.ogg"
+      "file": "voice/atlas/line-4.flac"
     },
     {
       "at": 23.9,
       "text": "Career tracks every application, and the Timeline keeps it all in order.",
-      "file": "voice/atlas/line-5.ogg"
+      "file": "voice/atlas/line-5.flac"
     },
     {
       "at": 29.3,
       "text": "ATLAS. Designed and built by Keith Vergara.",
-      "file": "voice/atlas/line-6.ogg"
+      "file": "voice/atlas/line-6.flac"
     }
   ]
 }
