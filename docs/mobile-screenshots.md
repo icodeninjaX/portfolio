@@ -95,3 +95,7 @@ Supplied by the owner from the ATLAS desktop app, signed in to their own account
 Supplied by the owner from the live site, signed in to their own account: two landing-story chapters, Today, Plants and Calendar. All cropped to a common 1888 × 918 frame (dropping the browser's link tooltip at the bottom-left of Today) and resized to 1440 × 700 WebP (quality 86) as `plantpal-desktop-{water,grown,today,plants,calendar}.webp`. **Redaction:** the account email under the user's name in the sidebar is blurred on Today, Plants and Calendar.
 
 Added the same day: Library (signed in), Activity and Gardens as `plantpal-desktop-{library,activity,gardens}.webp`, same crop and size. **Redaction:** the sidebar email on all three; on Gardens, both garden locations and the second garden's name.
+
+## KDV Website Services phone screenshots (2026-10-06)
+
+Supplied by the owner from an Android phone on the live site: the hero, "Where it starts", "Paper to system" (New Zion), "The front door" (website creation, iPay International) and "The control room" (business dashboards, 371admin). Cropped to remove the phone's status bar (top 116 px) and gesture bar, then resized from 1080 px to 780 × 1568 WebP (quality 86) as `kdv-mobile-{home,problem,new-zion,websites,dashboards}.webp`; `kdv-mobile-home.webp` replaces the earlier local render. The earlier `kdv-mobile-menu.webp` is kept. No extra redaction: client dashboards are already blurred on the site itself. The site's chat button is visible in the corner.
