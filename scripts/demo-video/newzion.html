@@ -1,0 +1,413 @@
+<!doctype html>
+<!--
+  New Z1on LPG POS + CMS motion-graphics demo (case study video). Same
+  contract as the others: `render(t)` draws the frame at t seconds;
+  `render.mjs newzion` captures every frame. Add `?play` to preview.
+
+  Style: "One day at the depot". An industrial LPG look (navy, safety orange,
+  hazard-stripe wipes, stencil-style caps) told as a single business day: a
+  running clock goes from 8:00 AM to 6:00 PM while one order travels from the
+  first call, past the old paper logs, into one queue, across the counter,
+  through stock and into the owner's report. Timed to a 120 bpm grid (BAR =
+  2 s) shared with music.py; the voice-over (newzion.voice.json) is from
+  Higgsfield. All figures come from the demo data in the screenshots.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New Zion demo</title>
+<style>
+  @font-face { font-family: "Space Grotesk"; src: url("../../app/fonts/space-grotesk-var.woff2") format("woff2"); font-weight: 300 700; }
+  @font-face { font-family: "Inter"; src: url("../../app/fonts/inter-var.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../app/fonts/jetbrains-mono-var.woff2") format("woff2"); font-weight: 100 800; }
+
+  :root { --navy: #0a1322; --navy2: #101c33; --line: #23324f; --orange: #ff7a1a; --yellow: #ffc21a; --paper: #f1ece0; --ink: #e9eef7; --muted: #8fa0bd; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--navy); }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: var(--ink); font-family: "Inter", sans-serif; background: radial-gradient(ellipse 70% 60% at 50% 45%, #14264a 0%, var(--navy) 70%); }
+  #grid { position: absolute; inset: 0; background-image: linear-gradient(#ffffff08 1px, transparent 1px), linear-gradient(90deg, #ffffff08 1px, transparent 1px); background-size: 60px 60px; }
+  .scene { position: absolute; inset: 0; }
+  .mono { font: 600 17px "JetBrains Mono", monospace; letter-spacing: .2em; text-transform: uppercase; }
+  .head { position: absolute; left: 110px; top: 170px; font: 700 76px/1.02 "Space Grotesk", sans-serif; letter-spacing: -.02em; text-transform: uppercase; }
+  .head em { font-style: normal; color: var(--orange); }
+  .kick { position: absolute; left: 112px; top: 132px; color: var(--yellow); }
+
+  /* HUD */
+  #brand { position: absolute; left: 64px; top: 48px; z-index: 6; display: flex; align-items: center; gap: 14px; font: 700 21px "Space Grotesk", sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+  .flame { width: 30px; height: 38px; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; background: radial-gradient(circle at 50% 70%, var(--yellow) 0 28%, var(--orange) 30% 100%); transform: rotate(0deg); box-shadow: 0 0 22px #ff7a1a88; }
+  #brand small { display: block; font: 500 13px "JetBrains Mono", monospace; letter-spacing: .18em; color: var(--muted); }
+  #clock { position: absolute; right: 64px; top: 40px; z-index: 6; text-align: right; }
+  #clock b { display: block; font: 700 58px/1 "JetBrains Mono", monospace; letter-spacing: -.02em; }
+  #clock b span { font-size: 26px; margin-left: 8px; color: var(--orange); }
+  #clock .day { position: relative; width: 300px; height: 4px; margin: 14px 0 0 auto; background: #ffffff1a; }
+  #clock .day i { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+  #label { position: absolute; left: 64px; bottom: 52px; z-index: 6; color: var(--muted); }
+  #label b { color: var(--orange); font-weight: 600; }
+  #wipe { position: absolute; top: -200px; bottom: -200px; width: 900px; z-index: 7; background: repeating-linear-gradient(-45deg, var(--orange) 0 60px, #0d0d0d 60px 120px); box-shadow: 0 0 0 14px var(--yellow); transform: translateX(-1200px) skewX(-12deg); }
+
+  /* 0. First call */
+  #phone { position: absolute; left: 50%; top: 360px; width: 200px; height: 200px; margin-left: -100px; border-radius: 50%; background: var(--orange); display: grid; place-items: center; box-shadow: 0 30px 80px -20px #ff7a1a99; }
+  #phone svg { width: 96px; height: 96px; }
+  .ring { position: absolute; left: 50%; top: 460px; width: 200px; height: 200px; margin: -100px 0 0 -100px; border-radius: 50%; border: 3px solid var(--orange); }
+  #s0 .title { position: absolute; left: 0; right: 0; top: 640px; text-align: center; font: 700 72px/1.05 "Space Grotesk", sans-serif; text-transform: uppercase; }
+  .ticket { position: absolute; width: 560px; padding: 22px 26px; border-radius: 6px; background: var(--paper); color: #1d1a14; box-shadow: 0 20px 50px -20px #000; font: 600 20px "JetBrains Mono", monospace; }
+  .ticket::before { content: ""; position: absolute; left: 0; right: 0; top: -8px; height: 8px; background: radial-gradient(circle at 8px 8px, var(--paper) 6px, transparent 6.5px) 0 0 / 16px 8px repeat-x; }
+  .ticket small { display: block; margin-top: 6px; font: 500 16px "JetBrains Mono", monospace; color: #6a6254; }
+  .ticket b { color: #c4500b; }
+  #t0 { left: 50%; margin-left: -280px; top: 800px; }
+
+  /* 1. Before: channels and paper logs */
+  #s1 { filter: sepia(.55) saturate(.8); }
+  .chan { position: absolute; top: 330px; width: 250px; text-align: center; }
+  .chan .icon { width: 150px; height: 150px; margin: 0 auto 24px; border-radius: 28px; border: 3px solid var(--ink); display: grid; place-items: center; }
+  .chan .icon svg { width: 76px; height: 76px; }
+  .chan b { font: 700 40px "Space Grotesk", sans-serif; text-transform: uppercase; }
+  #map { position: absolute; right: 90px; top: 250px; width: 900px; height: 640px; transform: scale(.94); transform-origin: 100% 0; border: 2px solid var(--line); border-radius: 10px; background: #0d1830; overflow: hidden; }
+  #map svg { position: absolute; inset: 0; }
+  .pin { position: absolute; width: 150px; text-align: center; }
+  .pin i { display: block; width: 26px; height: 26px; margin: 0 auto 8px; border-radius: 50% 50% 50% 0; background: var(--orange); transform: rotate(-45deg); box-shadow: 0 0 20px #ff7a1a88; }
+  .log { display: block; width: 88px; height: 70px; margin: 0 auto; border-radius: 3px; background: var(--paper) repeating-linear-gradient(transparent 0 9px, #7d8fb066 9px 10px); box-shadow: 4px 4px 0 #c9bfa8, 0 10px 20px -8px #000; }
+  .pin small { display: block; margin-top: 8px; font: 600 14px "JetBrains Mono", monospace; letter-spacing: .12em; color: var(--paper); }
+  #stamp { position: absolute; left: 90px; top: 660px; font-size: 40px; padding: 14px 26px; border: 5px solid var(--orange); color: var(--orange); font: 700 46px "Space Grotesk", sans-serif; text-transform: uppercase; transform: rotate(-6deg); }
+
+  /* 2. One queue */
+  .lane { position: absolute; left: 110px; width: 300px; height: 120px; padding: 24px 28px; border: 2px solid var(--line); border-radius: 12px; background: var(--navy2); display: flex; align-items: center; gap: 18px; font: 700 30px "Space Grotesk", sans-serif; text-transform: uppercase; }
+  .lane svg { width: 52px; height: 52px; flex: none; }
+  #queue { position: absolute; left: 820px; top: 230px; width: 620px; }
+  .qt { position: absolute; left: 0; width: 620px; padding: 18px 24px; border-radius: 6px; background: var(--paper); color: #1d1a14; display: grid; grid-template-columns: 90px 1fr auto; gap: 4px 16px; font: 600 19px "JetBrains Mono", monospace; box-shadow: 0 14px 30px -14px #000; }
+  .qt b { color: #c4500b; }
+  .qt small { grid-column: 2 / 4; font: 500 15px "JetBrains Mono", monospace; color: #6a6254; }
+  .qt .src { font-size: 14px; padding: 3px 10px; border-radius: 99px; background: #1d1a14; color: var(--paper); align-self: start; }
+  .shot { position: absolute; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 2px #ffffff22, 0 50px 120px -30px #000; background: var(--navy2); }
+  .shot img { display: block; width: 100%; }
+  #orders { left: 410px; top: 230px; width: 1400px; }
+
+  /* 3. Counter */
+  #pos { left: 90px; top: 250px; width: 1180px; }
+  #receipt { position: absolute; left: 1350px; top: 240px; width: 440px; height: 0; overflow: hidden; }
+  #receipt .paper { width: 440px; padding: 30px 30px 40px; background: var(--paper); color: #1d1a14; font: 500 19px/1.7 "JetBrains Mono", monospace; box-shadow: 0 30px 60px -24px #000; }
+  #receipt .paper::after { content: ""; display: block; height: 10px; margin: 20px -30px -50px; background: radial-gradient(circle at 10px 0, transparent 9px, var(--paper) 9.5px) 0 0 / 20px 10px repeat-x; }
+  #receipt h4 { font: 700 26px "Space Grotesk", sans-serif; text-align: center; text-transform: uppercase; }
+  #receipt .c { text-align: center; color: #6a6254; font-size: 16px; }
+  #receipt hr { border: 0; border-top: 2px dashed #1d1a1466; margin: 14px 0; }
+  #receipt .row { display: flex; justify-content: space-between; }
+  #receipt .tot { font-weight: 800; font-size: 24px; }
+  #receipt .ok { margin-top: 16px; text-align: center; padding: 8px; border: 3px solid #1f7a3d; color: #1f7a3d; font-weight: 800; letter-spacing: .14em; }
+  #printer { position: absolute; left: 1330px; top: 214px; width: 480px; height: 34px; border-radius: 10px; background: #1b2740; box-shadow: inset 0 -6px 0 #0f1729, 0 0 0 2px #2a3a5c; }
+
+  /* 4. Stock */
+  #cyls { position: absolute; left: 0; right: 0; top: 330px; display: flex; justify-content: center; gap: 110px; }
+  .cyl { position: relative; width: 210px; text-align: center; }
+  .cyl .body { position: relative; height: 380px; border-radius: 70px 70px 26px 26px; background: #18233a; box-shadow: inset 0 0 0 4px #2b3b5e; overflow: hidden; }
+  .cyl .fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: linear-gradient(90deg, #00000033, transparent 40%, #ffffff22 60%, #00000033); }
+  .cyl .collar { width: 90px; height: 44px; margin: 0 auto -6px; border-radius: 12px 12px 0 0; border: 6px solid #2b3b5e; border-bottom: 0; }
+  .cyl .valve { width: 30px; height: 24px; margin: 0 auto; border-radius: 6px 6px 0 0; background: #3a4b70; }
+  .cyl .kg { position: absolute; left: 0; right: 0; top: 130px; font: 700 50px "Space Grotesk", sans-serif; color: #fff; text-shadow: 0 4px 16px #0008; }
+  .cyl .n { margin-top: 26px; font: 700 64px/1 "JetBrains Mono", monospace; }
+  .cyl .n span { display: block; margin-top: 8px; font: 600 15px "JetBrains Mono", monospace; letter-spacing: .16em; color: var(--muted); }
+  .cyl .tag { display: inline-block; margin-top: 14px; padding: 6px 12px; border-radius: 4px; background: #5a3d06; color: #ffd27a; font: 600 15px "JetBrains Mono", monospace; }
+  #inventory { left: 260px; top: 300px; width: 1400px; }
+
+  /* 5. Report */
+  #report { left: 820px; top: 330px; width: 1020px; transform-origin: 0 50%; }
+  .stat { position: absolute; left: 110px; width: 460px; }
+  .stat b { display: block; font: 700 92px/1 "Space Grotesk", sans-serif; letter-spacing: -.03em; }
+  .stat span { display: block; margin-top: 10px; color: var(--muted); }
+  .badge { position: absolute; padding: 12px 22px; border: 4px solid var(--yellow); color: var(--yellow); font: 700 34px "JetBrains Mono", monospace; letter-spacing: .1em; }
+
+  /* 6. End */
+  #end { display: grid; place-items: center; text-align: center; }
+  #end .flame { width: 76px; height: 96px; margin: 0 auto 36px; }
+  #end h1 { font: 700 118px/1 "Space Grotesk", sans-serif; text-transform: uppercase; letter-spacing: -.01em; }
+  #end h1 em { font-style: normal; color: var(--orange); }
+  #end .sub { margin-top: 18px; font: 600 30px "Space Grotesk", sans-serif; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  #end .mods { margin-top: 46px; display: flex; justify-content: center; gap: 14px; }
+  #end .mods span { padding: 10px 18px; border: 2px solid var(--line); border-radius: 99px; font: 600 18px "JetBrains Mono", monospace; color: var(--ink); }
+  #end .by { margin-top: 50px; font-size: 26px; }
+  #end .by b { color: var(--orange); }
+  #fade { position: absolute; inset: 0; z-index: 9; background: var(--navy); pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="grid"></div>
+
+  <!-- 0. The first call -->
+  <div class="scene" id="s0">
+    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+    <div id="phone"><svg viewBox="0 0 24 24" fill="#0a1322"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1L6.6 10.8z"/></svg></div>
+    <div class="title">The first order of the day</div>
+    <div class="ticket" id="t0"><b>#01</b> · Fiesta Gas 11 kg LPG Cylinder<small>Phone-in · Delivery · LPG Main Branch</small></div>
+  </div>
+
+  <!-- 1. Before -->
+  <div class="scene" id="s1">
+    <div class="kick mono">Before · how orders came in</div>
+    <div class="chan" id="c0" style="left:90px"><div class="icon"><svg viewBox="0 0 24 24" fill="#e9eef7"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1L6.6 10.8z"/></svg></div><b>Phone</b></div>
+    <div class="chan" id="c1" style="left:350px"><div class="icon"><svg viewBox="0 0 24 24" fill="#e9eef7"><circle cx="13" cy="4" r="2"/><path d="M9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.3 7.3 0 0 0 19 13v-2a5.1 5.1 0 0 1-4.4-2.4l-1-1.6a2 2 0 0 0-2.5-.8L6 8.3V13h2V9.6l1.8-.7"/></svg></div><b>Walk-in</b></div>
+    <div class="chan" id="c2" style="left:610px"><div class="icon"><svg viewBox="0 0 24 24" fill="#e9eef7"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM7 9h10v2H7zm6 5H7v-2h6z"/></svg></div><b>Text</b></div>
+    <div id="map">
+      <svg viewBox="0 0 900 640"><g stroke="#24365a" stroke-width="14" fill="none" stroke-linecap="round"><path d="M-20 140 L920 210"/><path d="M-20 430 L920 380"/><path d="M180 -20 L250 660"/><path d="M560 -20 L620 660"/><path d="M-20 600 Q450 520 920 620"/></g><g stroke="#1a2846" stroke-width="5" fill="none"><path d="M60 -20 L90 660"/><path d="M380 -20 L420 660"/><path d="M760 -20 L780 660"/><path d="M-20 290 L920 300"/></g></svg>
+    </div>
+    <div id="stamp">Five branches · five paper logs</div>
+  </div>
+
+  <!-- 2. One queue -->
+  <div class="scene" id="s2">
+    <div class="kick mono">Morning · one queue</div>
+    <div class="head">Every branch.<br><em>One queue.</em></div>
+    <div class="lane" id="l0" style="top:470px"><svg viewBox="0 0 24 24" fill="#ff7a1a"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1L6.6 10.8z"/></svg>Phone</div>
+    <div class="lane" id="l1" style="top:620px"><svg viewBox="0 0 24 24" fill="#ff7a1a"><circle cx="13" cy="4" r="2"/><path d="M9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.3 7.3 0 0 0 19 13v-2a5.1 5.1 0 0 1-4.4-2.4l-1-1.6a2 2 0 0 0-2.5-.8L6 8.3V13h2V9.6l1.8-.7"/></svg>Walk-in</div>
+    <div class="lane" id="l2" style="top:770px"><svg viewBox="0 0 24 24" fill="#ff7a1a"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM7 9h10v2H7zm6 5H7v-2h6z"/></svg>Text</div>
+    <div id="queue"></div>
+    <div class="shot" id="orders"><img src="../../public/images/new-zion-orders.webp" alt=""></div>
+  </div>
+
+  <!-- 3. Counter -->
+  <div class="scene" id="s3">
+    <div class="kick mono">Midday · at the counter</div>
+    <div class="shot" id="pos"><img src="../../public/images/new-zion-pos-order.webp" alt=""></div>
+    <div id="printer"></div>
+    <div id="receipt"><div class="paper">
+      <h4>New Zion LPG</h4>
+      <div class="c">LPG Main Branch · Cashier: admin</div>
+      <div class="c">Order #11 · Oct 03, 2026 3:54 PM</div>
+      <hr>
+      <div class="row"><span>LPG Hose (2 m) ×3</span><span>₱690.00</span></div>
+      <hr>
+      <div class="row tot"><span>TOTAL</span><span>₱690.00</span></div>
+      <div class="ok">DELIVERED</div>
+    </div></div>
+  </div>
+
+  <!-- 4. Stock -->
+  <div class="scene" id="s4">
+    <div class="kick mono">Afternoon · stock across 5 branches</div>
+    <div class="head">Every cylinder, <em>counted.</em></div>
+    <div id="cyls"></div>
+    <div class="shot" id="inventory"><img src="../../public/images/new-zion-inventory.webp" alt=""></div>
+  </div>
+
+  <!-- 5. Report -->
+  <div class="scene" id="s5">
+    <div class="kick mono">Evening · the owner's report</div>
+    <div class="head">Any date range.<br><em>No one to ask.</em></div>
+    <div class="shot" id="report"><img src="../../public/images/new-zion-sales-report.webp" alt=""></div>
+    <div class="stat" id="st0" style="top:470px"><b id="n-sales">₱0.00</b><span class="mono">Completed sales</span></div>
+    <div class="stat" id="st1" style="top:650px"><b id="n-orders">0</b><span class="mono">Delivered orders</span></div>
+    <div class="badge" id="b0" style="left:1480px;top:820px">CSV</div>
+    <div class="badge" id="b1" style="left:1650px;top:820px">PDF</div>
+  </div>
+
+  <!-- 6. End -->
+  <div class="scene" id="end"><div>
+    <div class="flame"></div>
+    <h1>New Zion <em>LPG</em></h1>
+    <div class="sub">Point of sale + CMS · every order accounted for</div>
+    <div class="mods"><span>Orders</span><span>Customers</span><span>Products</span><span>Inventory</span><span>Branches</span><span>Sales reports</span></div>
+    <div class="by">Built by <b>Keith Vergara</b> · KDV Website Services</div>
+  </div></div>
+
+  <div id="brand"><span class="flame"></span><div>New Zion LPG<small>Operations · one business day</small></div></div>
+  <div id="clock"><b id="time">8:00<span>AM</span></b><div class="day"><i id="dayi"></i></div></div>
+  <div id="label" class="mono"></div>
+  <div id="wipe"></div>
+  <div id="fade"></div>
+</div>
+
+<script>
+const BEAT = .5, BAR = 2;                      // 120 bpm
+const S = [0, 6, 14, 22, 30, 38, 46];          // scene starts (bar-aligned)
+const DURATION = 55;
+const LABELS = ["01 / The first call", "02 / Before", "03 / One queue", "04 / The counter", "05 / Stock", "06 / The report", "07 / Close of day"];
+
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const ease = (x) => (x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const out = (x) => 1 - Math.pow(1 - x, 3);
+const back = (x) => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const rise = (el, k, d = 40) => { el.style.opacity = k; el.style.transform = `translateY(${(1 - k) * d}px)`; };
+const peso = (n) => "₱" + n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const sceneOf = (t) => { let i = 0; while (i < S.length - 1 && t >= S[i + 1]) i++; return i; };
+
+// Clock: minutes after midnight per scene, interpolated within each scene.
+const CLOCK = [[0, 480], [6, 482], [14, 570], [22, 660], [30, 810], [38, 960], [46, 1080], [55, 1080]];
+function clockAt(t) {
+  let i = 0; while (i < CLOCK.length - 2 && t >= CLOCK[i + 1][0]) i++;
+  const [ta, ma] = CLOCK[i], [tb, mb] = CLOCK[i + 1];
+  return Math.round(lerp(ma, mb, ease(prog(t, ta, tb))));
+}
+
+// Queue tickets (demo data from the screenshots).
+const Q = [
+  ["#04", "Phone", "Fiesta Gas 11 kg LPG Cylinder", "Demo Customer One · LPG Main Branch"],
+  ["#05", "Walk-in", "Butane Canister ×2", "Demo Customer Two · LPG North Branch"],
+  ["#06", "Text", "Fiesta Gas 22 kg LPG Cylinder", "Demo Customer Three · LPG East Branch"],
+  ["#07", "Phone", "LPG Tank Valve", "Demo Customer Four · LPG Main Branch"],
+  ["#08", "Walk-in", "Gas Lighter / Igniter", "Demo Customer One · LPG North Branch"],
+];
+const lane = { Phone: 0, "Walk-in": 1, Text: 2 };
+const qts = Q.map(([no, src, item, who]) => {
+  const d = document.createElement("div");
+  d.className = "qt";
+  d.innerHTML = `<b>${no}</b><span>${item}</span><span class="src">${src}</span><small>${who}</small>`;
+  $("queue").appendChild(d);
+  return { d, lane: lane[src] };
+});
+
+// Map pins for the five branches.
+const PINS = [[120, 120, "Branch 01"], [520, 90, "Branch 02"], [700, 300, "Branch 03"], [300, 360, "Branch 04"], [600, 500, "Branch 05"]];
+const pins = PINS.map(([x, y, name]) => {
+  const p = document.createElement("div");
+  p.className = "pin";
+  p.style.left = `${x - 75}px`; p.style.top = `${y - 20}px`;
+  p.innerHTML = `<i></i><span class="log"></span><small>${name}</small>`;
+  $("map").appendChild(p);
+  return p;
+});
+
+// Cylinders: filled counts from the inventory screen.
+const CYL = [["2.7 kg", 99, "#2f6fd6", ""], ["11 kg", 86, "#ff7a1a", "22 damaged · 10 lost"], ["22 kg", 90, "#d23c3c", "10 damaged · 10 lost"], ["50 kg", 69, "#6b7a90", ""]];
+const cyls = CYL.map(([kg, n, color, tag]) => {
+  const c = document.createElement("div");
+  c.className = "cyl";
+  c.innerHTML = `<div class="valve"></div><div class="collar"></div><div class="body"><div class="fill" style="background-color:${color}"></div><div class="kg">${kg}</div></div><div class="n"><b>0</b><span>filled</span></div>${tag ? `<div class="tag">${tag}</div>` : ""}`;
+  $("cyls").appendChild(c);
+  return { c, n, fill: c.querySelector(".fill"), num: c.querySelector(".n b"), tag: c.querySelector(".tag") };
+});
+
+function render(t) {
+  const sc = sceneOf(t);
+  ["s0", "s1", "s2", "s3", "s4", "s5", "end"].forEach((id, i) => { $(id).style.display = i === sc ? "" : "none"; });
+
+  // 0. Phone rings, title, first ticket.
+  if (sc === 0) {
+    const ring = (t % 1.2) / 1.2;
+    $("phone").style.transform = `rotate(${Math.sin(t * 40) * (t % 1.2 < .5 ? 8 : 0)}deg) scale(${lerp(.6, 1, back(prog(t, .2, .8)))})`;
+    document.querySelectorAll("#s0 .ring").forEach((r, i) => { const k = ((t - i * .4) % 1.2 + 1.2) % 1.2 / 1.2; r.style.transform = `scale(${1 + k * 1.6})`; r.style.opacity = (1 - k) * clamp(t - .3); });
+    rise(document.querySelector("#s0 .title"), out(prog(t, 1.2, 2.0)));
+    rise($("t0"), out(prog(t, 2.6, 3.4)), 80);
+    $("s0").style.opacity = 1 - ease(prog(t, 5.5, 6));
+  }
+
+  // 1. Before: three channels stamp in, then five branches each with a paper log.
+  if (sc === 1) {
+    ["c0", "c1", "c2"].forEach((id, i) => {
+      const k = back(prog(t, 6.4 + i * 1.1, 6.9 + i * 1.1));
+      $(id).style.opacity = clamp(k); $(id).style.transform = `scale(${lerp(.6, 1, clamp(k, 0, 1.2))})`;
+    });
+    rise(document.querySelector("#s1 .kick"), out(prog(t, 6.2, 6.8)), 16);
+    $("map").style.opacity = out(prog(t, 10.2, 10.8));
+    pins.forEach((p, i) => { const k = back(prog(t, 10.6 + i * .3, 11.1 + i * .3)); p.style.opacity = clamp(k); p.style.transform = `translateY(${(1 - clamp(k)) * -40}px)`; });
+    const s = back(prog(t, 12.0, 12.4));
+    $("stamp").style.opacity = clamp(s); $("stamp").style.transform = `rotate(-6deg) scale(${lerp(1.8, 1, clamp(s, 0, 1.1))})`;
+  }
+
+  // 2. Tickets slide from their lanes into one queue, then the Orders screen takes over.
+  if (sc === 2) {
+    rise(document.querySelector("#s2 .kick"), out(prog(t, 14.6, 15.2)), 16);
+    rise(document.querySelector("#s2 .head"), out(prog(t, 14.8, 15.6)));
+    ["l0", "l1", "l2"].forEach((id, i) => rise($(id), out(prog(t, 15 + i * .15, 15.6 + i * .15)), 30));
+    qts.forEach(({ d, lane: l }, i) => {
+      const at = 15.8 + i * BEAT * 1.5;
+      const k = ease(prog(t, at, at + .7));
+      const sx = -400, sy = 240 + l * 150 + 10;
+      const ty = i * 104;
+      d.style.transform = `translate(${lerp(sx, 0, k)}px, ${lerp(sy, ty, k)}px) scale(${lerp(.55, 1, k)})`;
+      d.style.opacity = clamp(prog(t, at, at + .2));
+    });
+    const o = ease(prog(t, 19.4, 20.4));
+    $("orders").style.opacity = o;
+    $("orders").style.transform = `translateY(${(1 - o) * 120}px) perspective(1800px) rotateX(${(1 - o) * 14}deg)`;
+    $("queue").style.opacity = 1 - o;
+    ["l0", "l1", "l2"].forEach((id) => { $(id).style.opacity = Math.min(+$(id).style.opacity, 1 - o); });
+    document.querySelector("#s2 .head").style.opacity = Math.min(+document.querySelector("#s2 .head").style.opacity, 1 - o);
+  }
+
+  // 3. POS screen, then a receipt prints out of the printer.
+  if (sc === 3) {
+    rise(document.querySelector("#s3 .kick"), out(prog(t, 22.4, 23)), 16);
+    const p = out(prog(t, 22.3, 23.2));
+    $("pos").style.opacity = p; $("pos").style.transform = `translateX(${(1 - p) * -80}px)`;
+    $("printer").style.opacity = out(prog(t, 23.2, 23.6));
+    const lines = prog(t, 24.2, 28.6);
+    const h = $("receipt").firstElementChild.offsetHeight;
+    $("receipt").style.height = `${Math.round(h * lines)}px`;
+  }
+
+  // 4. Cylinders fill to today's stock, then the Inventory screen rises.
+  if (sc === 4) {
+    rise(document.querySelector("#s4 .kick"), out(prog(t, 30.4, 31)), 16);
+    rise(document.querySelector("#s4 .head"), out(prog(t, 30.6, 31.4)));
+    cyls.forEach(({ c, n, fill, num, tag }, i) => {
+      const k = out(prog(t, 31.2 + i * .25, 31.8 + i * .25));
+      c.style.opacity = k; c.style.transform = `translateY(${(1 - k) * 60}px)`;
+      const f = ease(prog(t, 31.8 + i * .3, 33.8 + i * .3));
+      fill.style.height = `${f * n}%`;
+      num.textContent = Math.round(f * n);
+      if (tag) tag.style.opacity = prog(t, 34 + i * .2, 34.4 + i * .2);
+    });
+    const inv = ease(prog(t, 35.0, 36.2));
+    $("cyls").style.opacity = 1 - inv;
+    $("cyls").style.transform = `scale(${lerp(1, .9, inv)}) translateY(${-inv * 60}px)`;
+    $("inventory").style.opacity = inv;
+    $("inventory").style.transform = `translateY(${(1 - inv) * 140}px)`;
+    document.querySelector("#s4 .head").style.opacity = Math.min(+document.querySelector("#s4 .head").style.opacity, 1 - inv);
+  }
+
+  // 5. Report: screen slides in, totals count up, CSV and PDF stamp down.
+  if (sc === 5) {
+    rise(document.querySelector("#s5 .kick"), out(prog(t, 38.4, 39)), 16);
+    rise(document.querySelector("#s5 .head"), out(prog(t, 38.6, 39.4)));
+    const r = out(prog(t, 39.2, 40.2));
+    $("report").style.opacity = r;
+    $("report").style.transform = `translateX(${(1 - r) * 200}px) perspective(2000px) rotateY(${lerp(-18, -8, r)}deg)`;
+    rise($("st0"), out(prog(t, 40.2, 40.8))); rise($("st1"), out(prog(t, 40.6, 41.2)));
+    $("n-sales").textContent = peso(Math.round(2325 * ease(prog(t, 40.4, 42.2))));
+    $("n-orders").textContent = Math.round(2 * ease(prog(t, 40.8, 41.8)));
+    ["b0", "b1"].forEach((id, i) => { const k = back(prog(t, 42.6 + i * .5, 43 + i * .5)); $(id).style.opacity = clamp(k); $(id).style.transform = `rotate(${i ? 5 : -5}deg) scale(${lerp(1.8, 1, clamp(k, 0, 1.1))})`; });
+  }
+
+  // 6. Close of day.
+  if (sc === 6) {
+    const e = out(prog(t, 46.5, 47.5));
+    $("end").style.opacity = e;
+    $("end").firstElementChild.style.transform = `scale(${lerp(.94, 1, e)})`;
+    $("end").querySelectorAll(".mods span").forEach((s, i) => rise(s, out(prog(t, 48 + i * .15, 48.5 + i * .15)), 20));
+    rise($("end").querySelector(".by"), out(prog(t, 49.2, 49.8)), 20);
+  }
+
+  // Hazard-stripe wipes on the cuts into the queue, the report and the close.
+  let w = -1300;
+  for (const at of [S[2], S[5], S[6]]) {
+    const k = prog(t, at - .45, at + .45);
+    if (k > 0 && k < 1) w = lerp(-1300, 2300, ease(k));
+  }
+  $("wipe").style.transform = `translateX(${w}px) skewX(-12deg)`;
+
+  // HUD: brand, clock with day progress, scene label.
+  const m = clockAt(t);
+  const hh = Math.floor(m / 60), mm = m % 60;
+  $("time").innerHTML = sc === 1 ? `--:--<span>BEFORE</span>` : `${((hh + 11) % 12) + 1}:${String(mm).padStart(2, "0")}<span>${hh < 12 ? "AM" : "PM"}</span>`;
+  $("dayi").style.width = `${((m - 480) / 600) * 100}%`;
+  $("label").innerHTML = LABELS[sc].replace(/^(\d+)/, "<b>$1</b>");
+  const hud = clamp(prog(t, .4, 1.2));
+  ["brand", "clock", "label"].forEach((id) => { $(id).style.opacity = hud; });
+  $("stage").style.filter = sc === 1 ? "none" : "none";
+  $("fade").style.opacity = Math.max(1 - prog(t, 0, .4), prog(t, DURATION - .9, DURATION));
+}
+
+window.DURATION = DURATION;
+window.POSTER_AT = 26.5; // the counter: POS screen and the printed receipt
+window.render = render;
+render(0);
+if (location.search.includes("play")) {
+  const start = performance.now();
+  const loop = () => { render(((performance.now() - start) / 1000) % DURATION); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>

@@ -326,6 +326,13 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
       status: "internship" as const,
       link: "",
+      video: {
+        mp4: "/videos/newzion-demo.mp4",
+        webm: "/videos/newzion-demo.webm",
+        poster: "/videos/newzion-demo-poster.webp",
+        label: "New Zion LPG product film told as one business day: a running clock from 8 AM to 6 PM follows the first call, the old paper logs at five branches, orders from phone, walk-in and text landing in one queue, a receipt printing at the counter, LPG cylinders filling as stock counts, and the owner's sales report counting up to 2,325 pesos.",
+        caption: "A 55-second film of New Zion's POS + CMS across one business day, from the first call to the owner's report. Shown with demo data.",
+      },
       images: [
         { src: "/images/new-zion-dashboard.webp", width: 1440, height: 682, label: "Business overview", caption: "The admin dashboard: orders, customers, branches and products at a glance, today's new orders and customers, the top-selling cylinder, and the latest orders and registrations. Shown with demo data." },
         { src: "/images/new-zion-orders.webp", width: 1440, height: 682, label: "Order management", caption: "Every order from every branch in one directory, with pending, delivered and cancelled counts, search by customer, code, phone or product, and the branch and cashier behind each sale." },
