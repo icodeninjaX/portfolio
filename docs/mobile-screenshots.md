@@ -85,3 +85,13 @@ The two Garden public-landing captures (`plantpal-mobile-home.webp`, `plantpal-m
 The CoopTracker public sign-in capture (`coop-mobile-login.webp`) was replaced and deleted. The owner sent eight screenshots from the live app on their Android phone, signed in as the cooperative's administrator: Sign in, Dashboard, Current period, Collections, Members, Loans, Shares and Profile. Each was cropped to remove the status bar (rows 0–109) and gesture bar (rows 2360+), resized from 1080 to 780 px and saved as `public/images/coop-mobile-app-*.webp` (780 × 1625).
 
 **Redaction:** the screens list real cooperative members. Every member name other than the owner's was blurred (Gaussian, before cropping) on Collections, Members and Loans, including a name showing faintly through the Loans tab bar. Amounts, shares and statuses are left as captured. The owner's own name is not blurred. No other pixels were edited.
+
+## ATLAS desktop screenshots (2026-10-06)
+
+Supplied by the owner from the ATLAS desktop app, signed in to their own account: Today, Capture, Analyst, Tasks and Money · Accounts. Cropped to remove the Windows title bar (top 33 px) and trimmed to a common 1896 × 992 frame, then resized to 1440 × 754 WebP (quality 86) as `atlas-desktop-{today,capture,analyst,tasks,accounts}.webp`. No redaction: the screens show only the owner's own tasks and balances, published with their approval.
+
+## PlantPal / Garden desktop screenshots (2026-10-06)
+
+Supplied by the owner from the live site, signed in to their own account: two landing-story chapters, Today, Plants and Calendar. All cropped to a common 1888 × 918 frame (dropping the browser's link tooltip at the bottom-left of Today) and resized to 1440 × 700 WebP (quality 86) as `plantpal-desktop-{water,grown,today,plants,calendar}.webp`. **Redaction:** the account email under the user's name in the sidebar is blurred on Today, Plants and Calendar.
+
+Added the same day: Library (signed in), Activity and Gardens as `plantpal-desktop-{library,activity,gardens}.webp`, same crop and size. **Redaction:** the sidebar email on all three; on Gardens, both garden locations and the second garden's name.

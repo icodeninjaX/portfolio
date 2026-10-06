@@ -222,6 +222,11 @@ export const resumeData = {
       ],
       images: [
         { src: "/images/atlas-landing-page.webp", width: 1440, height: 900, label: "Public landing page", caption: "ATLAS's public landing page at atlas.kdvwebsiteservices.com, featuring the System Core and introduction to the personal operating system." },
+        { src: "/images/atlas-desktop-today.webp", width: 1440, height: 754, label: "Today", caption: "Today maps the day into a route: one task to do now, what comes next and later, and how much of the day is already planned." },
+        { src: "/images/atlas-desktop-capture.webp", width: 1440, height: 754, label: "Capture", caption: "Universal Capture turns a plain-language note, photo, document or voice memo into separate cards to review. Nothing is saved until each card is confirmed." },
+        { src: "/images/atlas-desktop-analyst.webp", width: 1440, height: 754, label: "Analyst", caption: "ATLAS Analyst answers questions about your own records, with every figure in an answer checked against its sources." },
+        { src: "/images/atlas-desktop-tasks.webp", width: 1440, height: 754, label: "Tasks", caption: "Tasks keeps today small enough to finish, with time left, next up and overdue at a glance and tabs for upcoming, inbox and completed work." },
+        { src: "/images/atlas-desktop-accounts.webp", width: 1440, height: 754, label: "Money · Accounts", caption: "Accounts shows where the money lives. Every total is an opening balance plus recorded movements, so it can always be explained." },
       ],
     },
     {
@@ -421,7 +426,15 @@ export const resumeData = {
       ],
       images: [
         { src: "/images/plantpal-garden-landing.webp", width: 1440, height: 820, label: "Garden public landing page", caption: "PlantPal's current Garden branding, captured from the public landing page with reduced motion enabled." },
+        { src: "/images/plantpal-desktop-water.webp", width: 1440, height: 700, label: "Landing · a little care", caption: "The scroll-driven landing story: water the seedling and it grows, with a chapter index and daylight and pause controls along the bottom." },
+        { src: "/images/plantpal-desktop-grown.webp", width: 1440, height: 700, label: "Landing · your garden", caption: "The story's last chapter. The seedling has grown into a full plant, with a call to start your own garden or watch it again." },
         { src: "/images/plantpal-garden-library.webp", width: 1440, height: 820, label: "Garden plant library", caption: "The public care-guide library with plant search, experience, and light filters. No signed-in garden or personal records are shown." },
+        { src: "/images/plantpal-desktop-today.webp", width: 1440, height: 700, label: "Today", caption: "Today greets you with the garden at a glance: how many plants, which need water or feeding, and a list of what needs checking with one-tap Watered, Remind tomorrow or Choose a date." },
+        { src: "/images/plantpal-desktop-plants.webp", width: 1440, height: 700, label: "Plants", caption: "Plants is the living collection, searchable and filterable by recorded health and care, with retired plants kept separately." },
+        { src: "/images/plantpal-desktop-calendar.webp", width: 1440, height: 700, label: "Calendar", caption: "Calendar lays out the care moments ahead as an agenda or month view, with planting guidance in its own tab." },
+        { src: "/images/plantpal-desktop-library.webp", width: 1440, height: 700, label: "Library (signed in)", caption: "Inside the app, the plant library has 87 care guides, searchable by name and filtered by plant type, experience and light." },
+        { src: "/images/plantpal-desktop-activity.webp", width: 1440, height: 700, label: "Activity", caption: "Activity is the garden's care log: every watering and feeding in one place, filterable by care type, plant and date range." },
+        { src: "/images/plantpal-desktop-gardens.webp", width: 1440, height: 700, label: "Gardens", caption: "Gardens keeps separate growing spaces, each with its own plants, location and setting. The locations and the second garden's name are blurred." },
       ],
     },
   ],
