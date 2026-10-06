@@ -228,6 +228,9 @@ export const resumeData = {
         { src: "/images/atlas-desktop-analyst.webp", width: 1440, height: 754, label: "Analyst", caption: "ATLAS Analyst answers questions about your own records, with every figure in an answer checked against its sources." },
         { src: "/images/atlas-desktop-tasks.webp", width: 1440, height: 754, label: "Tasks", caption: "Tasks keeps today small enough to finish, with time left, next up and overdue at a glance and tabs for upcoming, inbox and completed work." },
         { src: "/images/atlas-desktop-accounts.webp", width: 1440, height: 754, label: "Money · Accounts", caption: "Accounts shows where the money lives. Every total is an opening balance plus recorded movements, so it can always be explained." },
+        { src: "/images/atlas-desktop-debts.webp", width: 1440, height: 752, label: "Money · Debts", caption: "Debt payoff: what is owed, what it costs each month and the order that clears it soonest, with avalanche, snowball and custom payoff plans compared side by side. Amounts and lender names are blurred." },
+        { src: "/images/atlas-desktop-goals.webp", width: 1440, height: 752, label: "Goals", caption: "Goals track progress automatically from their milestones, with a completion ring, target date and what is up next for each goal." },
+        { src: "/images/atlas-desktop-career.webp", width: 1440, height: 752, label: "Career", caption: "Career keeps every job application tied to a stage, a date and one clear next action, with how far applications get at each stage. Company names, roles and salaries are blurred." },
       ],
     },
     {
