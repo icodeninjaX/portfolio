@@ -7,6 +7,7 @@ import { SimpleToolbar } from "@/components/resume/SimpleToolbar";
 import { ResumeSection } from "@/components/resume/Section";
 import { SimpleFooter } from "@/components/resume/SimpleFooter";
 import { DemoVideo } from "@/components/resume/DemoVideo";
+import { DesktopShowcase } from "@/components/resume/DesktopShowcase";
 import { orderedProjects, projectKind, projectNumber } from "@/components/resume/projects";
 import "../../studio.css";
 import "../../simple.css";
@@ -61,6 +62,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   let n = 0;
   const desktopFigureStart = mobileImages.length;
+  // Shown in the showcase's address bar: the live host, or a neutral label for internal tools.
+  const domain = "domain" in project ? project.domain : "";
+  const host = domain || (project.link ? new URL(project.link).host.replace(/^www\./, "") : `${project.slug}.internal`);
 
   return (
     <div className="portfolio-studio rs rs-case">
@@ -142,17 +146,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             )}
             {project.images.length > 0 && (
               <>
-                {mobileImages.length > 0 && <h3 className="rs-case-subhead">On a desktop</h3>}
-                <div className={project.images.length > 2 ? "rs-case-desktops rs-case-desktops-grid" : "rs-case-desktops"}>
-                  {project.images.map((img, i) => (
-                    <figure key={img.src} className="rs-shot">
-                      <a href={img.src} target="_blank" rel="noopener noreferrer" aria-label={`Open ${img.label} at full size (new tab)`}>
-                        <Image src={img.src} alt={`${project.name}: ${img.label}`} width={img.width} height={img.height} sizes="(max-width: 899px) 92vw, 730px" />
-                      </a>
-                      <figcaption><span>Fig. {projectNumber(desktopFigureStart + i)}</span> {img.label}<small>{img.caption}</small></figcaption>
-                    </figure>
-                  ))}
-                </div>
+                {mobileImages.length > 0 && <h3 className="rs-case-subhead">On a desktop <span>{project.images.length} {project.images.length === 1 ? "view" : "views"}</span></h3>}
+                <DesktopShowcase shots={project.images} name={project.name} host={host} figStart={desktopFigureStart} />
               </>
             )}
           </ResumeSection>
