@@ -200,6 +200,7 @@ export const resumeData = {
       tech: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL"],
       status: "personal" as const,
       stage: "Release candidate",
+      domain: "atlas.kdvwebsiteservices.com",
       link: "",
       source: "https://github.com/icodeninjaX/project-atlas",
       video: {
@@ -407,6 +408,7 @@ export const resumeData = {
         "Provides sub-second care schedule logging with zero framework bloat, making everyday garden logging quick and effortless.",
       tech: ["HTML", "CSS", "JavaScript", "HTMX", "MySQL"],
       status: "personal" as const,
+      domain: "kdv-garden.ct.ws",
       link: "",
       video: {
         mp4: "/videos/plantpal-demo.mp4",
