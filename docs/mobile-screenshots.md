@@ -107,3 +107,5 @@ Supplied by the owner from the live site on a desktop browser: the hero, "Where 
 ## New Z1on LPG POS + CMS desktop screenshots (2026-10-06)
 
 Supplied by the owner from the admin workspace, populated with demo data (Demo Customer One to Four, `DUMMY-CUS` codes, `09170000xxx` numbers, Example Lane addresses) plus two orders under the owner's own name: Business overview, Order management, Customers, Products and Inventory. Cropped to a common 1899 × 900 frame and resized to 1440 × 682 WebP (quality 86) as `new-zion-{dashboard,orders,customers,products,inventory}.webp`. They replace the earlier empty-state captures `new-zion-add-customer.webp` and `new-zion-search-customers.webp`. No redaction needed.
+
+Added the same day: Branches, Sales report and three point-of-sale views (dashboard, customers, new order) as `new-zion-{branches,sales-report,pos-dashboard,pos-customers,pos-order}.webp`, cropped to 1895 × 898 and resized to 1440 × 682. **Redaction:** one real customer's name, code, phone number and street address are blurred on the POS customers list, and the same street address is blurred on Branches.

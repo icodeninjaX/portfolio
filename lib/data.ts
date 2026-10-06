@@ -325,6 +325,11 @@ export const resumeData = {
         { src: "/images/new-zion-customers.webp", width: 1440, height: 682, label: "Customers", caption: "The customer directory keeps contact numbers, delivery addresses with landmarks and each household's tank size together, so phone-in orders can be dispatched without asking twice. Demo customers shown." },
         { src: "/images/new-zion-products.webp", width: 1440, height: 682, label: "Products", caption: "The catalog of cylinders, refills and accessories, with pricing, categories, linked LPG cylinder types and stock across branches." },
         { src: "/images/new-zion-inventory.webp", width: 1440, height: 682, label: "Inventory", caption: "Stock by product and branch: filled and empty cylinders, damaged and lost counts, and transfers between branches." },
+        { src: "/images/new-zion-branches.webp", width: 1440, height: 682, label: "Branches", caption: "The branch network: each location with its address, contact number and operational records, so staff know where every order and cylinder sits. A customer's street address is blurred." },
+        { src: "/images/new-zion-sales-report.webp", width: 1440, height: 682, label: "Sales report", caption: "The owner's report for any date range, branch, cashier or product: completed sales from delivered orders only, with every supporting transaction listed and export to CSV or PDF." },
+        { src: "/images/new-zion-pos-dashboard.webp", width: 1440, height: 682, label: "Point of sale", caption: "The cashier's side is its own focused app: today's customers and orders at a glance, quick actions to add or find a customer and start an order, and recent customers." },
+        { src: "/images/new-zion-pos-customers.webp", width: 1440, height: 682, label: "POS · customers", caption: "Cashiers find a customer by name, mobile number or code and start a new order in one tap. One real customer's details are blurred; the rest are demo records." },
+        { src: "/images/new-zion-pos-order.webp", width: 1440, height: 682, label: "POS · new order", caption: "Building an order: pick the branch to see only its stock, browse by category, add products and place the order with the cashier recorded." },
       ],
     },
     {
