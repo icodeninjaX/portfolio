@@ -426,7 +426,12 @@ export const resumeData = {
       ],
       images: [
         { src: "/images/plantpal-garden-landing.webp", width: 1440, height: 820, label: "Garden public landing page", caption: "PlantPal's current Garden branding, captured from the public landing page with reduced motion enabled." },
+        { src: "/images/plantpal-desktop-water.webp", width: 1440, height: 700, label: "Landing · a little care", caption: "The scroll-driven landing story: water the seedling and it grows, with a chapter index and daylight and pause controls along the bottom." },
+        { src: "/images/plantpal-desktop-grown.webp", width: 1440, height: 700, label: "Landing · your garden", caption: "The story's last chapter. The seedling has grown into a full plant, with a call to start your own garden or watch it again." },
         { src: "/images/plantpal-garden-library.webp", width: 1440, height: 820, label: "Garden plant library", caption: "The public care-guide library with plant search, experience, and light filters. No signed-in garden or personal records are shown." },
+        { src: "/images/plantpal-desktop-today.webp", width: 1440, height: 700, label: "Today", caption: "Today greets you with the garden at a glance: how many plants, which need water or feeding, and a list of what needs checking with one-tap Watered, Remind tomorrow or Choose a date." },
+        { src: "/images/plantpal-desktop-plants.webp", width: 1440, height: 700, label: "Plants", caption: "Plants is the living collection, searchable and filterable by recorded health and care, with retired plants kept separately." },
+        { src: "/images/plantpal-desktop-calendar.webp", width: 1440, height: 700, label: "Calendar", caption: "Calendar lays out the care moments ahead as an agenda or month view, with planting guidance in its own tab." },
       ],
     },
   ],

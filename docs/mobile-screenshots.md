@@ -89,3 +89,7 @@ The CoopTracker public sign-in capture (`coop-mobile-login.webp`) was replaced a
 ## ATLAS desktop screenshots (2026-10-06)
 
 Supplied by the owner from the ATLAS desktop app, signed in to their own account: Today, Capture, Analyst, Tasks and Money · Accounts. Cropped to remove the Windows title bar (top 33 px) and trimmed to a common 1896 × 992 frame, then resized to 1440 × 754 WebP (quality 86) as `atlas-desktop-{today,capture,analyst,tasks,accounts}.webp`. No redaction: the screens show only the owner's own tasks and balances, published with their approval.
+
+## PlantPal / Garden desktop screenshots (2026-10-06)
+
+Supplied by the owner from the live site, signed in to their own account: two landing-story chapters, Today, Plants and Calendar. All cropped to a common 1888 × 918 frame (dropping the browser's link tooltip at the bottom-left of Today) and resized to 1440 × 700 WebP (quality 86) as `plantpal-desktop-{water,grown,today,plants,calendar}.webp`. **Redaction:** the account email under the user's name in the sidebar is blurred on Today, Plants and Calendar.
