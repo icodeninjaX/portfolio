@@ -12,6 +12,8 @@ nothing to license. Each score is timed to its video's scenes.
             electric-piano groove that lifts at each service.
   newzion   a ticking clock under plucked strings, a minor 'before', then a
             bright G major groove with a counter bell on every order.
+  tracky    a lo-fi beat with vinyl crackle, swung hats and mellow keys on
+            jazzy sevenths.
   plantpal  warm and organic: D major pentatonic kalimba in 3/4, a soft pad
             and wind, a chime as each specimen is pressed, a harp gliss as
             the flower blooms.
@@ -461,7 +463,71 @@ def newzion(T):
     return reverb(tr.buf, 1.8, 0.24)
 
 
-SCORES = {"atlas": atlas, "coop": coop, "plantpal": plantpal, "kdv": kdv, "newzion": newzion}
+def tracky(T):
+    """Bar-locked to tracky.html (96 bpm, scenes at 0, 5, 12.5, 20, 25, 30,
+    37.5 s): a lo-fi beat with vinyl crackle, swung hats and mellow sine keys
+    on jazzy sevenths; a soft swell on every mint wipe and a resolve at the
+    end."""
+    tr = Track(T)
+    beat = 60 / 96
+    bar = 4 * beat
+    # Vinyl crackle throughout.
+    n = int(T * SR)
+    crackle = np.zeros(n)
+    idx = rng.integers(0, n, int(T * 60))
+    crackle[idx] = rng.uniform(-1, 1, len(idx))
+    crackle = crackle - lowpass_fast(crackle, 1200)
+    hiss = rng.standard_normal(n) * 0.015
+    tr.add(lowpass_fast(crackle + hiss, 7000), 0, 0.35)
+
+    def keys(m, dur, gain, at):
+        t = t_axis(dur)
+        f = hz(m)
+        sig = (np.sin(2 * np.pi * f * t) + 0.3 * np.sin(4 * np.pi * f * t)) * np.exp(-1.2 * t)
+        sig *= env(len(t), a=0.01, d=0.1, s=1, r=0.3)
+        tr.add(sig, at, gain)
+
+    # Opening: just keys and crackle under the question.
+    for j, m in enumerate([57, 60, 64, 67]):
+        keys(m, 4.5, 0.09, 0.3 + j * 0.08)
+    tr.add(pad([45, 57, 60, 64, 67], 5.2, shape="tri", cutoff=1100), 0, 0.45)
+    # Am9 - Dm9 - G13 - Cmaj9, one chord per bar, from the river onward.
+    chords = [[57, 60, 64, 67, 71], [50, 53, 57, 60, 64], [55, 59, 62, 64, 65], [48, 52, 55, 59, 62]]
+    roots = [33, 26, 31, 24]
+    t0, k = 5.0, 0
+    end = 37.5
+    while t0 < end - 0.01:
+        c = chords[k % 4]
+        for j, m in enumerate(c):
+            keys(m + 12 if j else m, bar, 0.075, t0 + j * 0.03)
+        tr.add(sub(roots[k % 4] + 12, bar * 0.95), t0, 0.3)
+        for b in range(4):
+            at = t0 + b * beat
+            if b in (0, 2) or (b == 3 and k % 2):
+                tr.add(kick(0.4), at + (beat / 2 if b == 3 else 0), 0.36)
+            if b in (1, 3):
+                tr.add(noise_hit(0.16, 2400, 22), at, 0.09, pan=-0.05)
+            for s in (0, 1):  # swung eighths
+                tr.add(noise_hit(0.03, 9000, 140), at + s * beat * 0.62, 0.035 if s else 0.05, pan=0.4)
+        if k % 2 == 1:  # a short melodic answer every other bar
+            for j, m in enumerate([c[4] + 12, c[3] + 12, c[2] + 12]):
+                keys(m, 0.9, 0.06, t0 + 2 * beat + j * beat / 2)
+        t0 += bar
+        k += 1
+    # A soft swell into every mint wipe.
+    for at in (5, 12.5, 20, 25, 30, 37.5):
+        m = int(0.6 * SR)
+        sw = rng.standard_normal(m) * np.linspace(0, 1, m) ** 2
+        tr.add(lowpass_fast(sw, 3000), at - 0.6, 0.05)
+    # End: Cmaj9 resolve with a gentle tail.
+    tr.add(pad([48, 55, 59, 62, 64, 67], T - end, shape="tri", cutoff=1500), end, 0.3)
+    for j, m in enumerate([72, 76, 79, 83]):
+        keys(m, 3.5, 0.08, end + 0.4 + j * 0.25)
+    tr.add(sub(24 + 12, T - end), end, 0.18)
+    return reverb(tr.buf, 1.6, 0.2)
+
+
+SCORES = {"atlas": atlas, "coop": coop, "plantpal": plantpal, "kdv": kdv, "newzion": newzion, "tracky": tracky}
 
 
 def main():

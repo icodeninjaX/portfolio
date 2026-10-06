@@ -367,6 +367,13 @@ export const resumeData = {
       tech: ["React", "TypeScript", "Tailwind CSS", "Supabase"],
       status: "personal" as const,
       link: "https://budget-tracker-two-inky.vercel.app/",
+      video: {
+        mp4: "/videos/tracky-demo.mp4",
+        webm: "/videos/tracky-demo.webm",
+        poster: "/videos/tracky-demo-poster.webp",
+        label: "TRACKY product film that answers 'Where did my money go?': income of 112,684 pesos flows like a river into loan, food, personal and other spending with 7,919 pesos left over, then pours into the app, followed by budget rings, a savings goal filling to 50 percent and the AI advisor's answer.",
+        caption: "A 45-second film of TRACKY as a money river: where the income went, then budgets, savings and the AI advisor, using the app's own figures.",
+      },
       mobileNote: "Captured from the live app at phone width, signed in to Keith's own account.",
       mobileImages: [
         { src: "/images/tracky-mobile-dashboard.webp", width: 700, height: 1392, label: "Dashboard · phone", alt: "Tracky dashboard on a phone in the Classic layout: total balance of 7,919 pesos, all-time income and expenses, and a positive cash flow note.", caption: "Dashboard. Total balance with all-time income and expenses, a period-health note, and a Classic, Focus or Bento layout switch." },

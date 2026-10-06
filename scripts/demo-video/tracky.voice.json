@@ -1,0 +1,12 @@
+{
+  "voice": "higgsfield/seed_audio/Holden",
+  "lines": [
+    { "at": 1.6, "text": "Where did my money go?", "file": "voice/tracky/line-0.ogg" },
+    { "at": 5.4, "text": "Tracky follows every peso: what came in, where it went, and what was left.", "file": "voice/tracky/line-1.ogg" },
+    { "at": 13.0, "text": "Every transaction lands in one place, sorted by day and by category.", "file": "voice/tracky/line-2.ogg" },
+    { "at": 20.4, "text": "Budgets keep each category in check, before the month runs away.", "file": "voice/tracky/line-3.ogg" },
+    { "at": 25.4, "text": "Savings goals show how far you've come, and how far there is to go.", "file": "voice/tracky/line-4.ogg" },
+    { "at": 30.4, "text": "And the AI advisor turns your own activity into plain answers.", "file": "voice/tracky/line-5.ogg" },
+    { "at": 38.2, "text": "Tracky. A little more in control. Built by Keith Vergara.", "file": "voice/tracky/line-6.ogg" }
+  ]
+}
