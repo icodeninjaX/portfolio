@@ -1,12 +1,12 @@
 {
   "voice": "higgsfield/seed_audio/Ainsley",
   "lines": [
-    { "at": 0.6, "text": "Eight in the morning. The first order of the day comes in.", "file": "voice/newzion/line-0.ogg" },
-    { "at": 6.2, "text": "Orders arrived by phone, by walk-in, and by text, and every branch kept its own paper log.", "file": "voice/newzion/line-1.ogg" },
-    { "at": 14.6, "text": "Now every order, from every branch, lands in one queue.", "file": "voice/newzion/line-2.ogg" },
-    { "at": 22.6, "text": "At the counter, the cashier picks the branch, sees what's in stock, and places the order.", "file": "voice/newzion/line-3.ogg" },
-    { "at": 30.6, "text": "Every cylinder is counted, filled or empty, across all five branches.", "file": "voice/newzion/line-4.ogg" },
-    { "at": 38.6, "text": "And by evening, the owner pulls the sales report for any date range, without asking anyone.", "file": "voice/newzion/line-5.ogg" },
-    { "at": 46.8, "text": "New Zion LPG. Point of sale and CMS, built by Keith Vergara.", "file": "voice/newzion/line-6.ogg" }
+    { "at": 0.6, "text": "Eight in the morning. The first order of the day comes in.", "file": "voice/newzion/line-0.flac" },
+    { "at": 6.2, "text": "Orders arrived by phone, by walk-in, and by text, and every branch kept its own paper log.", "file": "voice/newzion/line-1.flac" },
+    { "at": 14.6, "text": "Now every order, from every branch, lands in one queue.", "file": "voice/newzion/line-2.flac" },
+    { "at": 22.6, "text": "At the counter, the cashier picks the branch, sees what's in stock, and places the order.", "file": "voice/newzion/line-3.flac" },
+    { "at": 30.6, "text": "Every cylinder is counted, filled or empty, across all five branches.", "file": "voice/newzion/line-4.flac" },
+    { "at": 38.6, "text": "And by evening, the owner pulls the sales report for any date range, without asking anyone.", "file": "voice/newzion/line-5.flac" },
+    { "at": 46.8, "text": "New Zion LPG. Point of sale and CMS, built by Keith Vergara.", "file": "voice/newzion/line-6.flac" }
   ]
 }
