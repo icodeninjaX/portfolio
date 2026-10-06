@@ -1,33 +1,13 @@
 {
   "voice": "en_US-joe-medium",
   "lines": [
-    {
-      "at": 0.7,
-      "text": "CoopTracker. Cooperative finance, without the spreadsheets."
-    },
-    {
-      "at": 4.9,
-      "text": "Members, collections, loans and dividends live in one place, always reconciled."
-    },
-    {
-      "at": 11.0,
-      "text": "See the whole co-op at a glance, and exactly who has paid this period."
-    },
-    {
-      "at": 15.9,
-      "text": "Mark collections, and track each member's shares and capital."
-    },
-    {
-      "at": 20.9,
-      "text": "Follow every loan to the last peso, then share the interest pool fairly."
-    },
-    {
-      "at": 26.4,
-      "text": "Dividends are computed, not guessed, and tested before they're saved."
-    },
-    {
-      "at": 31.3,
-      "text": "CoopTracker. Designed and built by Keith Vergara."
-    }
+    { "at": 2.3, "text": "CoopTracker. Cooperative finance, without the spreadsheets." },
+    { "at": 6.5, "text": "One place for members, loans and dividends, always reconciled." },
+    { "at": 10.9, "text": "The dashboard shows the whole co-op, and who has paid this period." },
+    { "at": 15.2, "text": "Mark collections, and see each member's shares and capital." },
+    { "at": 19.4, "text": "Follow every loan to the last peso, then share out the interest." },
+    { "at": 23.65, "text": "The interest pool, divided by every eligible share." },
+    { "at": 27.3, "text": "Computed, not guessed, and tested before it's saved." },
+    { "at": 30.8, "text": "CoopTracker. Designed and built by Keith Vergara." }
   ]
 }
