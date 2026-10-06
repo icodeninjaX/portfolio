@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { LuArrowLeft, LuArrowRight, LuArrowUpRight } from "react-icons/lu";
 import { resumeData } from "@/lib/data";
 import { SimpleToolbar } from "@/components/resume/SimpleToolbar";
@@ -8,6 +7,7 @@ import { ResumeSection } from "@/components/resume/Section";
 import { SimpleFooter } from "@/components/resume/SimpleFooter";
 import { DemoVideo } from "@/components/resume/DemoVideo";
 import { DesktopShowcase } from "@/components/resume/DesktopShowcase";
+import { PhoneShowcase } from "@/components/resume/PhoneShowcase";
 import { orderedProjects, projectKind, projectNumber } from "@/components/resume/projects";
 import "../../studio.css";
 import "../../simple.css";
@@ -125,23 +125,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             {mobileImages.length > 0 && (
               <>
                 <h3 className="rs-case-subhead">On a phone <span>{mobileImages.length} {mobileImages.length === 1 ? "view" : "views"}</span></h3>
-                {/* Phone views as devices on a stage (a swipeable row on phones); the longer notes sit below. */}
-                <div className={mobileImages.length > 3 ? "rs-devices rs-devices-many" : "rs-devices"}>
-                  {mobileImages.map((img, i) => (
-                    <figure key={img.src} className="rs-device">
-                      <a href={img.src} target="_blank" rel="noopener noreferrer" aria-label={`Open ${img.label} at full size (new tab)`}>
-                        <span className="rs-device-frame">
-                          <Image src={img.src} alt={img.alt} width={img.width} height={img.height} sizes="(max-width: 639px) 62vw, 230px" />
-                        </span>
-                      </a>
-                      <figcaption><span>{projectNumber(i)}</span> {deviceLabel(img.label)}</figcaption>
-                    </figure>
-                  ))}
-                </div>
-                {"mobileNote" in project && project.mobileNote && <p className="rs-note rs-device-source">{project.mobileNote}</p>}
-                <ol className="rs-device-notes" aria-label="Notes on the phone views">
-                  {mobileImages.map((img, i) => <li key={img.src}><span>Fig. {projectNumber(i)}</span>{img.caption}</li>)}
-                </ol>
+                <PhoneShowcase
+                  screens={mobileImages.map((img) => ({ ...img, label: deviceLabel(img.label) }))}
+                  name={project.name}
+                  note={"mobileNote" in project && project.mobileNote ? project.mobileNote : undefined}
+                />
               </>
             )}
             {project.images.length > 0 && (

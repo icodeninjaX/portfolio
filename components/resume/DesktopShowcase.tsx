@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { LuArrowLeft, LuArrowRight, LuArrowUpRight } from "react-icons/lu";
+import { useSnapCarousel } from "./useSnapCarousel";
 
 type Shot = { src: string; width: number; height: number; label: string; caption: string };
 
@@ -12,9 +13,8 @@ type Shot = { src: string; width: number; height: number; label: string; caption
 // Without JS it is still a native horizontal scroller; in print every
 // screenshot is listed (see the print rules in simple.css).
 export function DesktopShowcase({ shots, name, host, figStart }: { shots: Shot[]; name: string; host: string; figStart: number }) {
-  const viewport = useRef<HTMLDivElement>(null);
+  const { viewport, active, go, step, onKeyDown } = useSnapCarousel(shots.length);
   const rail = useRef<HTMLOListElement>(null);
-  const [active, setActive] = useState(0);
   const many = shots.length > 1;
   const pad = (n: number) => String(n).padStart(2, "0");
   const fig = (i: number) => pad(figStart + i + 1);
@@ -22,44 +22,6 @@ export function DesktopShowcase({ shots, name, host, figStart }: { shots: Shot[]
   // The window keeps one shape per project: the median screenshot ratio.
   const ratios = shots.map((s) => s.width / s.height).sort((a, b) => a - b);
   const ratio = ratios[Math.floor(ratios.length / 2)];
-
-  // Where the viewport is heading. Arrows and keys step from here rather than
-  // from `active`, so quick repeated presses never lose a step mid-scroll.
-  const target = useRef(0);
-
-  const go = useCallback((i: number) => {
-    const el = viewport.current;
-    if (!el) return;
-    const next = (i + shots.length) % shots.length;
-    target.current = next;
-    const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
-    el.scrollTo({ left: next * el.clientWidth, behavior: smooth ? "smooth" : "auto" });
-  }, [shots.length]);
-
-  // Active slide follows the scroll position, so swipes, buttons and keys agree.
-  useEffect(() => {
-    const el = viewport.current;
-    if (!el) return;
-    let frame = 0;
-    let settle = 0;
-    const index = () => Math.round(el.scrollLeft / Math.max(1, el.clientWidth));
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => setActive(index()));
-      // Once a swipe comes to rest, steps continue from where it landed.
-      clearTimeout(settle);
-      settle = window.setTimeout(() => { target.current = index(); }, 150);
-    };
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => { el.removeEventListener("scroll", onScroll); cancelAnimationFrame(frame); clearTimeout(settle); };
-  }, []);
-
-  // Print lists every screenshot, so load the ones nobody has swiped to yet.
-  useEffect(() => {
-    const eager = () => viewport.current?.querySelectorAll("img").forEach((img) => { img.loading = "eager"; });
-    window.addEventListener("beforeprint", eager);
-    return () => window.removeEventListener("beforeprint", eager);
-  }, []);
 
   // Keep the current thumbnail in view inside the filmstrip.
   useEffect(() => {
@@ -70,16 +32,11 @@ export function DesktopShowcase({ shots, name, host, figStart }: { shots: Shot[]
     strip.scrollTo({ left, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   }, [active]);
 
-  const onKey = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowRight") { e.preventDefault(); go(target.current + 1); }
-    if (e.key === "ArrowLeft") { e.preventDefault(); go(target.current - 1); }
-  };
-
-  const current = shots[Math.min(active, shots.length - 1)];
+  const current = shots[active];
   const path = current.label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
   return (
-    <div className="rs-showcase" role="region" aria-roledescription="carousel" aria-label={`${name} on a desktop`} onKeyDown={onKey}>
+    <div className="rs-showcase" role="region" aria-roledescription="carousel" aria-label={`${name} on a desktop`} onKeyDown={onKeyDown}>
       <div className={many ? "rs-window rs-window-stacked" : "rs-window"}>
         <div className="rs-window-bar" aria-hidden="true">
           <span className="rs-window-lights"><i /><i /><i /></span>
@@ -99,8 +56,8 @@ export function DesktopShowcase({ shots, name, host, figStart }: { shots: Shot[]
         </div>
         {many && (
           <>
-            <button type="button" className="rs-window-nav rs-window-prev" onClick={() => go(target.current - 1)} aria-label="Previous screenshot"><LuArrowLeft aria-hidden="true" /></button>
-            <button type="button" className="rs-window-nav rs-window-next" onClick={() => go(target.current + 1)} aria-label="Next screenshot"><LuArrowRight aria-hidden="true" /></button>
+            <button type="button" className="rs-window-nav rs-window-prev" onClick={() => step(-1)} aria-label="Previous screenshot"><LuArrowLeft aria-hidden="true" /></button>
+            <button type="button" className="rs-window-nav rs-window-next" onClick={() => step(1)} aria-label="Next screenshot"><LuArrowRight aria-hidden="true" /></button>
           </>
         )}
       </div>
