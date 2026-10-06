@@ -320,8 +320,11 @@ export const resumeData = {
       status: "internship" as const,
       link: "",
       images: [
-        { src: "/images/new-zion-add-customer.webp", width: 1909, height: 921, label: "Customer registration", caption: "Existing New Zion POS screenshot from the KDV case study, showing the empty customer form and location fields." },
-        { src: "/images/new-zion-search-customers.webp", width: 1901, height: 921, label: "Customer search", caption: "Existing New Zion POS screenshot from the KDV case study, showing the search interface before any customer records are displayed." },
+        { src: "/images/new-zion-dashboard.webp", width: 1440, height: 682, label: "Business overview", caption: "The admin dashboard: orders, customers, branches and products at a glance, today's new orders and customers, the top-selling cylinder, and the latest orders and registrations. Shown with demo data." },
+        { src: "/images/new-zion-orders.webp", width: 1440, height: 682, label: "Order management", caption: "Every order from every branch in one directory, with pending, delivered and cancelled counts, search by customer, code, phone or product, and the branch and cashier behind each sale." },
+        { src: "/images/new-zion-customers.webp", width: 1440, height: 682, label: "Customers", caption: "The customer directory keeps contact numbers, delivery addresses with landmarks and each household's tank size together, so phone-in orders can be dispatched without asking twice. Demo customers shown." },
+        { src: "/images/new-zion-products.webp", width: 1440, height: 682, label: "Products", caption: "The catalog of cylinders, refills and accessories, with pricing, categories, linked LPG cylinder types and stock across branches." },
+        { src: "/images/new-zion-inventory.webp", width: 1440, height: 682, label: "Inventory", caption: "Stock by product and branch: filled and empty cylinders, damaged and lost counts, and transfers between branches." },
       ],
     },
     {

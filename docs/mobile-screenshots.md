@@ -103,3 +103,7 @@ Supplied by the owner from an Android phone on the live site: the hero, "Where i
 ## KDV Website Services desktop screenshots (2026-10-06)
 
 Supplied by the owner from the live site on a desktop browser: the hero, "Where it starts", "Paper to system", "The front door" and "The control room". Cropped to a common 1894 × 900 frame and resized to 1440 × 684 WebP (quality 86) as `kdv-desktop-{home,problem,new-zion,websites,dashboards}.webp`; they replace the earlier `kdv-website-services-home.webp`. **Redaction:** on Paper to system, the customer names in Latest Orders and New Customers on the New Zion dashboard are blurred; on The control room, the campaign details in the 371admin notifications panel are blurred. The site's chat button is visible in the corner.
+
+## New Z1on LPG POS + CMS desktop screenshots (2026-10-06)
+
+Supplied by the owner from the admin workspace, populated with demo data (Demo Customer One to Four, `DUMMY-CUS` codes, `09170000xxx` numbers, Example Lane addresses) plus two orders under the owner's own name: Business overview, Order management, Customers, Products and Inventory. Cropped to a common 1899 × 900 frame and resized to 1440 × 682 WebP (quality 86) as `new-zion-{dashboard,orders,customers,products,inventory}.webp`. They replace the earlier empty-state captures `new-zion-add-customer.webp` and `new-zion-search-customers.webp`. No redaction needed.
