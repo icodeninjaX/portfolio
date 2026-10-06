@@ -12,6 +12,11 @@
 // Voices are Piper models (<voice>.onnx + .onnx.json). Missing ones are
 // downloaded from huggingface.co/rhasspy/piper-voices. Use only voices whose
 // model card allows this kind of use: en_US-joe-medium is CC0.
+//
+// A line with a "file" (relative to this folder) uses that recorded clip
+// instead of Piper, e.g. voice lines generated elsewhere (kdv.voice.json uses
+// clips from Higgsfield, kept in voice/kdv/). Piper is only needed when at
+// least one line has no file.
 import { execFileSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
@@ -33,10 +38,11 @@ const work = mkdtempSync(path.join(tmpdir(), `${name}-voice-`));
 const run = (cmd, args, opts = {}) => execFileSync(cmd, args, { stdio: ["pipe", "pipe", "inherit"], ...opts });
 const seconds = (file) => Number(run("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]).toString().trim());
 
-// 1. Voice model.
-mkdirSync(voices, { recursive: true });
+// 1. Voice model (only when some line is spoken by Piper).
+const needsPiper = lines.some((line) => !line.file);
 const model = path.join(voices, `${voice}.onnx`);
-for (const file of [model, `${model}.json`]) {
+if (needsPiper) mkdirSync(voices, { recursive: true });
+for (const file of needsPiper ? [model, `${model}.json`] : []) {
   if (existsSync(file)) continue;
   const [lang, speaker, quality] = [voice.split("_")[0], voice.split("-")[1], voice.split("-")[2]];
   const url = `https://huggingface.co/rhasspy/piper-voices/resolve/main/${lang}/${voice.split("-")[0]}/${speaker}/${quality}/${path.basename(file)}`;
@@ -47,8 +53,8 @@ for (const file of [model, `${model}.json`]) {
 // 2. Speak each line and check it fits before the next one (and the video's end).
 const duration = seconds(video(".mp4"));
 const clips = lines.map((line, i) => {
-  const wav = path.join(work, `line-${i}.wav`);
-  run(piper, ["-m", model, "-f", wav, "--sentence-silence", "0.15"], { input: line.text });
+  const wav = line.file ? path.join(here, line.file) : path.join(work, `line-${i}.wav`);
+  if (!line.file) run(piper, ["-m", model, "-f", wav, "--sentence-silence", "0.15"], { input: line.text });
   const len = seconds(wav);
   const limit = (lines[i + 1]?.at ?? duration - 0.3) - 0.15;
   const end = line.at + len;
