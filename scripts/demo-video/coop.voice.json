@@ -1,13 +1,45 @@
 {
-  "voice": "en_US-joe-medium",
+  "voice": "higgsfield/seed_audio/Brielle",
   "lines": [
-    { "at": 2.3, "text": "CoopTracker. Cooperative finance, without the spreadsheets." },
-    { "at": 6.5, "text": "One place for members, loans and dividends, always reconciled." },
-    { "at": 10.9, "text": "The dashboard shows the whole co-op, and who has paid this period." },
-    { "at": 15.2, "text": "Mark collections, and see each member's shares and capital." },
-    { "at": 19.4, "text": "Follow every loan to the last peso, then share out the interest." },
-    { "at": 23.65, "text": "The interest pool, divided by every eligible share." },
-    { "at": 27.3, "text": "Computed, not guessed, and tested before it's saved." },
-    { "at": 30.8, "text": "CoopTracker. Designed and built by Keith Vergara." }
+    {
+      "at": 2.3,
+      "text": "Coop Tracker. Co-op finance, without the spreadsheets.",
+      "file": "voice/coop/line-0.ogg"
+    },
+    {
+      "at": 6.5,
+      "text": "One place for members, loans and dividends.",
+      "file": "voice/coop/line-1.ogg"
+    },
+    {
+      "at": 10.9,
+      "text": "The dashboard shows the whole co-op, and who has paid this period.",
+      "file": "voice/coop/line-2.ogg"
+    },
+    {
+      "at": 15.2,
+      "text": "Mark collections, and see every member's shares.",
+      "file": "voice/coop/line-3.ogg"
+    },
+    {
+      "at": 19.4,
+      "text": "Follow every loan, then share out the interest.",
+      "file": "voice/coop/line-4.ogg"
+    },
+    {
+      "at": 22.6,
+      "text": "The interest pool, divided by every eligible share.",
+      "file": "voice/coop/line-5.ogg"
+    },
+    {
+      "at": 26.8,
+      "text": "Computed, not guessed, and tested first.",
+      "file": "voice/coop/line-6.ogg"
+    },
+    {
+      "at": 31.25,
+      "text": "Coop Tracker. Designed and built by Keith Vergara.",
+      "file": "voice/coop/line-7.ogg"
+    }
   ]
 }
