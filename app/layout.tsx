@@ -85,7 +85,7 @@ function JsonLd() {
     name: "Keith Vergara",
     jobTitle: "Full-Stack Web Developer",
     url: siteUrl,
-    email: "mailto:kdv062997@gmail.com",
+    email: "mailto:keithvergara1997@gmail.com",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Las Pinas City",

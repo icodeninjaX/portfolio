@@ -17,7 +17,7 @@ export const resumeData = {
   title: "Full-Stack Web Developer",
   introduction: "I build practical software, from business systems to AI-powered tools.",
   location: "Las Piñas City, Philippines",
-  email: "kdv062997@gmail.com",
+  email: "keithvergara1997@gmail.com",
   phone: "0955-558-3927",
   website: "",
   github: "github.com/icodeninjaX",
