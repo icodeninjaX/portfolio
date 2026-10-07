@@ -85,7 +85,7 @@ export function SiliconSection({ data }: { data: Data }) {
           </p>
           <ul className="stack-facts">
             <li>
-              <span>NC II</span>Hardware servicing and networking
+              <span>NC II</span>Computer programming and hardware servicing
             </li>
             <li>
               <span>NC IV</span>Computer programming
