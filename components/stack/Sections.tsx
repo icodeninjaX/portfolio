@@ -212,11 +212,6 @@ export function ProjectSection({ project, index, total }: { project: Project; in
                   Live <span aria-hidden>↗</span>
                 </a>
               )}
-              {project.source && (
-                <a href={project.source} target="_blank" rel="noopener noreferrer" className="stack-link stack-link--ghost">
-                  Source <span aria-hidden>&#8599;</span>
-                </a>
-              )}
             </div>
           </div>
         </article>
