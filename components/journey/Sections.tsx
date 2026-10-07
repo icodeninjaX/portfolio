@@ -28,7 +28,7 @@ function headline(title: string) {
 }
 
 export function TrailheadSection({ data }: { data: Data }) {
-  const now = data.experience[0];
+  const latest = data.experience[0];
   return (
     <section id="top" data-stage className="stack-section stack-section--hero" aria-label="Introduction">
       <div className="stack-sticky">
@@ -63,8 +63,8 @@ export function TrailheadSection({ data }: { data: Data }) {
                 <dd>{String(data.journey.length).padStart(2, "0")} so far</dd>
               </div>
               <div>
-                <dt>Current stretch</dt>
-                <dd>{now.company.replace(" Inc.", "")}</dd>
+                <dt>Last stretch</dt>
+                <dd>{latest.company.replace(" Inc.", "")}</dd>
               </div>
             </dl>
           </div>
