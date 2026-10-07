@@ -98,7 +98,7 @@ export const resumeData = {
 
   certifications: [
     { name: "NC II", detail: "Computer Programming and Hardware Servicing", issuer: "TESDA · Vocational program", year: "2014–2016" },
-    { name: "NC IV", detail: "Computer programming (Java, Turbo C, VB6)", issuer: "TESDA · Vocational program", year: "2014–2016" },
+    { name: "NC IV", detail: "Programming", issuer: "TESDA · Vocational program", year: "2014–2016" },
   ],
 
   journey: [

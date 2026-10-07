@@ -88,7 +88,7 @@ export function SiliconSection({ data }: { data: Data }) {
               <span>NC II</span>Computer programming and hardware servicing
             </li>
             <li>
-              <span>NC IV</span>Computer programming
+              <span>NC IV</span>Programming
             </li>
           </ul>
         </article>
