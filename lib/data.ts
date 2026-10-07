@@ -53,7 +53,7 @@ export const resumeData = {
       role: "Full-Stack Web Developer",
       location: "",
       startDate: "Dec 2024",
-      endDate: "Present",
+      endDate: "Aug 2026",
       description: "Building a real-time device monitoring platform with dashboard interfaces for order tracking, ads management, and GPS-based device location mapping.",
       tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
       highlights: [
