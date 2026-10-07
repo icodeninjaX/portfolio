@@ -105,7 +105,7 @@ export const resumeData = {
     {
       year: "2014–2016",
       title: "Vocational Foundation: Hardware to Code (NC II & NC IV)",
-      description: "Where my path in tech truly began. Completed a 2-year vocational program that taught me computers from the ground up, starting with how the hardware works, how to fix it, and how networks connect everything together (NC II). From there, I moved into actual programming with languages like Java, Turbo C, and Visual Basic 6.0, learning how to think in logic before writing a single line of code (NC IV). It gave me the kind of foundation most developers skip, understanding the full picture from the physical machine all the way up to the software running on it.",
+      description: "Where my path in tech truly began. Completed a 2-year vocational program that taught me computers from the ground up, earning my NC II in Computer Programming and Hardware Servicing: how the hardware works, how to fix it, how networks connect everything together, and my first real code. From there, I went deeper into programming with languages like Java, Turbo C, and Visual Basic 6.0, learning how to think in logic before writing a single line of code (NC IV). It gave me the kind of foundation most developers skip, understanding the full picture from the physical machine all the way up to the software running on it.",
       kit: ["Hardware servicing", "Networking", "Java", "Turbo C", "VB6"],
     },
     {
