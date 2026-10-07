@@ -202,7 +202,6 @@ export const resumeData = {
       stage: "Release candidate",
       domain: "atlas.kdvwebsiteservices.com",
       link: "",
-      source: "https://github.com/icodeninjaX/project-atlas",
       video: {
         mp4: "/videos/atlas-demo.mp4",
         webm: "/videos/atlas-demo.webm",
@@ -253,7 +252,6 @@ export const resumeData = {
       kind: "Own studio",
       stage: "Live website",
       link: "https://kdvwebsiteservices.com/",
-      source: "https://github.com/icodeninjaX/KDV-Website-Services",
       video: {
         mp4: "/videos/kdv-demo.mp4",
         webm: "/videos/kdv-demo.webm",
