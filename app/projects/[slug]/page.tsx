@@ -48,7 +48,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const next = orderedProjects[index + 1];
   const kind = projectKind(project);
   const stage = "stage" in project && project.stage ? project.stage : project.link ? "In production" : "Internal system";
-  const source = "source" in project ? project.source : "";
   const mobileImages = ("mobileImages" in project ? project.mobileImages : undefined) ?? [];
   const [roleTitle, roleBody] = splitRole(project.role ?? project.details ?? "");
 
@@ -82,10 +81,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             <p className="rs-case-kicker">{stage}</p>
             <h1 className="rs-case-title">{project.name}</h1>
             <p className="rs-case-lead">{project.description}</p>
-            {(project.link || source) && (
+            {project.link && (
               <p className="rs-case-actions">
-                {project.link && <a className="rs-btn rs-btn-primary" href={project.link} target="_blank" rel="noopener noreferrer">{project.stage === "Live website" ? "Visit website" : "Open live app"} <LuArrowUpRight aria-hidden="true" /></a>}
-                {source && <a className="rs-btn" href={source} target="_blank" rel="noopener noreferrer">Source code <LuArrowUpRight aria-hidden="true" /></a>}
+                <a className="rs-btn rs-btn-primary" href={project.link} target="_blank" rel="noopener noreferrer">{project.stage === "Live website" ? "Visit website" : "Open live app"} <LuArrowUpRight aria-hidden="true" /></a>
               </p>
             )}
           </div>
