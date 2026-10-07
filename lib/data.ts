@@ -201,7 +201,7 @@ export const resumeData = {
       status: "personal" as const,
       stage: "Release candidate",
       domain: "atlas.kdvwebsiteservices.com",
-      link: "",
+      link: "https://atlas.kdvwebsiteservices.com/",
       video: {
         mp4: "/videos/atlas-demo.mp4",
         webm: "/videos/atlas-demo.webm",
@@ -451,7 +451,7 @@ export const resumeData = {
       tech: ["HTML", "CSS", "JavaScript", "HTMX", "MySQL"],
       status: "personal" as const,
       domain: "kdv-garden.ct.ws",
-      link: "",
+      link: "https://kdv-garden.ct.ws/",
       video: {
         mp4: "/videos/plantpal-demo.mp4",
         webm: "/videos/plantpal-demo.webm",
