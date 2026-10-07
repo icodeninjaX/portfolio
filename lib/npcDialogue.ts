@@ -21,7 +21,7 @@ export const NPC_DIALOGUES: Record<string, { name: string; lines: string[] }> = 
     name: "Chella",
     lines: [
       "Welcome! I'm Chella, and Experience is my department.",
-      "Keith's currently at X-META Technologies as a Full-Stack Web Developer, building a backend management system with real-time device monitoring.",
+      "Keith worked at X-META Technologies as a Full-Stack Web Developer, building a backend management system with real-time device monitoring.",
       "Before that, he interned building a POS and CMS system for New Z1on LPG. Integrated SMS routing to auto-dispatch orders to the nearest branch.",
       "He works across the whole stack: PHP, JavaScript, TypeScript, MySQL, HTMX. Pretty versatile!",
     ],

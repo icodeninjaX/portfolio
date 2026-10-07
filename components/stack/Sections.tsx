@@ -22,7 +22,7 @@ function Chapter({ index, name, meta }: { index: string; name: string; meta: str
 }
 
 export function HeroSection({ data }: { data: Data }) {
-  const current = data.experience[0];
+  const latest = data.experience[0];
   return (
     <section id="top" data-stage className="stack-section stack-section--hero" aria-label="Introduction">
       <div className="stack-sticky">
@@ -49,8 +49,8 @@ export function HeroSection({ data }: { data: Data }) {
             </p>
             <dl className="stack-hero__meta stack-reveal" style={{ ["--d" as string]: "0.62s" }}>
               <div>
-                <dt>Now</dt>
-                <dd>{current.role}, {current.company.replace(" Inc.", "")}</dd>
+                <dt>Previously</dt>
+                <dd>{latest.role}, {latest.company.replace(" Inc.", "")}</dd>
               </div>
               <div>
                 <dt>Based</dt>
