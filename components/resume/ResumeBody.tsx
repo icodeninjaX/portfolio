@@ -122,7 +122,6 @@ export function Projects({ index }: { index: number }) {
             <p className="rs-project-links">
               <Link href={`/projects/${p.slug}`}>Case study <LuArrowUpRight aria-hidden="true" /></Link>
               {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer">Live site <LuArrowUpRight aria-hidden="true" /></a>}
-              {"source" in p && p.source && <a href={p.source} target="_blank" rel="noopener noreferrer">Source <LuArrowUpRight aria-hidden="true" /></a>}
             </p>
           </li>
         ))}
