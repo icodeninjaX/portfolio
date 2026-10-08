@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { SceneSequence } from "./SceneSequence";
+import { SCENE_MANIFEST } from "./sceneManifest";
 import { StackShell } from "./StackShell";
 
 export type StackStage = {
@@ -10,6 +11,15 @@ export type StackStage = {
   /** Short label for the HUD altimeter. */
   label: string;
 };
+
+/** The film is one five-second clip per transition; show where the reader is as a 24 fps timecode. */
+const FILM_SECONDS = SCENE_MANIFEST.frames.length * 5;
+const FPS = 24;
+function timecode(progress: number) {
+  const total = Math.round(progress * FILM_SECONDS * FPS);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(Math.floor(total / (60 * FPS)))}:${pad(Math.floor(total / FPS) % 60)}:${pad(total % FPS)}`;
+}
 
 export function StackExperience({ stages, children }: { stages: StackStage[]; children: React.ReactNode }) {
   const labels = useMemo(() => stages.map((s) => s.label), [stages]);
@@ -30,10 +40,8 @@ export function StackExperience({ stages, children }: { stages: StackStage[]; ch
         { href: "/resume", label: "Simple mode", cta: true },
         { href: "#contact", label: "Contact", cta: true },
       ]}
-      loaderLabel="Booting the stack"
-      readout={(s, idx, last) =>
-        `SCENE ${String(idx).padStart(2, "0")}/${last} · ${(s.progress * 100).toFixed(0).padStart(3, "0")}%`
-      }
+      loaderLabel="Rolling film"
+      readout={(s, idx, last) => `${timecode(s.progress)} · SC ${String(idx).padStart(2, "0")}/${last}`}
     >
       {children}
     </StackShell>

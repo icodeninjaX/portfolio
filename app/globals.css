@@ -696,6 +696,15 @@ html.lenis body {
   opacity: 0.6;
 }
 
+/* Homepage film palette: taken from the footage itself — the warm desk lamp
+   (accent) and the cyan glow inside the PC (live signals: timecode, scene marker). */
+.stack-home--film {
+  --s-amber: #f0b46a;
+  --s-warm: #f6d3a6;
+  --s-glow: #7fd6e4;
+  --s-rec: #ff4f45;
+}
+
 /* Homepage: me, scene by scene (components/stack/SceneSequence.tsx). */
 .stack-scenes {
   position: fixed;
@@ -2221,5 +2230,131 @@ html.lenis body {
 
   .stack-kit {
     margin-top: 18px;
+  }
+}
+
+/* ---- Homepage film: titles and chrome read like a film, not a tower ---- */
+
+/* Nav pills and skill meters pick up the lamp instead of the old orange. */
+.stack-home--film .stack-nav__cta {
+  border-color: color-mix(in srgb, var(--s-amber) 55%, transparent);
+}
+
+.stack-home--film .stack-meter__bar i.on {
+  box-shadow: 0 0 8px color-mix(in srgb, var(--s-amber) 50%, transparent);
+}
+
+/* Scene line: "SCENE 03 — THE WHITEBOARD / COLLEGE" */
+.stack-home--film .stack-chapter__index {
+  padding: 3px 7px;
+  border: 1px solid color-mix(in srgb, var(--s-amber) 55%, transparent);
+  border-radius: 2px;
+  color: var(--s-amber);
+}
+
+.stack-home--film .stack-chapter__rule {
+  width: 22px;
+  background: color-mix(in srgb, var(--s-amber) 45%, transparent);
+}
+
+/* Long scene lines wrap as whole pieces: the tag never splits, the date drops below. */
+.stack-home--film .stack-chapter {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
+.stack-home--film .stack-chapter > span {
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .stack-home--film .stack-chapter__rule {
+    display: none;
+  }
+}
+
+/* Recording light instead of the old molten ping. */
+.stack-home--film .stack-dot {
+  background: var(--s-rec);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--s-rec) 70%, transparent);
+  animation: stack-rec 1.6s steps(1, end) infinite;
+}
+
+@keyframes stack-rec {
+  0%, 60% { opacity: 1; }
+  61%, 100% { opacity: 0.25; }
+}
+
+/* Timecode readout with a REC light. */
+.stack-home--film .stack-readout {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: color-mix(in srgb, var(--s-glow) 70%, var(--s-ash));
+}
+
+.stack-home--film .stack-readout::before {
+  content: "REC";
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--s-bone-2);
+  background: radial-gradient(circle, var(--s-rec) 3px, transparent 3.5px) left center / 8px 8px no-repeat;
+  padding-left: 14px;
+  animation: stack-rec 1.6s steps(1, end) infinite;
+}
+
+/* Scene index on the right: a strip of film frames with the current one lit. */
+.stack-home--film .stack-altimeter__rail {
+  width: 9px;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 3px,
+    var(--s-line) 3px 9px
+  );
+  border-left: 1px solid var(--s-line);
+  border-right: 1px solid var(--s-line);
+}
+
+.stack-home--film .stack-altimeter__rail::before {
+  display: none;
+}
+
+.stack-home--film .stack-altimeter__marker {
+  left: -4px;
+  width: 17px;
+}
+
+.stack-home--film .stack-altimeter__marker::before {
+  top: -9px;
+  width: 17px;
+  height: 18px;
+  background: color-mix(in srgb, var(--s-glow) 14%, transparent);
+  border: 1px solid var(--s-glow);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--s-glow) 45%, transparent);
+}
+
+.stack-home--film .stack-altimeter__label {
+  color: var(--s-bone-2);
+}
+
+/* Loader: a frame counter rolling up, lit by the lamp. */
+.stack-home--film .stack-loader__inner .stack-mono::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 10px;
+  border-radius: 99px;
+  background: var(--s-rec);
+  vertical-align: 1px;
+  animation: stack-rec 1.6s steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack-home--film .stack-dot,
+  .stack-home--film .stack-readout::before,
+  .stack-home--film .stack-loader__inner .stack-mono::before {
+    animation: none;
   }
 }
