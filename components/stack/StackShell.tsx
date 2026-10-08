@@ -22,9 +22,12 @@ export type NavItem = {
 export type StackShellProps = {
   /** One label per `data-stage` section, shown on the altimeter. */
   labels: string[];
-  /** Rendered only when WebGL is available. */
+  /** Rendered only when WebGL is available, unless `webglOnly` is false. */
   canvas: React.ReactNode;
-  video: { src: string; poster: string };
+  /** Set false for a background that draws without WebGL (the homepage's 2D scene canvas). */
+  webglOnly?: boolean;
+  /** Looping hero clip that fades out as the first section scrolls away. */
+  video?: { src: string; poster: string };
   nav: NavItem[];
   /** Where the wordmark points. */
   home: string;
@@ -106,6 +109,7 @@ export function StackShell({
   readout,
   fallback,
   assets = true,
+  webglOnly = true,
   className = "",
   children,
 }: StackShellProps) {
@@ -229,18 +233,23 @@ export function StackShell({
     };
   }, []);
 
+  // `webgl` is null until feature detection has run after hydration.
+  const showCanvas = webgl === true || (!webglOnly && webgl !== null);
+
   return (
-    <div className={`stack-home ${className} ${loaded || webgl === false ? "is-loaded" : ""}`}>
+    <div className={`stack-home ${className} ${loaded || (webgl === false && webglOnly) ? "is-loaded" : ""}`}>
       <div className="stack-stage" aria-hidden>
-        {webgl && canvas}
-        {webgl === false && (
+        {showCanvas && canvas}
+        {webgl === false && webglOnly && (
           <div className="stack-fallback" style={fallback ? { backgroundImage: `url("${fallback}")` } : undefined} />
         )}
       </div>
 
-      <div ref={videoRef} className="stack-video" aria-hidden>
-        <video src={video.src} poster={video.poster} autoPlay muted loop playsInline preload="auto" />
-      </div>
+      {video && (
+        <div ref={videoRef} className="stack-video" aria-hidden>
+          <video src={video.src} poster={video.poster} autoPlay muted loop playsInline preload="auto" />
+        </div>
+      )}
 
       <div className="stack-grain" aria-hidden />
 
@@ -274,7 +283,7 @@ export function StackShell({
 
       <span ref={readoutRef} className="stack-readout" aria-hidden />
 
-      {webgl && !loaded && <Preloader label={loaderLabel} assets={assets} onDone={() => setLoaded(true)} />}
+      {showCanvas && !loaded && <Preloader label={loaderLabel} assets={assets} onDone={() => setLoaded(true)} />}
 
       <div className="stack-content">{children}</div>
     </div>

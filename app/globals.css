@@ -696,6 +696,35 @@ html.lenis body {
   opacity: 0.6;
 }
 
+/* Homepage: me, scene by scene (components/stack/SceneSequence.tsx). */
+.stack-scenes {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s var(--s-ease);
+}
+
+.is-loaded .stack-scenes {
+  opacity: 1;
+}
+
+.stack-scenes canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Darken the edges so the copy and HUD always read over the footage. */
+.stack-scenes::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10, 9, 8, 0.6) 0%, rgba(10, 9, 8, 0) 22%, rgba(10, 9, 8, 0) 70%, rgba(10, 9, 8, 0.75) 100%),
+    radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(10, 9, 8, 0.55) 100%);
+  pointer-events: none;
+}
+
 .stack-video {
   position: fixed;
   inset: 0;
@@ -1994,6 +2023,7 @@ html.lenis body {
 
 @media print {
   .stack-stage,
+  .stack-scenes,
   .stack-video,
   .stack-grain,
   .stack-topbar,
