@@ -1,5 +1,5 @@
 {
-  "note": "Higgsfield MiniMax H3 Max transitions (5 s, 768p). Clip N starts on keyframe N and ends on keyframe N+1 (docs/scroll-keyframes).",
+  "note": "Higgsfield MiniMax H3 Max transitions (5 s, 768p), each upscaled to 3840x2160 with Topaz (`uhd`). Clip N starts on keyframe N and ends on keyframe N+1 (docs/scroll-keyframes). `id` is the original 768p job, kept as a fallback.",
   "base": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_060026_",
   "focus": {
     "_default": 0.7,
@@ -12,62 +12,74 @@
     {
       "from": "hero",
       "to": "silicon",
-      "id": "fd0a50a7-d5b5-4f9b-a137-9cc5af4154c6"
+      "id": "fd0a50a7-d5b5-4f9b-a137-9cc5af4154c6",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_064650_6f055e22-5790-446c-930c-41adf259236d.mp4"
     },
     {
       "from": "silicon",
       "to": "signal",
-      "id": "f7ed6af2-f501-405d-a586-ae79231d54eb"
+      "id": "f7ed6af2-f501-405d-a586-ae79231d54eb",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065023_72dcb059-378f-4dc8-8714-b57fd6a956f5.mp4"
     },
     {
       "from": "signal",
       "to": "data",
-      "id": "babab7e1-8b7d-4f74-bced-8d812299e4ad"
+      "id": "babab7e1-8b7d-4f74-bced-8d812299e4ad",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065026_bc5cde3c-98e9-4e0b-9bac-45091f78ec26.mp4"
     },
     {
       "from": "data",
       "to": "atlas",
-      "id": "72e45e75-4f6f-4434-ac38-a4ed7ae75cc3"
+      "id": "72e45e75-4f6f-4434-ac38-a4ed7ae75cc3",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065028_f28f93b8-52e5-4c10-aed9-0386b5de4cd1.mp4"
     },
     {
       "from": "atlas",
       "to": "kdv-website-services",
-      "id": "24e1af52-6630-416d-afab-b2653186998e"
+      "id": "24e1af52-6630-416d-afab-b2653186998e",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065031_705a5fb0-80eb-4e04-90ca-156511176bac.mp4"
     },
     {
       "from": "kdv-website-services",
       "to": "371admin",
-      "id": "ab9edbe8-02e4-4adf-9b9a-45ba53589196"
+      "id": "ab9edbe8-02e4-4adf-9b9a-45ba53589196",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065033_14772ea0-6a25-48a7-8b38-f4f3f6d7aba9.mp4"
     },
     {
       "from": "371admin",
       "to": "new-z1on-lpg",
-      "id": "e0f867d0-9aad-4d99-8d96-6bf0404e46ec"
+      "id": "e0f867d0-9aad-4d99-8d96-6bf0404e46ec",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065035_45d183d9-e57e-47f5-b2e3-a23df97b28b5.mp4"
     },
     {
       "from": "new-z1on-lpg",
       "to": "tracky",
-      "id": "67548d13-5deb-4457-a9fb-1b5731e7b4d0"
+      "id": "67548d13-5deb-4457-a9fb-1b5731e7b4d0",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065038_fd2006ea-5f16-4c7f-b5ed-3617db0b0174.mp4"
     },
     {
       "from": "tracky",
       "to": "coop-tracker",
-      "id": "64da969a-7f72-48f0-a479-719a49dfcfee"
+      "id": "64da969a-7f72-48f0-a479-719a49dfcfee",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065040_611183bb-abf4-4b03-83a1-fd52df460cc7.mp4"
     },
     {
       "from": "coop-tracker",
       "to": "plantpal",
-      "id": "8c5d4623-b408-41d0-8530-41e6a23ad9b4"
+      "id": "8c5d4623-b408-41d0-8530-41e6a23ad9b4",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065043_b9e67a4a-2316-4c48-a147-8f3db50baf7f.mp4"
     },
     {
       "from": "plantpal",
       "to": "now",
-      "id": "c3ed07bc-f98a-4982-8b9d-89c7f7b5b22d"
+      "id": "c3ed07bc-f98a-4982-8b9d-89c7f7b5b22d",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065045_7108fb93-beab-4dae-a31b-a57a4e57006d.mp4"
     },
     {
       "from": "now",
       "to": "contact",
-      "id": "3999eb37-83f8-4d30-bef2-59dca3d7d725"
+      "id": "3999eb37-83f8-4d30-bef2-59dca3d7d725",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_065050_78c08758-f3f2-4ced-97d4-b4ecdf71712a.mp4"
     }
   ]
 }
