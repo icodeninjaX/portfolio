@@ -2,8 +2,9 @@
 //   node scripts/scenes/build-frames.mjs [clipsDir]
 // Downloads any clip missing from clipsDir (default: .scene-clips, gitignored),
 // then writes public/stack/scenes/{d,m}/SS-FFF.webp and components/stack/sceneManifest.ts.
-// d = desktop, the full 16:9 frame at 1280w. m = phones, a full-resolution
-// portrait crop that follows me from one scene's focus to the next.
+// Sources are the 4K Topaz upscales (`uhd`), falling back to the 768p originals.
+// d = desktop, the full 16:9 frame at 1600w. m = phones, a portrait crop
+// 1152px tall that follows me from one scene's focus to the next.
 // Clip N starts on scene N and ends on N+1.
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -20,18 +21,17 @@ const STEP = 3;
 const PORTRAIT = 0.9;
 const focusOf = (scene) => focus[scene] ?? focus._default;
 const SIZES = [
-  { dir: "d", quality: 72, vf: () => "scale=1280:-2:flags=lanczos,unsharp=5:5:0.35:5:5:0" },
+  { dir: "d", quality: 72, vf: () => "scale=1600:-2:flags=lanczos" },
   {
     dir: "m",
-    quality: 72,
+    quality: 68,
     vf: (clip, frames) => {
       // Ease the crop from one scene's focus to the next, like the desktop framing does.
       const a = focusOf(clip.from);
       const b = focusOf(clip.to);
       const t = `(n/${frames - 1})`;
       const x = `(iw-ih*${PORTRAIT})*(${a}+(${b - a})*${t}*${t}*(3-2*${t}))`;
-      // Phones stretch these ~2x, so a light sharpen keeps hair and glasses crisp.
-      return `crop=w=trunc(ih*${PORTRAIT}/2)*2:h=ih:x='${x}':y=0,unsharp=5:5:0.6:5:5:0`;
+      return `crop=w=trunc(ih*${PORTRAIT}/2)*2:h=ih:x='${x}':y=0,scale=-2:1152:flags=lanczos`;
     },
   },
 ];
@@ -43,8 +43,8 @@ for (const s of SIZES) mkdirSync(join(out, s.dir), { recursive: true });
 const counts = [];
 clips.forEach((clip, i) => {
   const seg = String(i).padStart(2, "0");
-  const src = join(clipsDir, `seg${seg}.mp4`);
-  if (!existsSync(src)) execFileSync("curl", ["-sSf", "-o", src, `${base}${clip.id}.mp4`]);
+  const src = join(clipsDir, clip.uhd ? `seg${seg}-uhd.mp4` : `seg${seg}.mp4`);
+  if (!existsSync(src)) execFileSync("curl", ["-sSf", "-o", src, clip.uhd ?? `${base}${clip.id}.mp4`]);
   const total = Number(
     execFileSync("ffprobe", [
       "-v", "error", "-select_streams", "v", "-count_packets",
