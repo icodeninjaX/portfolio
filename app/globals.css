@@ -1888,6 +1888,11 @@ html.lenis body {
     align-items: center;
   }
 
+  /* Homepage: the scene fills the top of the screen, so the sign-off sits below my face. */
+  .stack-home--film .stack-section--contact .stack-sticky {
+    align-items: flex-end;
+  }
+
   .stack-copy::before {
     display: none;
   }
