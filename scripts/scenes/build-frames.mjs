@@ -11,7 +11,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 
 const root = new URL("../../", import.meta.url).pathname;
-const { base, focus, clips } = JSON.parse(readFileSync(join(root, "scripts/scenes/clips.json"), "utf8"));
+const { base, focus, pan = {}, clips } = JSON.parse(readFileSync(join(root, "scripts/scenes/clips.json"), "utf8"));
 const clipsDir = process.argv[2] ?? join(root, ".scene-clips");
 const out = join(root, "public/stack/scenes");
 // Every 3rd frame of a 24 fps, 5 s clip: 42 frames per transition.
@@ -44,7 +44,7 @@ const counts = [];
 clips.forEach((clip, i) => {
   const seg = String(i).padStart(2, "0");
   const src = join(clipsDir, clip.uhd ? `seg${seg}-uhd.mp4` : `seg${seg}.mp4`);
-  if (!existsSync(src)) execFileSync("curl", ["-sSf", "-o", src, clip.uhd ?? `${base}${clip.id}.mp4`]);
+  if (!existsSync(src)) execFileSync("curl", ["-sSf", "-o", src, clip.uhd ?? `${clip.base ?? base}${clip.id}.mp4`]);
   const total = Number(
     execFileSync("ffprobe", [
       "-v", "error", "-select_streams", "v", "-count_packets",
@@ -76,6 +76,8 @@ export const SCENE_MANIFEST = {
   scenes: ${JSON.stringify(scenes)},
   /** Horizontal position of me in each scene; phone frames are already cropped around it. */
   focus: ${JSON.stringify(scenes.map(focusOf))},
+  /** Desktop-only rightward shift per scene, as a fraction of the screen width. */
+  pan: ${JSON.stringify(scenes.map((s) => pan[s] ?? 0))},
   frames: ${JSON.stringify(counts)},
 } as const;
 `,
