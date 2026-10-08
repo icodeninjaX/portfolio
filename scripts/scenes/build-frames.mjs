@@ -1,21 +1,39 @@
 // Turns the homepage transition clips into the scroll-scrubbed frame sequence.
 //   node scripts/scenes/build-frames.mjs [clipsDir]
 // Downloads any clip missing from clipsDir (default: .scene-clips, gitignored),
-// then writes public/stack/scenes/{d,m}/SS-FFF.webp (desktop 1280w, mobile 720w)
-// and components/stack/sceneManifest.ts. Clip N starts on scene N and ends on N+1.
+// then writes public/stack/scenes/{d,m}/SS-FFF.webp and components/stack/sceneManifest.ts.
+// d = desktop, the full 16:9 frame at 1280w. m = phones, a full-resolution
+// portrait crop that follows me from one scene's focus to the next.
+// Clip N starts on scene N and ends on N+1.
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = new URL("../../", import.meta.url).pathname;
-const { base, clips } = JSON.parse(readFileSync(join(root, "scripts/scenes/clips.json"), "utf8"));
+const { base, focus, clips } = JSON.parse(readFileSync(join(root, "scripts/scenes/clips.json"), "utf8"));
 const clipsDir = process.argv[2] ?? join(root, ".scene-clips");
 const out = join(root, "public/stack/scenes");
 // Every 3rd frame of a 24 fps, 5 s clip: 42 frames per transition.
 const STEP = 3;
+// Phone crop aspect (w / h): a little wider than a phone's scene area so
+// slightly wider screens still fill it.
+const PORTRAIT = 0.9;
+const focusOf = (scene) => focus[scene] ?? focus._default;
 const SIZES = [
-  { dir: "d", width: 1280, quality: 70 },
-  { dir: "m", width: 720, quality: 66 },
+  { dir: "d", quality: 72, vf: () => "scale=1280:-2:flags=lanczos,unsharp=5:5:0.35:5:5:0" },
+  {
+    dir: "m",
+    quality: 72,
+    vf: (clip, frames) => {
+      // Ease the crop from one scene's focus to the next, like the desktop framing does.
+      const a = focusOf(clip.from);
+      const b = focusOf(clip.to);
+      const t = `(n/${frames - 1})`;
+      const x = `(iw-ih*${PORTRAIT})*(${a}+(${b - a})*${t}*${t}*(3-2*${t}))`;
+      // Phones stretch these ~2x, so a light sharpen keeps hair and glasses crisp.
+      return `crop=w=trunc(ih*${PORTRAIT}/2)*2:h=ih:x='${x}':y=0,unsharp=5:5:0.6:5:5:0`;
+    },
+  },
 ];
 
 mkdirSync(clipsDir, { recursive: true });
@@ -27,10 +45,16 @@ clips.forEach((clip, i) => {
   const seg = String(i).padStart(2, "0");
   const src = join(clipsDir, `seg${seg}.mp4`);
   if (!existsSync(src)) execFileSync("curl", ["-sSf", "-o", src, `${base}${clip.id}.mp4`]);
+  const total = Number(
+    execFileSync("ffprobe", [
+      "-v", "error", "-select_streams", "v", "-count_packets",
+      "-show_entries", "stream=nb_read_packets", "-of", "csv=p=0", src,
+    ]).toString().trim(),
+  );
   for (const s of SIZES) {
     execFileSync("ffmpeg", [
       "-v", "error", "-y", "-i", src,
-      "-vf", `select='not(mod(n\\,${STEP}))',scale=${s.width}:-2`,
+      "-vf", `${s.vf(clip, total)},select='not(mod(n\\,${STEP}))'`,
       "-vsync", "0", "-c:v", "libwebp", "-quality", String(s.quality),
       "-start_number", "0",
       join(out, s.dir, `${seg}-%03d.webp`),
@@ -50,6 +74,8 @@ writeFileSync(
 export const SCENE_MANIFEST = {
   base: "/stack/scenes",
   scenes: ${JSON.stringify(scenes)},
+  /** Horizontal position of me in each scene; phone frames are already cropped around it. */
+  focus: ${JSON.stringify(scenes.map(focusOf))},
   frames: ${JSON.stringify(counts)},
 } as const;
 `,

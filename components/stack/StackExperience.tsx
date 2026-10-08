@@ -20,6 +20,7 @@ export function StackExperience({ stages, children }: { stages: StackStage[]; ch
       labels={labels}
       canvas={<SceneSequence sceneIds={sceneIds} />}
       webglOnly={false}
+      className="stack-home--film"
       assets={false}
       home="#top"
       nav={[
