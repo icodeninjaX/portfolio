@@ -1,0 +1,18 @@
+{
+  "note": "Higgsfield MiniMax H3 Max transitions (5 s, 768p). Clip N starts on keyframe N and ends on keyframe N+1 (docs/scroll-keyframes).",
+  "base": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_060026_",
+  "clips": [
+    { "from": "hero", "to": "silicon", "id": "fd0a50a7-d5b5-4f9b-a137-9cc5af4154c6" },
+    { "from": "silicon", "to": "signal", "id": "f7ed6af2-f501-405d-a586-ae79231d54eb" },
+    { "from": "signal", "to": "data", "id": "babab7e1-8b7d-4f74-bced-8d812299e4ad" },
+    { "from": "data", "to": "atlas", "id": "72e45e75-4f6f-4434-ac38-a4ed7ae75cc3" },
+    { "from": "atlas", "to": "kdv-website-services", "id": "24e1af52-6630-416d-afab-b2653186998e" },
+    { "from": "kdv-website-services", "to": "371admin", "id": "ab9edbe8-02e4-4adf-9b9a-45ba53589196" },
+    { "from": "371admin", "to": "new-z1on-lpg", "id": "e0f867d0-9aad-4d99-8d96-6bf0404e46ec" },
+    { "from": "new-z1on-lpg", "to": "tracky", "id": "67548d13-5deb-4457-a9fb-1b5731e7b4d0" },
+    { "from": "tracky", "to": "coop-tracker", "id": "64da969a-7f72-48f0-a479-719a49dfcfee" },
+    { "from": "coop-tracker", "to": "plantpal", "id": "8c5d4623-b408-41d0-8530-41e6a23ad9b4" },
+    { "from": "plantpal", "to": "now", "id": "c3ed07bc-f98a-4982-8b9d-89c7f7b5b22d" },
+    { "from": "now", "to": "contact", "id": "3999eb37-83f8-4d30-bef2-59dca3d7d725" }
+  ]
+}

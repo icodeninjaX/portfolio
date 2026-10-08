@@ -1,26 +1,26 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import type { PanelProject } from "./InterfaceLayer";
+import { useMemo } from "react";
+import { SceneSequence } from "./SceneSequence";
 import { StackShell } from "./StackShell";
-import { CAMERA_KEYS } from "./stages";
 
-const StackCanvas = dynamic(() => import("./StackCanvas"), { ssr: false });
+export type StackStage = {
+  /** Scene id in `sceneManifest.ts` (falls back to the previous scene when missing). */
+  scene: string;
+  /** Short label for the HUD altimeter. */
+  label: string;
+};
 
-const LABELS = CAMERA_KEYS.map((k) => k.label);
+export function StackExperience({ stages, children }: { stages: StackStage[]; children: React.ReactNode }) {
+  const labels = useMemo(() => stages.map((s) => s.label), [stages]);
+  const sceneIds = useMemo(() => stages.map((s) => s.scene), [stages]);
 
-export function StackExperience({
-  projects,
-  children,
-}: {
-  projects: PanelProject[];
-  children: React.ReactNode;
-}) {
   return (
     <StackShell
-      labels={LABELS}
-      canvas={<StackCanvas projects={projects} />}
-      video={{ src: "/stack/hero-silicon.mp4", poster: "/stack/hero-poster.webp" }}
+      labels={labels}
+      canvas={<SceneSequence sceneIds={sceneIds} />}
+      webglOnly={false}
+      assets={false}
       home="#top"
       nav={[
         { href: "#work", label: "Work" },
@@ -31,7 +31,7 @@ export function StackExperience({
       ]}
       loaderLabel="Booting the stack"
       readout={(s, idx, last) =>
-        `ALT ${(s.progress * 38).toFixed(1).padStart(4, "0")}m · ${String(idx).padStart(2, "0")}/${last}`
+        `SCENE ${String(idx).padStart(2, "0")}/${last} · ${(s.progress * 100).toFixed(0).padStart(3, "0")}%`
       }
     >
       {children}

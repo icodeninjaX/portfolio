@@ -44,8 +44,8 @@ export function HeroSection({ data }: { data: Data }) {
           </h1>
           <div className="stack-hero__foot">
             <p className="stack-hero__lede stack-reveal" style={{ ["--d" as string]: "0.5s" }}>
-              I started out fixing computers and ended up building the software that runs on them. Scroll to climb
-              the stack, from the silicon up to the products I ship.
+              I started out fixing computers and ended up building the software that runs on them. Scroll to follow
+              along, from the first system unit I opened to the products I ship.
             </p>
             <dl className="stack-hero__meta stack-reveal" style={{ ["--d" as string]: "0.62s" }}>
               <div>
@@ -60,7 +60,7 @@ export function HeroSection({ data }: { data: Data }) {
           </div>
         </div>
         <a href="#silicon" className="stack-scrollcue stack-reveal" style={{ ["--d" as string]: "0.8s" }}>
-          <span>Scroll to climb</span>
+          <span>Scroll to follow</span>
           <span className="stack-scrollcue__line" />
         </a>
       </div>
