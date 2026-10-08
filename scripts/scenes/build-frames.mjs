@@ -20,17 +20,18 @@ const STEP = 3;
 const PORTRAIT = 0.9;
 const focusOf = (scene) => focus[scene] ?? focus._default;
 const SIZES = [
-  { dir: "d", quality: 70, vf: () => "scale=1280:-2" },
+  { dir: "d", quality: 72, vf: () => "scale=1280:-2:flags=lanczos,unsharp=5:5:0.35:5:5:0" },
   {
     dir: "m",
-    quality: 64,
+    quality: 72,
     vf: (clip, frames) => {
       // Ease the crop from one scene's focus to the next, like the desktop framing does.
       const a = focusOf(clip.from);
       const b = focusOf(clip.to);
       const t = `(n/${frames - 1})`;
       const x = `(iw-ih*${PORTRAIT})*(${a}+(${b - a})*${t}*${t}*(3-2*${t}))`;
-      return `crop=w=trunc(ih*${PORTRAIT}/2)*2:h=ih:x='${x}':y=0`;
+      // Phones stretch these ~2x, so a light sharpen keeps hair and glasses crisp.
+      return `crop=w=trunc(ih*${PORTRAIT}/2)*2:h=ih:x='${x}':y=0,unsharp=5:5:0.6:5:5:0`;
     },
   },
 ];

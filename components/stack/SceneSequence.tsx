@@ -140,11 +140,14 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
     let w = 0;
     let h = 0;
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      // Render at the screen's real density: letting the browser stretch a
+      // low-density canvas on a 3x phone visibly softens the footage.
+      const dpr = Math.min(window.devicePixelRatio || 1, set === "m" ? 3 : 2);
       w = Math.round(window.innerWidth * dpr);
       h = Math.round(window.innerHeight * dpr);
       canvas.width = w;
       canvas.height = h;
+      ctx.imageSmoothingQuality = "high";
       dirty = true;
     };
     resize();
@@ -153,7 +156,8 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
     // Height the scene is drawn into; on portrait screens the rest is the copy's dark floor.
     const sceneH = () => (set === "m" ? Math.round(h * PORTRAIT_SCENE) : h);
     const cover = (img: HTMLImageElement, focus: number, alpha: number) => {
-      const zoom = 1.045;
+      // Desktop overscans a little for the pointer parallax; phones have no pointer.
+      const zoom = set === "m" ? 1 : 1.045;
       const boxH = sceneH();
       const scale = Math.max(w / img.naturalWidth, boxH / img.naturalHeight) * zoom;
       const dw = img.naturalWidth * scale;
