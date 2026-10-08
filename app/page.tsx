@@ -15,14 +15,14 @@ export default function Home() {
   // One entry per `data-stage` section below, in order. Scene ids match
   // components/stack/sceneManifest.ts; projects use their slug.
   const stages: StackStage[] = [
-    { scene: "hero", label: "Boot" },
-    { scene: "silicon", label: "L1 · Silicon" },
-    { scene: "signal", label: "L2 · Signal" },
-    { scene: "data", label: "L3 · Data" },
-    ...projects.map((p) => ({ scene: p.slug, label: `L4 · ${p.name.split(" ")[0]}` })),
-    { scene: "now", label: "L5 · Now" },
-    { scene: "contact", label: "Contact" },
-  ];
+    { scene: "hero", label: "Opening" },
+    { scene: "silicon", label: "Workbench" },
+    { scene: "signal", label: "LPG counter" },
+    { scene: "data", label: "Whiteboard" },
+    ...projects.map((p) => ({ scene: p.slug, label: p.name.split(" ")[0] })),
+    { scene: "now", label: "Now" },
+    { scene: "contact", label: "Next scene" },
+  ].map((s, i) => ({ ...s, label: `Sc ${String(i).padStart(2, "0")} · ${s.label}` }));
 
   return (
     <StackExperience stages={stages}>

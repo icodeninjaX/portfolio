@@ -10,10 +10,15 @@ const statusLabel: Record<Project["status"], string> = {
   personal: "Personal · Shipped",
 };
 
-function Chapter({ index, name, meta }: { index: string; name: string; meta: string }) {
+// The homepage is one film of me: every section is a scene, numbered in order
+// (the hero is scene 00, then silicon, signal, data, one per project, now, contact).
+const SCENES_BEFORE_WORK = 4;
+const sceneNo = (n: number) => String(n).padStart(2, "0");
+
+function Chapter({ scene, name, meta }: { scene: number; name: string; meta: string }) {
   return (
     <p className="stack-chapter">
-      <span className="stack-chapter__index">{index}</span>
+      <span className="stack-chapter__index">Scene {sceneNo(scene)}</span>
       <span className="stack-chapter__rule" />
       <span>{name}</span>
       <span className="stack-chapter__meta">{meta}</span>
@@ -44,8 +49,8 @@ export function HeroSection({ data }: { data: Data }) {
           </h1>
           <div className="stack-hero__foot">
             <p className="stack-hero__lede stack-reveal" style={{ ["--d" as string]: "0.5s" }}>
-              I started out fixing computers and ended up building the software that runs on them. Scroll to follow
-              along, from the first system unit I opened to the products I ship.
+              I started out fixing computers and ended up building the software that runs on them. This is that
+              story, one scene at a time, from the first system unit I opened to the products I ship.
             </p>
             <dl className="stack-hero__meta stack-reveal" style={{ ["--d" as string]: "0.62s" }}>
               <div>
@@ -60,7 +65,7 @@ export function HeroSection({ data }: { data: Data }) {
           </div>
         </div>
         <a href="#silicon" className="stack-scrollcue stack-reveal" style={{ ["--d" as string]: "0.8s" }}>
-          <span>Scroll to follow</span>
+          <span>Scroll to play</span>
           <span className="stack-scrollcue__line" />
         </a>
       </div>
@@ -74,7 +79,7 @@ export function SiliconSection({ data }: { data: Data }) {
     <section id="silicon" data-stage className="stack-section" aria-labelledby="silicon-title">
       <div className="stack-sticky">
         <article className="stack-copy">
-          <Chapter index="L1" name="Silicon" meta={voc.year} />
+          <Chapter scene={1} name="The workbench" meta={voc.year} />
           <h2 id="silicon-title" className="stack-h2">
             It started with a screwdriver, <em>not a keyboard.</em>
           </h2>
@@ -103,7 +108,7 @@ export function SignalSection({ data }: { data: Data }) {
     <section id="signal" data-stage className="stack-section stack-section--right" aria-labelledby="signal-title">
       <div className="stack-sticky">
         <article className="stack-copy">
-          <Chapter index="L2" name="Signal" meta={`${intern.startDate} – ${intern.endDate}`} />
+          <Chapter scene={2} name="The LPG counter" meta={`${intern.startDate} – ${intern.endDate}`} />
           <h2 id="signal-title" className="stack-h2">
             Then I learned how machines <em>talk to each other.</em>
           </h2>
@@ -135,7 +140,7 @@ export function DataSection({ data }: { data: Data }) {
     <section id="data" data-stage className="stack-section" aria-labelledby="data-title">
       <div className="stack-sticky">
         <article className="stack-copy">
-          <Chapter index="L3" name="Data" meta={college.year} />
+          <Chapter scene={3} name="The whiteboard" meta={college.year} />
           <h2 id="data-title" className="stack-h2">
             Every real system is a data problem <em>wearing a UI.</em>
           </h2>
@@ -177,7 +182,11 @@ export function ProjectSection({ project, index, total }: { project: Project; in
     >
       <div className="stack-sticky">
         <article className="stack-copy stack-copy--wide">
-          <Chapter index="L4" name={index === 0 ? "Interface — Selected work" : "Interface"} meta={`${n} / ${String(total).padStart(2, "0")}`} />
+          <Chapter
+            scene={SCENES_BEFORE_WORK + index}
+            name={index === 0 ? "Selected work" : "Work"}
+            meta={`${n} / ${String(total).padStart(2, "0")}`}
+          />
           <p className="stack-project__status">{project.stage ?? statusLabel[project.status]}</p>
           <h2 id={`p-${project.slug}`} className="stack-project__name">
             {project.name}
@@ -225,9 +234,9 @@ export function NowSection({ data }: { data: Data }) {
     <section id="now" data-stage className="stack-section stack-section--right stack-section--tall" aria-labelledby="now-title">
       <div className="stack-sticky">
         <article className="stack-copy stack-copy--wide">
-          <Chapter index="L5" name="Now" meta="The whole stack" />
+          <Chapter scene={SCENES_BEFORE_WORK + data.projects.length} name="Now" meta="Present" />
           <h2 id="now-title" className="stack-h2">
-            Hardware, signal, data, interface. <em>One person, every layer.</em>
+            From the workbench to production. <em>Same person, every scene.</em>
           </h2>
           <ol className="stack-timeline">
             {data.experience.map((e) => (
@@ -261,9 +270,9 @@ export function ContactSection({ data }: { data: Data }) {
     <section id="contact" data-stage className="stack-section stack-section--contact" aria-labelledby="contact-title">
       <div className="stack-sticky">
         <div className="stack-contact">
-          <Chapter index="L6" name="Next layer" meta="Open to work" />
+          <Chapter scene={SCENES_BEFORE_WORK + data.projects.length + 1} name="Next scene" meta="Open to work" />
           <h2 id="contact-title" className="stack-contact__title">
-            Let&apos;s build <em>the next layer.</em>
+            Let&apos;s build <em>the next scene.</em>
           </h2>
           <a href={`mailto:${data.email}`} className="stack-contact__mail">
             {data.email}
