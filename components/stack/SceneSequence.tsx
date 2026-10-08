@@ -9,7 +9,7 @@ import { stackScroll, subscribeStack } from "./scrollStore";
 // (pre-cut into frames by scripts/scenes/build-frames.mjs) is scrubbed by
 // scroll and drawn to a 2D canvas, so it plays forwards and backwards.
 
-const { base, scenes, focus: FOCUS, frames } = SCENE_MANIFEST;
+const { base, scenes, focus: FOCUS, pan: PAN, frames } = SCENE_MANIFEST;
 const SEGMENTS = frames.length;
 
 /** On portrait screens the scene fills this much of the height and fades into the copy below. */
@@ -155,7 +155,7 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
     const pointer = { x: 0, y: 0 };
     // Height the scene is drawn into; on portrait screens the rest is the copy's dark floor.
     const sceneH = () => (set === "m" ? Math.round(h * PORTRAIT_SCENE) : h);
-    const cover = (img: HTMLImageElement, focus: number, alpha: number) => {
+    const cover = (img: HTMLImageElement, focus: number, alpha: number, pan = 0) => {
       // Desktop overscans a little for the pointer parallax; phones have no pointer.
       const zoom = set === "m" ? 1 : 1.045;
       const boxH = sceneH();
@@ -166,10 +166,24 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
       const spareY = dh - boxH;
       // Phone frames are already centred on me.
       const fx = set === "m" ? 0.5 : focus;
-      const x = -spareX * Math.min(1, Math.max(0, fx + pointer.x * 0.04));
+      const x = -spareX * Math.min(1, Math.max(0, fx + pointer.x * 0.04)) + pan * w;
       const y = -spareY * (set === "m" ? 0.35 : 0.5 + pointer.y * 0.18);
       ctx.globalAlpha = alpha;
       ctx.drawImage(img, x, y, dw, dh);
+    };
+
+    // Desktop pan: the strip uncovered on the left fades into the page colour.
+    const edge = (pan: number) => {
+      if (pan <= 0) return;
+      const x = pan * w;
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#0a0908";
+      ctx.fillRect(0, 0, Math.ceil(x), h);
+      const g = ctx.createLinearGradient(x, 0, x + w * 0.14, 0);
+      g.addColorStop(0, "rgba(10, 9, 8, 1)");
+      g.addColorStop(1, "rgba(10, 9, 8, 0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(x, 0, w * 0.14, h);
     };
 
     // Portrait: melt the bottom of the scene into the page colour.
@@ -207,31 +221,33 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
       const from = map[k];
       const to = map[Math.min(count - 1, k + 1)];
       const focus = FOCUS[from] + (FOCUS[to] - FOCUS[from]) * t;
+      const pan = set === "m" ? 0 : PAN[from] + (PAN[to] - PAN[from]) * t;
 
       ctx.globalAlpha = 1;
       ctx.fillStyle = "#0a0908";
       ctx.fillRect(0, 0, w, h);
-      paint(from, to, t, focus);
+      paint(from, to, t, focus, pan);
+      edge(pan);
       shade(focus);
       floor();
     };
 
-    const paint = (from: number, to: number, t: number, focus: number) => {
+    const paint = (from: number, to: number, t: number, focus: number, pan: number) => {
       if (t > 0 && to === from + 1 && from < SEGMENTS) {
         // Scrub the clip that joins the two scenes, blending neighbouring frames.
         const pos = t * (frames[from] - 1);
         const f0 = Math.floor(pos);
         const a = nearest(from, f0);
         const b = loaded.get(key(from, Math.min(frames[from] - 1, f0 + 1)));
-        if (a) cover(a, focus, 1);
-        if (b && a !== b) cover(b, focus, pos - f0);
+        if (a) cover(a, focus, 1, pan);
+        if (b && a !== b) cover(b, focus, pos - f0, pan);
         if (a || b) return;
       }
       // Holding on a scene, or two scenes without a clip between them: crossfade stills.
       const sa = loaded.get(key(...still(from)));
       const sb = loaded.get(key(...still(to)));
-      if (sa) cover(sa, focus, 1);
-      if (sb && t > 0 && to !== from) cover(sb, focus, t);
+      if (sa) cover(sa, focus, 1, pan);
+      if (sb && t > 0 && to !== from) cover(sb, focus, t, pan);
     };
 
     let raf = 0;

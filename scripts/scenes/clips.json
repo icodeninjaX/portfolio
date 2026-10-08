@@ -5,15 +5,21 @@
     "_default": 0.7,
     "signal": 0.3,
     "now": 0.32,
-    "contact": 0.3
+    "contact": 0.3,
+    "hero": 0.6
   },
   "focusNote": "Horizontal position of me in each scene (0 = left edge). Drives the phone crop and the desktop copy-side shading.",
+  "pan": {
+    "hero": 0.14
+  },
+  "panNote": "Desktop only: shift a scene right by this fraction of the screen width so a centred subject clears the big left-hand title; the uncovered edge fades into the page colour.",
   "clips": [
     {
       "from": "hero",
       "to": "silicon",
-      "id": "fd0a50a7-d5b5-4f9b-a137-9cc5af4154c6",
-      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_064650_6f055e22-5790-446c-930c-41adf259236d.mp4"
+      "id": "4720aaa8-e5a2-4513-93be-fbc73829dd59",
+      "uhd": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_133404_bf6c7c7c-fa95-4191-bb59-8ad7c6def144.mp4",
+      "base": "https://d8j0ntlcm91z4.cloudfront.net/user_3JniC1P5c5ioKG1Idk58HeqcWAF/hf_20261008_133329_"
     },
     {
       "from": "silicon",

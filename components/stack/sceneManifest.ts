@@ -6,6 +6,8 @@ export const SCENE_MANIFEST = {
   base: "/stack/scenes",
   scenes: ["hero","silicon","signal","data","atlas","kdv-website-services","371admin","new-z1on-lpg","tracky","coop-tracker","plantpal","now","contact"],
   /** Horizontal position of me in each scene; phone frames are already cropped around it. */
-  focus: [0.7,0.7,0.3,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.32,0.3],
+  focus: [0.6,0.7,0.3,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.32,0.3],
+  /** Desktop-only rightward shift per scene, as a fraction of the screen width. */
+  pan: [0.14,0,0,0,0,0,0,0,0,0,0,0,0],
   frames: [42,42,42,42,42,42,42,42,42,42,42,42],
 } as const;
