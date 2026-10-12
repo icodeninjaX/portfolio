@@ -723,6 +723,16 @@ html.lenis body {
   height: 100%;
 }
 
+/* Phones: the canvas covers only the scene area at the top (height set in
+   SceneSequence against the largest viewport); the page colour shows below. */
+.stack-scenes.is-portrait {
+  bottom: auto;
+}
+
+.stack-scenes.is-portrait::after {
+  background: linear-gradient(180deg, rgba(10, 9, 8, 0.6) 0%, rgba(10, 9, 8, 0) 22%);
+}
+
 /* Darken the edges so the copy and HUD always read over the footage. */
 .stack-scenes::after {
   content: "";
@@ -2269,6 +2279,14 @@ html.lenis body {
 
 @media (max-width: 767px) {
   .stack-home--film .stack-chapter__rule {
+    display: none;
+  }
+}
+
+/* Phones: the animated grain is a layer four times the screen, recomposited
+   every scroll frame; the footage carries its own grain anyway. */
+@media (max-width: 767px) {
+  .stack-home--film .stack-grain {
     display: none;
   }
 }
