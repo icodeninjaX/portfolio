@@ -15,6 +15,14 @@ const SEGMENTS = frames.length;
 /** On portrait screens the scene fills this much of the height and fades into the copy below. */
 const PORTRAIT_SCENE = 0.72;
 
+/**
+ * Decoded frames kept ready to draw, nearest the reader first. Drawing an
+ * <img> whose decoded pixels the browser has evicted re-decodes it on the main
+ * thread mid-scroll (visible stutter on phones), so frames are drawn from
+ * ImageBitmaps sized for this screen instead, within a memory budget.
+ */
+const BITMAP_BUDGET_MB = { m: 180, d: 380 };
+
 /** A transition starts this far into a section and ends this far into the next. */
 const HOLD = 0.7;
 const SPAN = 0.5;
@@ -50,6 +58,14 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
 
     // Portrait screens get frames pre-cropped around me (see build-frames.mjs).
     const set = window.innerWidth < window.innerHeight ? "m" : "d";
+    const portrait = set === "m";
+    const stage = canvas.parentElement;
+    if (stage && portrait) {
+      // Size against the largest viewport so the address bar sliding in and
+      // out never resizes (and so reallocates) the canvas.
+      stage.classList.add("is-portrait");
+      stage.style.height = `${PORTRAIT_SCENE * 100}${CSS.supports("height", "1lvh") ? "lvh" : "vh"}`;
+    }
     const url = (seg: number, f: number) =>
       `${base}/${set}/${String(seg).padStart(2, "0")}-${String(f).padStart(3, "0")}.webp`;
 
@@ -57,6 +73,13 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
     const requested = new Set<string>();
     let dirty = true;
     let disposed = false;
+
+    const bitmaps = new Map<string, ImageBitmap>();
+    const making = new Set<string>();
+    let generation = 0;
+    let windowDirty = true;
+    const lowMemory = ((navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8) <= 4;
+    const budget = BITMAP_BUDGET_MB[set] * (lowMemory ? 0.6 : 1) * 1024 * 1024;
 
     // ---- loading: every scene's still first, then whole clips nearest to the reader ----
     const queue: [number, number][] = [];
@@ -77,6 +100,7 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
             if (disposed) return;
             loaded.set(k, img);
             dirty = true;
+            windowDirty = true;
           })
           .catch(() => {})
           .finally(() => {
@@ -127,49 +151,83 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
     }, 2500);
 
     // ---- drawing ----
-    const nearest = (seg: number, f: number) => {
+    /** Closest ready frame: a bitmap if one is near, else the still, else the raw image. */
+    const nearest = (seg: number, f: number): CanvasImageSource | undefined => {
       for (let d = 0; d < frames[seg]; d++) {
-        const a = loaded.get(key(seg, f - d));
+        const a = bitmaps.get(key(seg, f - d)) ?? bitmaps.get(key(seg, f + d));
         if (a) return a;
-        const b = loaded.get(key(seg, f + d));
-        if (b) return b;
       }
-      return undefined;
+      return loaded.get(key(seg, f));
     };
+    const ready = (k: string): CanvasImageSource | undefined => bitmaps.get(k) ?? loaded.get(k);
 
     let w = 0;
     let h = 0;
+    let sizedWidth = -1;
     const resize = () => {
-      // Render at the screen's real density: letting the browser stretch a
-      // low-density canvas on a 3x phone visibly softens the footage.
-      const dpr = Math.min(window.devicePixelRatio || 1, set === "m" ? 3 : 2);
-      w = Math.round(window.innerWidth * dpr);
-      h = Math.round(window.innerHeight * dpr);
+      // Phones resize every time the address bar slides in or out; only a real
+      // width change (rotation) is worth reallocating the canvas and frames for.
+      if (portrait && window.innerWidth === sizedWidth) return;
+      sizedWidth = window.innerWidth;
+      // 2x is already finer than the 1152px source frames on any phone, and
+      // every extra pixel is re-uploaded to the GPU on each scroll frame.
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const box = canvas.getBoundingClientRect();
+      w = Math.round(box.width * dpr);
+      h = Math.round(box.height * dpr);
       canvas.width = w;
       canvas.height = h;
       ctx.imageSmoothingQuality = "high";
+      bitmaps.forEach((b) => b.close());
+      bitmaps.clear();
+      generation++;
+      windowDirty = true;
       dirty = true;
     };
     resize();
 
     const pointer = { x: 0, y: 0 };
-    // Height the scene is drawn into; on portrait screens the rest is the copy's dark floor.
-    const sceneH = () => (set === "m" ? Math.round(h * PORTRAIT_SCENE) : h);
-    const cover = (img: HTMLImageElement, focus: number, alpha: number, pan = 0) => {
-      // Desktop overscans a little for the pointer parallax; phones have no pointer.
-      const zoom = set === "m" ? 1 : 1.045;
-      const boxH = sceneH();
-      const scale = Math.max(w / img.naturalWidth, boxH / img.naturalHeight) * zoom;
-      const dw = img.naturalWidth * scale;
-      const dh = img.naturalHeight * scale;
-      const spareX = dw - w;
-      const spareY = dh - boxH;
-      // Phone frames are already centred on me.
-      const fx = set === "m" ? 0.5 : focus;
-      const x = -spareX * Math.min(1, Math.max(0, fx + pointer.x * 0.04)) + pan * w;
-      const y = -spareY * (set === "m" ? 0.35 : 0.5 + pointer.y * 0.18);
+    // Desktop overscans a little for the pointer parallax; phones have no pointer.
+    const ZOOM = portrait ? 1 : 1.045;
+    // Phone frames are already centred on me; show them a little above centre.
+    const PORTRAIT_Y = 0.35;
+
+    /** Region of a source frame a bitmap keeps, and the size it is decoded to. */
+    const bitmapRect = (iw: number, ih: number) => {
+      const scale = Math.max(w / iw, h / ih) * ZOOM;
+      // Never decode larger than the source: the GPU upscales for free.
+      const down = Math.min(1, scale);
+      if (!portrait) return { sx: 0, sy: 0, sw: iw, sh: ih, rw: Math.round(iw * down), rh: Math.round(ih * down) };
+      // Phones: keep exactly the visible box, so drawing it is a plain copy.
+      const sw = w / scale;
+      const sh = h / scale;
+      return {
+        sx: (iw - sw) * 0.5,
+        sy: (ih - sh) * PORTRAIT_Y,
+        sw,
+        sh,
+        rw: Math.round(sw * down),
+        rh: Math.round(sh * down),
+      };
+    };
+
+    const cover = (src: CanvasImageSource, focus: number, alpha: number, pan = 0) => {
       ctx.globalAlpha = alpha;
-      ctx.drawImage(img, x, y, dw, dh);
+      if (src instanceof ImageBitmap && portrait) {
+        ctx.drawImage(src, 0, 0, w, h);
+        return;
+      }
+      const iw = src instanceof HTMLImageElement ? src.naturalWidth : (src as ImageBitmap).width;
+      const ih = src instanceof HTMLImageElement ? src.naturalHeight : (src as ImageBitmap).height;
+      const scale = Math.max(w / iw, h / ih) * ZOOM;
+      const dw = iw * scale;
+      const dh = ih * scale;
+      const spareX = dw - w;
+      const spareY = dh - h;
+      const fx = portrait ? 0.5 : focus;
+      const x = -spareX * Math.min(1, Math.max(0, fx + pointer.x * 0.04)) + pan * w;
+      const y = -spareY * (portrait ? PORTRAIT_Y : 0.5 + pointer.y * 0.18);
+      ctx.drawImage(src, x, y, dw, dh);
     };
 
     // Desktop pan: the strip uncovered on the left fades into the page colour.
@@ -186,25 +244,22 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
       ctx.fillRect(x, 0, w * 0.14, h);
     };
 
-    // Portrait: melt the bottom of the scene into the page colour.
+    // Portrait: the canvas only covers the top of the screen (CSS); melt its
+    // bottom edge into the page colour below.
     const floor = () => {
-      if (set !== "m") return;
-      const boxH = sceneH();
-      const g = ctx.createLinearGradient(0, boxH * 0.55, 0, boxH);
+      if (!portrait) return;
+      const g = ctx.createLinearGradient(0, h * 0.55, 0, h);
       g.addColorStop(0, "rgba(10, 9, 8, 0)");
       g.addColorStop(1, "rgba(10, 9, 8, 1)");
       ctx.globalAlpha = 1;
       ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, boxH);
-      // The zoomed frame overhangs the scene box; keep the floor solid below it.
-      ctx.fillStyle = "#0a0908";
-      ctx.fillRect(0, boxH, w, h - boxH);
+      ctx.fillRect(0, 0, w, h);
     };
 
     // Shade the half opposite the subject, where the section copy sits.
     const shade = (focus: number) => {
       const side = (focus - 0.5) * 2;
-      if (Math.abs(side) < 0.05 || set === "m") return;
+      if (Math.abs(side) < 0.05 || portrait) return;
       const g = side > 0 ? ctx.createLinearGradient(0, 0, w * 0.62, 0) : ctx.createLinearGradient(w, 0, w * 0.38, 0);
       g.addColorStop(0, `rgba(10, 9, 8, ${(0.82 * Math.min(1, Math.abs(side) / 0.4)).toFixed(3)})`);
       g.addColorStop(1, "rgba(10, 9, 8, 0)");
@@ -221,7 +276,10 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
       const from = map[k];
       const to = map[Math.min(count - 1, k + 1)];
       const focus = FOCUS[from] + (FOCUS[to] - FOCUS[from]) * t;
-      const pan = set === "m" ? 0 : PAN[from] + (PAN[to] - PAN[from]) * t;
+      const pan = portrait ? 0 : PAN[from] + (PAN[to] - PAN[from]) * t;
+      // Where the reader is in the film, for the bitmap window.
+      if (t > 0 && to === from + 1 && from < SEGMENTS) here = { seg: from, f: t * (frames[from] - 1) };
+      else here = { seg: Math.min(from, SEGMENTS - 1), f: from < SEGMENTS ? 0 : frames[SEGMENTS - 1] - 1 };
 
       ctx.globalAlpha = 1;
       ctx.fillStyle = "#0a0908";
@@ -238,16 +296,77 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
         const pos = t * (frames[from] - 1);
         const f0 = Math.floor(pos);
         const a = nearest(from, f0);
-        const b = loaded.get(key(from, Math.min(frames[from] - 1, f0 + 1)));
+        const b = ready(key(from, Math.min(frames[from] - 1, f0 + 1)));
         if (a) cover(a, focus, 1, pan);
         if (b && a !== b) cover(b, focus, pos - f0, pan);
         if (a || b) return;
       }
       // Holding on a scene, or two scenes without a clip between them: crossfade stills.
-      const sa = loaded.get(key(...still(from)));
-      const sb = loaded.get(key(...still(to)));
+      const sa = ready(key(...still(from)));
+      const sb = ready(key(...still(to)));
       if (sa) cover(sa, focus, 1, pan);
       if (sb && t > 0 && to !== from) cover(sb, focus, t, pan);
+    };
+
+    // ---- bitmap window: decode the frames around the reader, release the rest ----
+    let here = { seg: 0, f: 0 };
+    let lastHere = "";
+    const offsets: number[] = [];
+    frames.reduce((acc, n, i) => ((offsets[i] = acc), acc + n), 0);
+    const globalIndex = (seg: number, f: number) => offsets[seg] + f;
+    const stillKeys = new Set(Array.from({ length: scenes.length }, (_, s) => key(...still(s))));
+
+    const refreshWindow = () => {
+      windowDirty = false;
+      const sample = loaded.values().next().value;
+      if (!sample || w === 0) return;
+      const r = bitmapRect(sample.naturalWidth, sample.naturalHeight);
+      const per = r.rw * r.rh * 4;
+      // Stills always stay; the rest of the budget goes to frames nearest the reader.
+      const reach = Math.max(4, Math.floor(budget / per) - stillKeys.size);
+      const centre = globalIndex(here.seg, Math.round(here.f));
+      const wanted: string[] = [...stillKeys];
+      for (let d = 0; wanted.length < stillKeys.size + reach && d < offsets[SEGMENTS - 1] + frames[SEGMENTS - 1]; d++) {
+        for (const g of d === 0 ? [centre] : [centre + d, centre - d]) {
+          let seg = SEGMENTS - 1;
+          while (seg >= 0 && offsets[seg] > g) seg--;
+          if (seg < 0 || g - offsets[seg] >= frames[seg]) continue;
+          wanted.push(key(seg, g - offsets[seg]));
+        }
+      }
+      const keep = new Set(wanted);
+      bitmaps.forEach((b, k) => {
+        if (!keep.has(k)) {
+          b.close();
+          bitmaps.delete(k);
+        }
+      });
+      const gen = generation;
+      for (const k of wanted) {
+        if (making.size >= 3) break;
+        if (bitmaps.has(k) || making.has(k)) continue;
+        const img = loaded.get(k);
+        if (!img) continue;
+        making.add(k);
+        const b = bitmapRect(img.naturalWidth, img.naturalHeight);
+        // Decode from the file bytes (already in the HTTP cache): browsers do
+        // that off the main thread, unlike decoding from an <img>.
+        fetch(img.src)
+          .then((res) => res.blob())
+          .then((blob) =>
+            createImageBitmap(blob, b.sx, b.sy, b.sw, b.sh, { resizeWidth: b.rw, resizeHeight: b.rh, resizeQuality: "high" }),
+          )
+          .then((bmp) => {
+            if (disposed || gen !== generation) return bmp.close();
+            bitmaps.set(k, bmp);
+            dirty = true;
+          })
+          .catch(() => {})
+          .finally(() => {
+            making.delete(k);
+            windowDirty = true;
+          });
+      }
     };
 
     let raf = 0;
@@ -264,7 +383,13 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
       if (dirty) {
         dirty = false;
         draw();
+        const at = `${here.seg}:${Math.round(here.f / 2)}`;
+        if (at !== lastHere) {
+          lastHere = at;
+          windowDirty = true;
+        }
       }
+      if (windowDirty) refreshWindow();
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -285,6 +410,8 @@ export function SceneSequence({ sceneIds }: { sceneIds: string[] }) {
       cancelAnimationFrame(raf);
       window.clearTimeout(idle);
       window.removeEventListener("resize", resize);
+      bitmaps.forEach((b) => b.close());
+      bitmaps.clear();
     };
   }, [sceneIds]);
 
