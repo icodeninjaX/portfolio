@@ -1574,6 +1574,13 @@ html.lenis body {
   transform: none;
 }
 
+/* components/stack/filmTitles.ts plays the hero title letter by letter. */
+.stack-hero__title[data-film] .stack-reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
 /* ---- contact ---- */
 .stack-section--contact .stack-sticky {
   justify-content: center;

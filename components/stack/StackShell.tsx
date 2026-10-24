@@ -4,6 +4,7 @@ import { useProgress } from "@react-three/drei";
 import Lenis from "lenis";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { driveLenis, ScrollTrigger, useFilmTitles } from "./filmTitles";
 import { measureSections, stackScroll, subscribeStack, updateStage, type StackScroll } from "./scrollStore";
 
 // The chrome every immersive page shares: preloader, smooth scroll, top bar,
@@ -119,6 +120,7 @@ export function StackShell({
   const markerRef = useRef<HTMLSpanElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
   const readoutRef = useRef<HTMLSpanElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   // Latest props without re-running the scroll effect.
   const config = useRef({ labels, readout });
   useEffect(() => {
@@ -164,15 +166,14 @@ export function StackShell({
     };
 
     let lenis: Lenis | null = null;
-    let raf = 0;
+    let stopLenis = () => {};
     if (!reduced) {
       lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9 });
-      lenis.on("scroll", ({ scroll }: { scroll: number }) => updateStage(scroll));
-      const loop = (time: number) => {
-        lenis?.raf(time);
-        raf = requestAnimationFrame(loop);
-      };
-      raf = requestAnimationFrame(loop);
+      lenis.on("scroll", ({ scroll }: { scroll: number }) => {
+        updateStage(scroll);
+        ScrollTrigger.update();
+      });
+      stopLenis = driveLenis(lenis);
     }
     const onNativeScroll = () => {
       if (!lenis) updateStage(window.scrollY);
@@ -217,12 +218,17 @@ export function StackShell({
     window.addEventListener("pointermove", onPointer, { passive: true });
     document.addEventListener("click", onAnchor);
     // Fonts and images shift layout after first paint.
-    const ro = new ResizeObserver(onResize);
+    // ScrollTrigger handles window resizes itself (and skips the phone
+    // address bar); a body that moved under it needs telling.
+    const ro = new ResizeObserver(() => {
+      onResize();
+      ScrollTrigger.refresh();
+    });
     ro.observe(document.body);
 
     return () => {
       unsub();
-      cancelAnimationFrame(raf);
+      stopLenis();
       lenis?.destroy();
       ro.disconnect();
       window.removeEventListener("resize", onResize);
@@ -233,11 +239,14 @@ export function StackShell({
     };
   }, []);
 
+  const isLoaded = loaded || (webgl === false && webglOnly);
+  useFilmTitles(rootRef, isLoaded);
+
   // `webgl` is null until feature detection has run after hydration.
   const showCanvas = webgl === true || (!webglOnly && webgl !== null);
 
   return (
-    <div className={`stack-home ${className} ${loaded || (webgl === false && webglOnly) ? "is-loaded" : ""}`}>
+    <div ref={rootRef} className={`stack-home ${className} ${isLoaded ? "is-loaded" : ""}`}>
       <div className="stack-stage" aria-hidden>
         {showCanvas && canvas}
         {webgl === false && webglOnly && (
