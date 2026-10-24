@@ -121,7 +121,6 @@ export function StackShell({
   const labelRef = useRef<HTMLSpanElement>(null);
   const readoutRef = useRef<HTMLSpanElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
-  useFilmTitles(rootRef);
   // Latest props without re-running the scroll effect.
   const config = useRef({ labels, readout });
   useEffect(() => {
@@ -240,11 +239,14 @@ export function StackShell({
     };
   }, []);
 
+  const isLoaded = loaded || (webgl === false && webglOnly);
+  useFilmTitles(rootRef, isLoaded);
+
   // `webgl` is null until feature detection has run after hydration.
   const showCanvas = webgl === true || (!webglOnly && webgl !== null);
 
   return (
-    <div ref={rootRef} className={`stack-home ${className} ${loaded || (webgl === false && webglOnly) ? "is-loaded" : ""}`}>
+    <div ref={rootRef} className={`stack-home ${className} ${isLoaded ? "is-loaded" : ""}`}>
       <div className="stack-stage" aria-hidden>
         {showCanvas && canvas}
         {webgl === false && webglOnly && (
